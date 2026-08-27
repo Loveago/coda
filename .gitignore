@@ -10,3 +10,6 @@ build/
 
 # uploaded files (local dev driver)
 public/uploads/
+
+# local deployment guide
+vercel.txt
