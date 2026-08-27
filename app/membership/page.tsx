@@ -7,6 +7,7 @@ import Reveal from '@/components/Reveal';
 import MembershipForm from '@/components/MembershipForm';
 import '../globals.css';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Membership', description: 'Join GACODA — the Greater Accra Concerned Online Drivers Association.' };
 
 const faqs = [

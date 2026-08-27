@@ -7,6 +7,7 @@ import Reveal from '@/components/Reveal';
 import ContactForm from '@/components/ContactForm';
 import '../globals.css';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Contact Us', description: 'Get in touch with GACODA — phone, email, location and contact form.' };
 
 export default async function Contact() {

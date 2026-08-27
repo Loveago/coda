@@ -6,6 +6,7 @@ import Reveal from '@/components/Reveal';
 import MembershipStatusForm from '@/components/MembershipStatusForm';
 import '../globals.css';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Check Application Status', description: 'Check the status of your GACODA membership application using your phone number or email.' };
 
 export default async function MembershipStatus() {
