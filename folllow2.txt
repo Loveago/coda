@@ -1,0 +1,1209 @@
+# GACODA MEMBER PORTAL, MEMBERSHIP FEES & PAYSTACK
+
+Extend the GACODA website into a complete **membership management and payment platform**.
+
+Members should be able to:
+
+1. Apply for membership.
+2. Create an account using their email and password.
+3. Wait for administrator approval.
+4. Log in after approval.
+5. View their member profile.
+6. Pay their annual membership dues.
+7. View their payment history.
+8. See their membership status.
+9. Download/view payment receipts.
+10. Update permitted profile information.
+11. See when their annual membership expires.
+12. Renew their annual dues when required.
+
+Administrators must have complete control over membership, fees, payments and member accounts.
+
+---
+
+# 1. MEMBERSHIP FEES
+
+Create a configurable fee system.
+
+Initial values:
+
+### Registration Fee
+
+**GHS 20**
+
+### Annual Membership Dues
+
+**GHS 200**
+
+However, DO NOT hardcode these amounts into the application.
+
+Store them in PostgreSQL.
+
+Administrators must be able to change them from:
+
+`/admin/settings/fees`
+
+---
+
+# 2. REGISTRATION FEE TOGGLE
+
+The administrator must be able to turn the registration fee ON or OFF.
+
+Setting:
+
+**Registration Fee Enabled**
+
+Values:
+
+`ON`
+
+or
+
+`OFF`
+
+Default:
+
+`ON`
+
+When ON:
+
+New applicants must pay:
+
+**GHS 20 registration fee**
+
+before their membership application can become fully active.
+
+When OFF:
+
+The registration fee becomes:
+
+**GHS 0**
+
+and the applicant does not need to make a registration payment.
+
+The admin should be able to change this at any time.
+
+---
+
+# 3. IMPORTANT: FEE SNAPSHOTS
+
+When a member starts a payment, save the fee amount that applied at that time.
+
+For example:
+
+If the annual dues are GHS 200 today and the administrator changes them to GHS 250 next month, an existing payment transaction should remain associated with the original GHS 200 amount.
+
+Do not dynamically change historical transactions.
+
+Store:
+
+* Amount
+* Currency
+* Fee type
+* Fee configuration version/reference
+* Date
+* Member
+* Payment status
+
+---
+
+# 4. MEMBERSHIP APPLICATION FORM
+
+Update the membership application form.
+
+Required fields should include appropriate information such as:
+
+### Personal Information
+
+* First name
+* Last name
+* Email
+* Phone number
+* Date of birth
+* Gender where appropriate
+* Residential location
+
+### Driver Information
+
+* Driver/online driving platform
+* Years of driving experience
+* Vehicle information
+* Vehicle registration number where appropriate
+
+### Emergency Contact
+
+* Name
+* Phone
+* Relationship
+
+### Account
+
+The applicant must create:
+
+* Email address
+* Password
+
+Password requirements:
+
+* Minimum 8 characters
+* Do not store the password in plaintext
+* Hash the password using a secure password hashing algorithm
+
+Do not unnecessarily collect sensitive information.
+
+---
+
+# 5. EMAIL UNIQUENESS
+
+Email addresses must be unique for member accounts.
+
+If an applicant enters an email that already exists:
+
+Show an appropriate message such as:
+
+"This email is already registered. Please log in or reset your password."
+
+Do not reveal unnecessary account information to unauthenticated users.
+
+---
+
+# 6. APPLICATION STATUS
+
+Membership applications should have statuses such as:
+
+```text
+PENDING
+APPROVED
+REJECTED
+SUSPENDED
+```
+
+A newly submitted application should initially be:
+
+`PENDING`
+
+The applicant should NOT have full member access while pending.
+
+---
+
+# 7. ADMIN APPROVAL WORKFLOW
+
+Create an admin membership review screen:
+
+`/admin/members/applications`
+
+Administrators can:
+
+* View application
+* Review applicant information
+* Approve
+* Reject
+* Request additional information
+* Add internal notes
+* View registration payment status
+
+When approved:
+
+The member account becomes:
+
+`ACTIVE`
+
+The member can now log into the member portal.
+
+---
+
+# 8. REGISTRATION PAYMENT WORKFLOW
+
+If registration fees are enabled:
+
+### Application submitted
+
+↓
+
+### Application remains PENDING
+
+↓
+
+### Applicant is directed to registration payment
+
+↓
+
+### Paystack payment
+
+↓
+
+### Paystack webhook confirms successful payment
+
+↓
+
+### Registration payment becomes PAID
+
+↓
+
+### Administrator reviews application
+
+↓
+
+### Administrator approves member
+
+↓
+
+### Account becomes ACTIVE
+
+If registration fees are disabled:
+
+Application submitted
+
+↓
+
+Administrator reviews application
+
+↓
+
+Administrator approves member
+
+↓
+
+Account becomes ACTIVE
+
+---
+
+# 9. IMPORTANT PAYMENT RULE
+
+Never trust payment information supplied by the browser.
+
+The server must verify payments using Paystack.
+
+Do NOT simply mark a transaction as successful because the frontend says payment succeeded.
+
+Use Paystack's:
+
+* Transaction initialization
+* Transaction verification
+* Webhooks
+
+The server must verify:
+
+* Transaction reference
+* Amount
+* Currency
+* Payment status
+* Relevant metadata
+* Member/account association
+
+Only then should the database mark a payment as successful.
+
+---
+
+# 10. PAYSTACK INTEGRATION
+
+Integrate Paystack as the payment processor.
+
+Use environment variables:
+
+```env
+PAYSTACK_SECRET_KEY=
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=
+PAYSTACK_WEBHOOK_SECRET=
+```
+
+Never expose:
+
+`PAYSTACK_SECRET_KEY`
+
+to the browser.
+
+Use Paystack's official API from server-side/serverless code.
+
+Create a payment abstraction so the payment provider can be replaced later if necessary.
+
+For example:
+
+```text
+lib/payments/
+  paystack.ts
+  payment-service.ts
+```
+
+---
+
+# 11. PAYMENT TYPES
+
+Support at least two payment types:
+
+```text
+REGISTRATION_FEE
+ANNUAL_DUES
+```
+
+The system should be designed so additional payment types can be added later.
+
+---
+
+# 12. ANNUAL MEMBERSHIP DUES
+
+Every active member should have an annual membership due.
+
+Initial fee:
+
+**GHS 200**
+
+When a member logs into their dashboard, clearly show:
+
+### Membership
+
+Status:
+
+**ACTIVE**
+
+### Annual Dues
+
+**GHS 200**
+
+### Due Date
+
+Example:
+
+**31 August 2027**
+
+### Payment Status
+
+**PAID / DUE / OVERDUE**
+
+---
+
+# 13. MEMBERSHIP YEAR
+
+Do not simply assume that every member's membership year is the calendar year.
+
+Store membership dates explicitly.
+
+For example:
+
+```text
+membershipStartDate
+membershipEndDate
+```
+
+When a member pays annual dues, calculate the appropriate membership period according to the GACODA membership rules.
+
+Make this configurable enough that the association can change the policy later.
+
+---
+
+# 14. ANNUAL RENEWAL
+
+When annual dues become due, the member dashboard should show:
+
+**Your annual membership dues are due.**
+
+Button:
+
+**PAY ANNUAL DUES**
+
+After successful payment:
+
+* Record the payment
+* Update membership status/payment status
+* Extend the membership period
+* Generate payment receipt
+* Record transaction reference
+
+Do not create duplicate renewal periods if the same Paystack transaction is processed more than once.
+
+---
+
+# 15. MEMBER DASHBOARD
+
+Create:
+
+`/member/dashboard`
+
+The dashboard should look modern and match the GACODA brand.
+
+Display:
+
+### Welcome
+
+"Welcome, [Member Name]"
+
+### Membership Status
+
+ACTIVE
+
+### Member ID
+
+Example:
+
+`GACODA-000123`
+
+Generate unique member IDs.
+
+### Annual Dues
+
+GHS 200
+
+### Payment Status
+
+PAID / DUE / OVERDUE
+
+### Membership Valid Until
+
+Date
+
+### Registration Status
+
+PAID / NOT REQUIRED
+
+---
+
+# 16. MEMBER PROFILE
+
+Create:
+
+`/member/profile`
+
+Members should be able to view and edit permitted information.
+
+Include:
+
+* Profile photo
+* Full name
+* Email
+* Phone
+* Location
+* Driver platform
+* Vehicle information
+* Emergency contact
+
+Some fields should be locked after approval if they require administrator verification.
+
+For example:
+
+* Member ID
+* Approval status
+* Membership dates
+* Payment status
+
+---
+
+# 17. MEMBER PROFILE PHOTO
+
+Allow members to upload a profile photo.
+
+Do not store image binaries in PostgreSQL.
+
+Use object storage.
+
+Store only:
+
+* File URL
+* File metadata
+* Upload date
+
+in PostgreSQL.
+
+Validate:
+
+* File type
+* File size
+* Image dimensions where appropriate
+
+---
+
+# 18. MEMBER LOGIN
+
+Create:
+
+`/login`
+
+Members should be able to log in using:
+
+* Email
+* Password
+
+After successful login:
+
+Redirect to:
+
+`/member/dashboard`
+
+Pending/rejected/suspended accounts should receive appropriate access restrictions.
+
+---
+
+# 19. PASSWORD RESET
+
+Do not forget password recovery.
+
+Create:
+
+`/forgot-password`
+
+and:
+
+`/reset-password`
+
+Implement secure password reset tokens with expiration.
+
+Never email passwords.
+
+Never store plaintext passwords.
+
+---
+
+# 20. EMAIL VERIFICATION
+
+Add email verification.
+
+After registration:
+
+Send a verification email.
+
+The member must verify their email before the account can proceed normally.
+
+Use secure, expiring verification tokens.
+
+If email delivery is not configured initially, build the architecture so an email provider can be connected through environment variables.
+
+---
+
+# 21. PAYMENT HISTORY
+
+Create:
+
+`/member/payments`
+
+Members should see:
+
+| Date | Type | Amount | Status | Reference |
+| ---- | ---- | ------ | ------ | --------- |
+
+Payment types:
+
+* Registration Fee
+* Annual Dues
+
+Statuses:
+
+* Pending
+* Successful
+* Failed
+* Refunded
+
+Allow members to open an individual payment record.
+
+---
+
+# 22. PAYMENT RECEIPTS
+
+After successful payment, create a receipt page.
+
+Example:
+
+`/member/payments/[id]`
+
+Receipt should contain:
+
+* GACODA name
+* GACODA logo
+* Member name
+* Member ID
+* Payment type
+* Amount
+* Currency
+* Payment date
+* Paystack reference
+* Transaction status
+
+Provide:
+
+**DOWNLOAD RECEIPT**
+
+Where practical, generate a PDF receipt server-side.
+
+---
+
+# 23. PAYSTACK WEBHOOK
+
+Create a secure serverless endpoint such as:
+
+`/api/payments/paystack/webhook`
+
+The webhook must:
+
+1. Receive Paystack events.
+2. Verify authenticity/signature.
+3. Find the corresponding transaction.
+4. Ensure the transaction has not already been processed.
+5. Verify the transaction details.
+6. Update the payment record.
+7. Update membership status/period where appropriate.
+8. Record the event.
+9. Return the correct response.
+
+Implement idempotency.
+
+If Paystack sends the same webhook multiple times, the system must NOT:
+
+* Create duplicate payments
+* Extend membership twice
+* Create duplicate receipts
+
+---
+
+# 24. PAYMENT TRANSACTIONS DATABASE
+
+Create a dedicated payment model.
+
+Example fields:
+
+```text
+id
+memberId
+type
+amount
+currency
+reference
+provider
+providerTransactionId
+status
+metadata
+paidAt
+createdAt
+updatedAt
+```
+
+Use unique constraints on payment references.
+
+Currency should initially be:
+
+`GHS`
+
+Do not use floating-point numbers for financial calculations.
+
+Use an appropriate integer/decimal representation.
+
+---
+
+# 25. PAYMENT METADATA
+
+When initializing Paystack payments, attach useful metadata such as:
+
+```text
+memberId
+memberNumber
+paymentType
+```
+
+Do not place unnecessary sensitive information into Paystack metadata.
+
+---
+
+# 26. ADMIN PAYMENT DASHBOARD
+
+Create:
+
+`/admin/payments`
+
+Administrators should be able to see:
+
+* Total revenue
+* Registration fees
+* Annual dues
+* Successful payments
+* Failed payments
+* Pending payments
+* Recent transactions
+
+Provide:
+
+* Search
+* Filters
+* Date range
+* Payment type filter
+* Status filter
+* Member search
+
+---
+
+# 27. ADMIN FEE SETTINGS
+
+Create:
+
+`/admin/settings/fees`
+
+Display:
+
+## Registration Fee
+
+Amount:
+
+**GHS 20**
+
+Toggle:
+
+**Registration Fee Enabled**
+
+[ ON / OFF ]
+
+## Annual Membership Dues
+
+Amount:
+
+**GHS 200**
+
+Allow the administrator to change both values.
+
+Require confirmation before changing fees.
+
+For example:
+
+"Changing this fee will affect future transactions but will not change historical payments."
+
+---
+
+# 28. FEE CHANGE HISTORY
+
+Keep a history of fee changes.
+
+Store:
+
+* Fee type
+* Previous amount
+* New amount
+* Changed by
+* Date
+* Enabled/disabled status
+
+This should be accessible to administrators.
+
+---
+
+# 29. ADMIN MEMBER DETAILS
+
+When an administrator opens:
+
+`/admin/members/[id]`
+
+show:
+
+### Member Information
+
+* Name
+* Email
+* Phone
+* Member ID
+* Driver information
+* Registration date
+* Approval date
+* Status
+
+### Membership
+
+* Start date
+* End date
+* Current status
+* Registration fee status
+* Annual dues status
+
+### Payments
+
+Display complete payment history.
+
+### Admin Actions
+
+* Approve
+* Reject
+* Suspend
+* Reactivate
+* Edit member
+* Reset password
+* View payment history
+
+Dangerous actions must require confirmation.
+
+---
+
+# 30. MEMBER ID CARDS
+
+Add a future-ready member identification system.
+
+Every approved member should have a unique member ID.
+
+Example:
+
+`GACODA-000001`
+
+Create a member card page:
+
+`/member/id-card`
+
+The card can display:
+
+* GACODA logo
+* Member photograph
+* Full name
+* Member ID
+* Membership status
+* Valid until date
+
+Design it so it can later be converted into a printable/downloadable ID card.
+
+---
+
+# 31. MEMBERSHIP STATUS AUTOMATION
+
+The system should automatically identify:
+
+### ACTIVE
+
+Membership is valid.
+
+### DUE
+
+Annual payment is approaching/due.
+
+### OVERDUE
+
+Membership has expired without renewal.
+
+### SUSPENDED
+
+Administrator has manually suspended the member.
+
+Do not rely solely on frontend logic.
+
+Membership status calculations should be performed securely on the server.
+
+---
+
+# 32. ADMIN NOTIFICATIONS
+
+Add an admin notification system.
+
+Administrators should be notified when:
+
+* New membership application arrives
+* Registration payment succeeds
+* Annual dues payment succeeds
+* Contact message arrives
+* New newsletter subscriber joins
+
+Create a notification center in the admin dashboard.
+
+---
+
+# 33. MEMBER NOTIFICATIONS
+
+The architecture should support member notifications.
+
+Examples:
+
+* Application received
+* Application approved
+* Application rejected
+* Registration payment successful
+* Annual dues reminder
+* Annual dues payment successful
+* Membership expiring soon
+
+Prepare the notification system so email/SMS/WhatsApp integrations can be added later.
+
+Do not hardcode one notification provider into the membership system.
+
+---
+
+# 34. ADMIN REPORTS
+
+Add:
+
+`/admin/reports`
+
+Allow administrators to view/export reports such as:
+
+* Total members
+* Active members
+* Pending applications
+* Registration fee revenue
+* Annual dues revenue
+* Revenue by month
+* Expired memberships
+* Upcoming renewals
+* Payment failures
+
+Allow CSV export where appropriate.
+
+---
+
+# 35. FINANCIAL SAFETY
+
+Because this system handles money:
+
+* Never trust client-side amounts.
+* Never allow the browser to determine the payment amount.
+* Always retrieve the current fee from the server/database.
+* Store the amount associated with the transaction.
+* Verify Paystack transactions server-side.
+* Verify webhook authenticity.
+* Implement idempotency.
+* Never expose secret keys.
+* Never log payment secrets.
+* Never store card details.
+* Never store CVV.
+* Never store Paystack credentials in PostgreSQL.
+
+The frontend may display the current amount, but the server must determine the actual amount to charge.
+
+---
+
+# 36. DATABASE ADDITIONS
+
+Extend the Prisma schema with appropriate models, for example:
+
+```text
+User
+Member
+MembershipApplication
+MembershipPeriod
+Payment
+PaymentEvent
+FeeSetting
+FeeSettingHistory
+PasswordResetToken
+EmailVerificationToken
+Notification
+MemberProfile
+```
+
+Use proper foreign keys, indexes and unique constraints.
+
+A user account and member profile may be separated conceptually:
+
+```text
+User
+  ↓
+Member
+  ↓
+MembershipPeriod
+  ↓
+Payment
+```
+
+This should allow the authentication system and membership system to evolve independently.
+
+---
+
+# 37. IMPORTANT: REGISTRATION + PAYMENT LOGIC
+
+Implement the following exact logic:
+
+### Registration fee ON
+
+New applicant:
+
+**Application → Account → Email verification → Registration payment → Admin approval → ACTIVE**
+
+### Registration fee OFF
+
+New applicant:
+
+**Application → Account → Email verification → Admin approval → ACTIVE**
+
+### Annual dues
+
+Active member:
+
+**Login → Dashboard → Pay Annual Dues → Paystack → Server verification/webhook → Membership renewed**
+
+---
+
+# 38. DO NOT AUTO-APPROVE MEMBERS
+
+Payment of the registration fee must NOT automatically mean membership approval.
+
+The administrator remains responsible for approving the application.
+
+Likewise, an applicant paying the registration fee should not automatically gain access to protected member benefits unless the administrator has approved the account.
+
+---
+
+# 39. ADMIN CONTROL OVER MEMBERSHIP REQUIREMENTS
+
+Create a settings section where administrators can eventually control:
+
+* Registration fee
+* Registration fee enabled/disabled
+* Annual dues
+* Membership approval requirement
+* Membership duration
+* Renewal reminder period
+* Whether email verification is required
+
+Default values should follow the requirements in this specification.
+
+---
+
+# 40. COMPLETE USER EXPERIENCE
+
+The final experience should feel like a real membership platform:
+
+### Visitor
+
+Homepage
+
+↓
+
+### Join GACODA
+
+↓
+
+### Membership Application
+
+↓
+
+### Create email/password
+
+↓
+
+### Verify email
+
+↓
+
+### Registration fee if enabled
+
+↓
+
+### Application submitted
+
+↓
+
+### Admin reviews
+
+↓
+
+### Approved
+
+↓
+
+### Member receives notification
+
+↓
+
+### Login
+
+↓
+
+### Member Dashboard
+
+↓
+
+### View profile / membership / payments
+
+↓
+
+### Pay GHS 200 annual dues
+
+↓
+
+### Paystack
+
+↓
+
+### Server verifies payment
+
+↓
+
+### Membership renewed
+
+↓
+
+### Receipt available
+
+---
+
+# 41. FINAL TESTING REQUIREMENTS
+
+Before considering the membership/payment system complete, test all of these:
+
+* New applicant registration
+* Duplicate email
+* Weak password
+* Email verification
+* Registration fee ON
+* Registration fee OFF
+* Registration payment
+* Failed payment
+* Cancelled payment
+* Successful Paystack payment
+* Paystack webhook
+* Duplicate webhook
+* Admin approval
+* Admin rejection
+* Member login
+* Suspended member login
+* Annual dues payment
+* Membership renewal
+* Payment history
+* Receipt generation
+* Password reset
+* Admin fee changes
+* Fee change history
+* Member profile updates
+* Member ID generation
+* Admin payment reports
+
+Test both successful and failure scenarios.
+
+---
+
+# MOST IMPORTANT
+
+The GACODA platform should now be treated as a **full membership management system with a CMS and payment platform**, not simply an association website.
+
+The three major systems are:
+
+### PUBLIC WEBSITE
+
+Visitors can:
+
+* Learn about GACODA
+* Read news
+* View resources
+* View gallery
+* Apply for membership
+* Contact GACODA
+
+### MEMBER PORTAL
+
+Members can:
+
+* Log in
+* Manage their profile
+* View membership status
+* View member ID
+* Pay annual dues
+* View payment history
+* Download receipts
+* Renew membership
+
+### ADMIN CMS
+
+Administrators can:
+
+* Manage the entire website
+* Create/edit/publish news
+* Manage pages
+* Manage members
+* Approve applications
+* Manage fees
+* Turn registration fees ON/OFF
+* Manage payments
+* View financial reports
+* Manage gallery
+* Manage resources
+* Manage administrators
+* View audit logs
+* Control website settings
+
+Build all three systems as one cohesive, secure, serverless Next.js + Node.js + PostgreSQL + Prisma application with Paystack integration.

@@ -1,0 +1,1649 @@
+# GACODA Website — Full-Stack Serverless Build Prompt
+
+You are an expert senior full-stack developer and UI/UX engineer.
+
+I have attached a **GACODA website design mockup image**. Use that image as the primary visual reference and build the website to closely match its layout, proportions, typography, spacing, colors, cards, navigation, imagery, responsive behavior, and overall premium feel.
+
+## 1. Organization
+
+The website is for:
+
+**GREATER ACCRA CONCERNED ONLINE DRIVERS ASSOCIATION**
+
+Short name:
+
+**GACODA**
+
+Tagline:
+
+**UNITED DRIVERS. STRONGER VOICES. SAFER ROADS.**
+
+GACODA is an association representing online drivers in the Greater Accra Region of Ghana.
+
+The website should feel:
+
+* Professional
+* Modern
+* Trustworthy
+* Premium
+* Driver-focused
+* Ghanaian but not overly stereotypical
+* Technology-forward
+* Community-oriented
+
+Do NOT make it look like a generic corporate template.
+
+---
+
+# 2. IMPORTANT: USE THE ATTACHED IMAGE
+
+Treat the attached design image as the visual source of truth.
+
+Recreate the design rather than inventing a completely different layout.
+
+Pay particular attention to:
+
+* Header proportions
+* Navigation spacing
+* Hero composition
+* Blue color palette
+* Typography hierarchy
+* Rounded cards
+* Image treatment
+* Iconography
+* Statistics section
+* News cards
+* Footer
+* Mobile layout
+* Buttons
+* Borders
+* Shadows
+* Section spacing
+* Responsive behavior
+
+Where the image contains placeholder information, create sensible reusable content/data structures rather than hardcoding everything directly into components.
+
+---
+
+# 3. TECHNOLOGY STACK
+
+Build this as a modern **serverless application**.
+
+Use:
+
+* Next.js
+* React
+* TypeScript
+* Node.js serverless runtime
+* PostgreSQL
+* Prisma ORM
+* Tailwind CSS
+* Modern CSS animations/transitions
+* Lucide React or another lightweight icon library
+* Zod for validation
+
+The application must be deployable to a serverless platform such as Vercel.
+
+Use PostgreSQL through a serverless-compatible provider such as Neon or Supabase.
+
+Do NOT create a traditional Express server that requires a permanently running Node.js process.
+
+Use:
+
+* Next.js Server Components where appropriate
+* Server Actions where appropriate
+* Route Handlers/API endpoints where appropriate
+* PostgreSQL for persistent data
+* Prisma for database access
+
+Keep the architecture clean and production-ready.
+
+---
+
+# 4. BRAND COLORS
+
+The association's primary color is **BLUE**.
+
+Use a premium blue-based palette rather than the green/gold designs from earlier concepts.
+
+Suggested starting palette:
+
+* Primary Blue: #0757D9
+* Deep Navy: #061B49
+* Bright Blue: #1677FF
+* Light Blue: #EAF3FF
+* White: #FFFFFF
+* Dark Text: #071A33
+* Muted Text: #64748B
+
+You may slightly adjust these values where necessary to make the design visually closer to the attached image.
+
+Blue must remain the dominant brand color.
+
+Avoid making green the primary color.
+
+---
+
+# 5. HOMEPAGE
+
+Build the homepage shown in the attached design.
+
+## Top Bar
+
+Create a slim top information bar containing:
+
+* Phone number
+* Email
+* Location: Accra, Ghana
+* Social media icons
+* Short tagline
+
+Make it responsive.
+
+On smaller screens, simplify or hide non-essential items.
+
+---
+
+# 6. MAIN NAVIGATION
+
+Create a professional responsive navigation bar.
+
+Include:
+
+* GACODA logo
+* GACODA name
+* Home
+* About Us
+* Membership
+* News & Updates
+* Resources
+* Gallery
+* Contact Us
+* Join GACODA button
+
+Desktop:
+
+Use a horizontal navigation layout similar to the attached design.
+
+Mobile:
+
+Use a hamburger menu with a smooth animated mobile navigation drawer.
+
+The navigation should remain accessible and keyboard friendly.
+
+---
+
+# 7. HERO SECTION
+
+Recreate the hero section from the attached image.
+
+Main heading:
+
+**UNITED DRIVERS.
+STRONGER VOICES.
+SAFER ROADS.**
+
+Make the typography bold and highly visible.
+
+Use:
+
+* Deep blue background
+* Bright blue accents
+* White text
+* Large imagery
+* Accra/driver imagery
+* Layered visual elements
+* Subtle gradients
+* Modern curved shapes
+
+Include:
+
+**JOIN OUR ASSOCIATION**
+
+and
+
+**LEARN MORE**
+
+buttons.
+
+Also create the circular/interactive:
+
+**TOGETHER WE DRIVE CHANGE**
+
+element shown in the design.
+
+The hero should feel dynamic.
+
+Add subtle animations such as:
+
+* Fade-in
+* Slide-up
+* Image movement
+* Floating elements
+* Button hover effects
+* Soft gradient movement
+
+Do not over-animate the page.
+
+Animations should feel premium and smooth.
+
+---
+
+# 8. FLUID ANIMATIONS
+
+The website should feel significantly more modern than a static HTML website.
+
+Use subtle, purposeful animations.
+
+Examples:
+
+* Hero elements animate into position on page load
+* Cards gently lift on hover
+* Buttons have smooth hover transitions
+* Navigation links animate their underline
+* Statistics animate when entering the viewport
+* Images have subtle scale/parallax effects
+* Sections reveal themselves while scrolling
+* News cards have smooth hover states
+* Mobile menu slides/fades smoothly
+* Buttons have subtle press feedback
+* Interactive elements have micro-interactions
+
+Use CSS transitions and lightweight animation libraries where appropriate.
+
+Prefer Framer Motion/Motion for React only where it genuinely improves the experience.
+
+Avoid excessive animations that hurt performance.
+
+Respect:
+
+`prefers-reduced-motion`
+
+---
+
+# 9. VALUES SECTION
+
+Create the six value cards shown in the design:
+
+1. Unity
+2. Advocacy
+3. Support
+4. Professionalism
+5. Partnership
+6. Safety
+
+Each card should have:
+
+* Icon
+* Title
+* Short description
+* Hover animation
+
+On desktop, display them horizontally.
+
+On mobile, use a responsive grid.
+
+---
+
+# 10. ABOUT GACODA
+
+Create an About section similar to the attached design.
+
+Heading:
+
+**Who We Are**
+
+Explain that GACODA represents the interests of online drivers in Greater Accra.
+
+Include:
+
+* Short description
+* Mission-focused content
+* Professional imagery
+* CTA button
+
+Button:
+
+**MORE ABOUT US**
+
+Use a modern split layout.
+
+On mobile, stack the content vertically.
+
+---
+
+# 11. IMPACT / STATISTICS
+
+Create the statistics section.
+
+Use dynamic values loaded from the database where appropriate.
+
+Examples:
+
+* 5,000+ Members
+* 1 Voice
+* 20+ Partners
+* Greater Accra
+
+Do NOT blindly hardcode these values into the UI.
+
+Create a database-backed statistics system so an administrator can update them later.
+
+Animate the numbers when they enter the viewport.
+
+---
+
+# 12. NEWS & UPDATES
+
+Create a modern news section.
+
+Display news cards containing:
+
+* Featured image
+* Date
+* Category
+* Title
+* Short excerpt
+* Read More button
+
+Example titles can initially be seeded into the database.
+
+The homepage should retrieve the latest published news articles from PostgreSQL.
+
+Include:
+
+**VIEW ALL NEWS**
+
+The news system must be database-driven.
+
+---
+
+# 13. NEWS DETAIL PAGES
+
+Create dynamic routes such as:
+
+`/news/[slug]`
+
+Each article should support:
+
+* Title
+* Cover image
+* Content
+* Author
+* Published date
+* Category
+* SEO metadata
+* Social sharing
+* Related articles
+
+Use PostgreSQL + Prisma.
+
+---
+
+# 14. NEWSLETTER
+
+Create a newsletter signup component.
+
+Fields:
+
+* Email
+
+Validate the email using Zod.
+
+Store subscribers in PostgreSQL.
+
+Prevent duplicate subscriptions.
+
+Show clear success/error states.
+
+Do not expose database credentials to the client.
+
+---
+
+# 15. MEMBERSHIP
+
+Create a dedicated:
+
+`/membership`
+
+page.
+
+Include a professional membership application form.
+
+Suggested fields:
+
+* Full name
+* Phone number
+* Email
+* Date of birth
+* Driver/online driving platform
+* Vehicle information
+* Ghana Card/ID information
+* Region
+* Emergency contact
+* Additional information
+* Consent checkbox
+
+Important:
+
+Do not store sensitive information unnecessarily.
+
+Use appropriate validation.
+
+Create a PostgreSQL membership table.
+
+Applications should initially have a status such as:
+
+`PENDING`
+
+Administrators should later be able to review applications.
+
+---
+
+# 16. CONTACT PAGE
+
+Create:
+
+`/contact`
+
+Include:
+
+* Contact information
+* Phone
+* Email
+* Location
+* Contact form
+* Social links
+* Map placeholder/component
+
+Contact form submissions must be stored in PostgreSQL.
+
+Fields:
+
+* Name
+* Email
+* Phone
+* Subject
+* Message
+
+Add validation and spam protection considerations.
+
+---
+
+# 17. ABOUT PAGE
+
+Create:
+
+`/about`
+
+Include:
+
+* Who We Are
+* Mission
+* Vision
+* Core Values
+* Objectives
+* Leadership section
+* Association history
+
+Structure the page using reusable components.
+
+---
+
+# 18. GALLERY
+
+Create:
+
+`/gallery`
+
+Build a modern responsive image gallery.
+
+Features:
+
+* Masonry/grid layout
+* Categories
+* Lightbox
+* Smooth transitions
+* Mobile-friendly design
+
+Gallery items should be database-driven.
+
+---
+
+# 19. RESOURCES
+
+Create:
+
+`/resources`
+
+Allow GACODA administrators to publish useful resources such as:
+
+* Documents
+* Driver guides
+* Safety information
+* Association policies
+* Announcements
+* Downloadable PDFs
+
+Resources should be database-driven.
+
+---
+
+# 20. ADMIN DASHBOARD
+
+Create a protected admin area:
+
+`/admin`
+
+The dashboard should eventually allow authorized administrators to manage:
+
+* News
+* Membership applications
+* Contact messages
+* Newsletter subscribers
+* Statistics
+* Gallery
+* Resources
+* Leadership/team members
+
+Create a clean modern admin interface.
+
+Do not expose admin functionality to unauthenticated users.
+
+Use a proper authentication solution compatible with the serverless architecture.
+
+---
+
+# 21. DATABASE
+
+Use PostgreSQL with Prisma.
+
+Create an appropriate schema including models similar to:
+
+* User
+* MembershipApplication
+* NewsArticle
+* NewsletterSubscriber
+* ContactMessage
+* Statistic
+* GalleryItem
+* Resource
+* TeamMember
+
+Use:
+
+* UUIDs or safe IDs
+* Created timestamps
+* Updated timestamps
+* Appropriate indexes
+* Slugs for public content
+* Status fields where appropriate
+
+Create:
+
+`prisma/schema.prisma`
+
+Also provide:
+
+* Prisma migrations
+* Seed script
+* Example seed data
+
+---
+
+# 22. SECURITY
+
+Build with security in mind.
+
+Important requirements:
+
+* Never expose database credentials
+* Validate all user input
+* Sanitize appropriate user-generated content
+* Protect admin routes
+* Prevent unauthorized database operations
+* Add basic rate limiting to public forms where practical
+* Use secure authentication
+* Use environment variables
+* Do not commit secrets
+* Add `.env.example`
+
+---
+
+# 23. SEO
+
+Implement proper SEO.
+
+Include:
+
+* Page titles
+* Meta descriptions
+* Open Graph metadata
+* Twitter/social metadata
+* Canonical URLs
+* Sitemap
+* Robots.txt
+* Structured metadata where appropriate
+
+The website should be optimized for searches related to GACODA and online drivers in Greater Accra.
+
+---
+
+# 24. PERFORMANCE
+
+The site must be fast.
+
+Use:
+
+* Optimized images
+* Lazy loading
+* Responsive image sizes
+* Server Components where appropriate
+* Minimal client-side JavaScript
+* Code splitting
+* Efficient database queries
+* Proper caching/revalidation
+
+Do not sacrifice performance for animations.
+
+---
+
+# 25. RESPONSIVE DESIGN
+
+The attached image includes a desktop/mobile concept.
+
+The real implementation must be fully responsive.
+
+Test layouts for:
+
+* Mobile
+* Tablet
+* Laptop
+* Large desktop
+
+The mobile version should not simply be a scaled-down desktop version.
+
+Re-design sections where necessary for touch interfaces.
+
+---
+
+# 26. COMPONENT ARCHITECTURE
+
+Create reusable components such as:
+
+`Navbar`
+
+`MobileMenu`
+
+`Hero`
+
+`ValueCard`
+
+`AboutSection`
+
+`StatsSection`
+
+`NewsCard`
+
+`NewsletterSignup`
+
+`Footer`
+
+`Button`
+
+`SectionHeading`
+
+`ContactForm`
+
+`MembershipForm`
+
+`GalleryGrid`
+
+etc.
+
+Avoid putting the entire website into one giant component.
+
+---
+
+# 27. PROJECT STRUCTURE
+
+Use a clean Next.js project structure.
+
+For example:
+
+```text
+app/
+  page.tsx
+  about/
+  membership/
+  news/
+  resources/
+  gallery/
+  contact/
+  admin/
+  api/
+
+components/
+  layout/
+  sections/
+  ui/
+  forms/
+
+lib/
+  db.ts
+  validations/
+  auth/
+  utils/
+
+prisma/
+  schema.prisma
+  seed.ts
+
+public/
+  images/
+  icons/
+
+types/
+```
+
+Adjust the structure if a better Next.js architecture is appropriate.
+
+---
+
+# 28. IMPORTANT DESIGN RULE
+
+Do not replace the attached design with a generic Tailwind dashboard/template.
+
+The attached image should be the primary design reference.
+
+However, improve anything necessary for:
+
+* Accessibility
+* Responsiveness
+* UX
+* Performance
+* Real-world usability
+
+The finished website should look like a **real professional association website**, not a design prototype.
+
+---
+
+# 29. IMAGE HANDLING
+
+Use suitable royalty-free/placeholder imagery for development where actual GACODA photographs are unavailable.
+
+Do not rely on images that may disappear unexpectedly.
+
+Structure image references so they can easily be replaced later with official GACODA photographs.
+
+Do not embed enormous unoptimized images.
+
+---
+
+# 30. CONTENT
+
+Use realistic placeholder content where official GACODA information has not yet been provided.
+
+Clearly structure content so it can be edited later.
+
+Do not invent official claims, government partnerships, membership numbers, phone numbers, email addresses, or credentials as if they were real.
+
+Mark demo data appropriately where necessary.
+
+---
+
+# 31. DELIVERABLE
+
+Build the actual working application, not just a visual mockup.
+
+I want:
+
+1. Fully working Next.js application
+2. TypeScript
+3. PostgreSQL integration
+4. Prisma ORM
+5. Serverless-compatible backend
+6. Database migrations
+7. Seed data
+8. Authentication structure
+9. Admin dashboard foundation
+10. Responsive frontend
+11. Fluid animations
+12. Forms connected to PostgreSQL
+13. SEO
+14. Accessibility
+15. `.env.example`
+16. README with setup instructions
+
+---
+
+# 32. ENVIRONMENT VARIABLES
+
+Create a `.env.example` containing the required variables, for example:
+
+```env
+DATABASE_URL=
+DIRECT_URL=
+AUTH_SECRET=
+NEXT_PUBLIC_SITE_URL=
+```
+
+Do not put real secrets into the repository.
+
+---
+
+# 33. DEVELOPMENT PROCESS
+
+Before coding:
+
+1. Inspect the attached image carefully.
+2. Identify the visual design system.
+3. Identify reusable components.
+4. Plan the database schema.
+5. Plan the application architecture.
+
+Then implement the project.
+
+Do not stop after creating the homepage.
+
+Build the foundation for the complete GACODA website.
+
+After implementation:
+
+1. Run the application.
+2. Check for TypeScript errors.
+3. Check for lint errors.
+4. Check database integration.
+5. Check responsive layouts.
+6. Fix broken links/routes.
+7. Fix visual inconsistencies.
+8. Make sure forms work.
+9. Make sure server-side code does not expose secrets.
+10. Provide clear instructions for running the project locally and deploying it to a serverless platform.
+
+## Final instruction
+
+**Prioritize the attached GACODA design visually, but build it as a real production-ready serverless application rather than a static HTML mockup.**
+
+The final result should feel like a premium, modern digital platform for a serious drivers' association in Ghana.
+
+# GACODA ADMIN PANEL — FULL CONTENT MANAGEMENT SYSTEM
+
+The GACODA website must include a **complete, secure admin panel/CMS** that allows authorized administrators to control the website without editing source code.
+
+The admin panel should be available at:
+
+`/admin`
+
+Do NOT build this as a static dashboard mockup. All important controls must connect to PostgreSQL and actually modify the live website content.
+
+---
+
+## 1. ADMIN DASHBOARD
+
+Create a professional, responsive admin dashboard showing:
+
+* Total members
+* Pending membership applications
+* Published news articles
+* Draft articles
+* Contact messages
+* Newsletter subscribers
+* Gallery images
+* Resources
+* Website statistics
+
+Include visual charts where useful.
+
+Example dashboard cards:
+
+* Members
+* Pending Applications
+* News
+* Messages
+* Subscribers
+
+Provide recent activity such as:
+
+* New membership application
+* New contact message
+* New newsletter subscriber
+* New article published
+
+---
+
+# 2. ADMIN AUTHENTICATION
+
+The admin panel must be protected.
+
+Implement secure authentication suitable for a serverless Next.js application.
+
+Requirements:
+
+* Login page
+* Logout
+* Protected `/admin` routes
+* Password hashing
+* Secure sessions
+* Role-based authorization
+* Server-side authorization checks
+* Prevent unauthorized API/database access
+
+Create roles such as:
+
+### SUPER_ADMIN
+
+Full access to everything.
+
+### ADMIN
+
+Can manage normal website content and membership/news.
+
+### EDITOR
+
+Can create/edit/publish news and manage media/content but cannot manage administrators.
+
+Structure the system so additional roles can be added later.
+
+---
+
+# 3. NEWS MANAGEMENT — FULL CMS
+
+This is particularly important.
+
+Administrators must be able to create and manage news articles directly from the admin panel.
+
+Create:
+
+`/admin/news`
+
+The news management screen should display:
+
+* Article title
+* Featured image
+* Category
+* Author
+* Status
+* Published date
+* Last updated
+* Actions
+
+Actions:
+
+* Create
+* Edit
+* Preview
+* Publish
+* Unpublish
+* Save as draft
+* Delete
+
+---
+
+# 4. CREATE NEWS ARTICLE
+
+Create:
+
+`/admin/news/new`
+
+Build a proper article editor.
+
+Fields:
+
+### Title
+
+Article title.
+
+### Slug
+
+Automatically generate a URL-friendly slug from the title.
+
+Allow administrators to edit it manually.
+
+Example:
+
+`gacoda-holds-successful-town-hall-meeting`
+
+### Excerpt
+
+Short summary displayed on news cards.
+
+### Featured Image
+
+Allow the administrator to upload/select a featured image.
+
+### Category
+
+Examples:
+
+* Association News
+* Road Safety
+* Advocacy
+* Events
+* Driver Welfare
+* Partnerships
+* Announcements
+
+Allow administrators to create/edit categories.
+
+### Article Content
+
+Provide a proper rich-text editor.
+
+The editor should support:
+
+* Headings
+* Paragraphs
+* Bold
+* Italic
+* Links
+* Lists
+* Quotes
+* Images
+* Videos where appropriate
+* Tables
+* Text alignment
+* Horizontal separators
+
+Do not store unsafe raw HTML without sanitization.
+
+### Author
+
+Automatically associate the article with the logged-in administrator.
+
+### Status
+
+Support:
+
+* DRAFT
+* PUBLISHED
+* ARCHIVED
+
+### Publish Date
+
+Allow scheduled publication.
+
+For example:
+
+An administrator should be able to create an article today and schedule it for publication tomorrow.
+
+---
+
+# 5. ARTICLE PREVIEW
+
+Before publishing, administrators should be able to click:
+
+**Preview**
+
+and see exactly how the article will appear on the public website.
+
+Create a preview route that is protected or uses a secure preview token.
+
+---
+
+# 6. ARTICLE SEO
+
+Every article should support:
+
+* SEO title
+* Meta description
+* URL slug
+* Featured image
+* Open Graph image
+* Canonical URL
+
+If SEO fields are empty, automatically generate sensible defaults from the article.
+
+---
+
+# 7. NEWS PUBLIC WEBSITE
+
+Published articles must automatically appear on:
+
+`/news`
+
+The homepage should automatically display the latest published articles.
+
+Individual articles should use:
+
+`/news/[slug]`
+
+Draft articles must NEVER appear publicly.
+
+Archived articles should not appear in normal news listings.
+
+Scheduled articles should automatically become visible when their publish time is reached.
+
+---
+
+# 8. NEWS SEARCH AND FILTERING
+
+Inside the admin panel, provide:
+
+* Search articles
+* Filter by status
+* Filter by category
+* Filter by author
+* Sort by newest/oldest
+* Pagination
+
+Make the interface fast and easy to use.
+
+---
+
+# 9. BULK NEWS ACTIONS
+
+Allow administrators to select multiple articles and:
+
+* Publish
+* Unpublish
+* Archive
+* Delete
+
+Require confirmation before destructive actions.
+
+---
+
+# 10. CONTENT MANAGEMENT
+
+The admin panel should allow administrators to control the main website content.
+
+Create management sections for:
+
+### Homepage
+
+Administrators should be able to edit:
+
+* Hero heading
+* Hero description
+* Hero buttons
+* Hero images
+* CTA text
+* Value propositions
+* About section
+* Statistics
+* Featured news
+* Newsletter section
+
+### About Page
+
+Manage:
+
+* About content
+* Mission
+* Vision
+* Objectives
+* Core values
+* History
+
+### Membership
+
+Manage:
+
+* Membership information
+* Requirements
+* Benefits
+* Application settings
+
+### Contact
+
+Manage:
+
+* Phone number
+* Email
+* Office/location
+* Social media links
+* Opening hours
+
+### Footer
+
+Manage:
+
+* Footer description
+* Quick links
+* Contact information
+* Social links
+* Newsletter text
+
+---
+
+# 11. WEBSITE SETTINGS
+
+Create:
+
+`/admin/settings`
+
+Allow administrators to manage global settings.
+
+Examples:
+
+* Organization name
+* Short name
+* Tagline
+* Logo
+* Favicon
+* Primary website email
+* Phone number
+* Address
+* Social media URLs
+* Google Maps location
+* SEO defaults
+* Default social sharing image
+
+These settings should be stored in PostgreSQL.
+
+---
+
+# 12. MEMBERSHIP MANAGEMENT
+
+Create:
+
+`/admin/members`
+
+Administrators should be able to:
+
+* View applications
+* Search members
+* Filter members
+* View member details
+* Approve applications
+* Reject applications
+* Change member status
+* Add members manually
+* Edit member information
+* Export member data where appropriate
+
+Membership statuses:
+
+* PENDING
+* APPROVED
+* REJECTED
+* SUSPENDED
+
+Provide confirmation dialogs for important status changes.
+
+---
+
+# 13. CONTACT MESSAGE MANAGEMENT
+
+Create:
+
+`/admin/messages`
+
+Administrators can:
+
+* View messages
+* Mark as read
+* Mark as unread
+* Archive messages
+* Delete messages
+* Search messages
+
+Display:
+
+* Name
+* Email
+* Phone
+* Subject
+* Message
+* Date
+* Status
+
+---
+
+# 14. NEWSLETTER MANAGEMENT
+
+Create:
+
+`/admin/subscribers`
+
+Administrators can:
+
+* View subscribers
+* Search subscribers
+* Export subscriber list
+* Remove subscribers
+* View subscription date
+* View subscription status
+
+Do not expose subscriber information publicly.
+
+---
+
+# 15. GALLERY MANAGEMENT
+
+Create:
+
+`/admin/gallery`
+
+Administrators can:
+
+* Upload images
+* Delete images
+* Edit captions
+* Add categories
+* Reorder images
+* Mark images as featured
+
+The public `/gallery` page should automatically reflect these changes.
+
+---
+
+# 16. RESOURCES MANAGEMENT
+
+Create:
+
+`/admin/resources`
+
+Administrators can create and manage resources such as:
+
+* PDF documents
+* Driver guides
+* Policies
+* Safety documents
+* Announcements
+* Downloadable files
+
+Each resource should support:
+
+* Title
+* Description
+* Category
+* File
+* Thumbnail
+* Published status
+* Date
+
+---
+
+# 17. TEAM / LEADERSHIP MANAGEMENT
+
+Create:
+
+`/admin/team`
+
+Administrators can manage leadership/team profiles.
+
+Fields:
+
+* Name
+* Position
+* Biography
+* Profile image
+* Social links
+* Display order
+* Active/inactive
+
+The public About page should automatically display these profiles.
+
+---
+
+# 18. STATISTICS MANAGEMENT
+
+Create:
+
+`/admin/statistics`
+
+Administrators can edit homepage statistics without touching code.
+
+Examples:
+
+* Members
+* Partners
+* Years active
+* Regions served
+* Other impact metrics
+
+Each statistic should have:
+
+* Label
+* Value
+* Description
+* Icon
+* Display order
+* Active/inactive
+
+---
+
+# 19. MEDIA LIBRARY
+
+Create:
+
+`/admin/media`
+
+Provide a central media library.
+
+Administrators should be able to:
+
+* Upload images
+* View images
+* Search images
+* Delete images
+* Add alt text
+* Add captions
+* Reuse existing images
+
+Do not store large binary files directly inside PostgreSQL.
+
+Use object storage for uploaded files/images, while PostgreSQL stores their metadata and URLs.
+
+The architecture should be compatible with serverless object storage such as:
+
+* Vercel Blob
+* Cloudinary
+* S3-compatible storage
+* Supabase Storage
+
+Keep the storage provider abstracted so it can be changed later.
+
+---
+
+# 20. NAVIGATION MANAGEMENT
+
+Create:
+
+`/admin/navigation`
+
+Allow administrators to manage navigation links.
+
+They should be able to:
+
+* Add links
+* Edit links
+* Delete links
+* Reorder links
+* Enable/disable links
+
+However, protect critical system routes from accidentally being removed.
+
+---
+
+# 21. ADMIN USER MANAGEMENT
+
+Only SUPER_ADMIN users should access:
+
+`/admin/users`
+
+Allow them to:
+
+* Create administrators
+* Edit administrators
+* Change roles
+* Disable accounts
+* Reset passwords
+* View last login
+* Delete administrators
+
+Never allow an administrator to remove the last SUPER_ADMIN account.
+
+---
+
+# 22. AUDIT LOG
+
+Create an audit log system.
+
+Track important admin actions such as:
+
+* Article created
+* Article edited
+* Article published
+* Article deleted
+* Membership approved
+* Settings changed
+* Administrator created
+* Administrator disabled
+
+Store:
+
+* User
+* Action
+* Entity
+* Entity ID
+* Timestamp
+* Relevant metadata
+
+Create:
+
+`/admin/audit-log`
+
+Only authorized administrators should access it.
+
+---
+
+# 23. DATABASE MODELS
+
+Extend the Prisma PostgreSQL schema to support the CMS.
+
+Suggested models:
+
+```text
+User
+Role
+MembershipApplication
+NewsArticle
+NewsCategory
+NewsletterSubscriber
+ContactMessage
+GalleryItem
+Resource
+TeamMember
+Statistic
+SiteSetting
+NavigationItem
+Media
+AuditLog
+```
+
+Use proper relationships and indexes.
+
+News should have relationships with:
+
+* Author
+* Category
+* Media/featured image
+
+---
+
+# 24. SERVERLESS REQUIREMENTS
+
+The entire admin system must remain compatible with serverless deployment.
+
+Do not depend on:
+
+* Local filesystem persistence
+* Long-running Node processes
+* In-memory databases
+* Server-local uploaded files
+* Persistent server sessions
+
+Use:
+
+* PostgreSQL
+* Serverless-compatible authentication
+* Object storage
+* Server Actions / Route Handlers
+* Environment variables
+
+---
+
+# 25. ADMIN UI DESIGN
+
+The admin panel should have a completely separate professional dashboard UI.
+
+Use:
+
+* Sidebar navigation
+* Top navigation
+* Breadcrumbs
+* Tables
+* Cards
+* Modal dialogs
+* Toast notifications
+* Search
+* Filters
+* Pagination
+* Empty states
+* Loading states
+* Error states
+
+Make it responsive enough to manage the website from a tablet or mobile device.
+
+---
+
+# 26. IMPORTANT CMS RULE
+
+The public website should **not contain content that has to be changed manually in the source code** if that content belongs in the CMS.
+
+For example:
+
+If an administrator changes the GACODA phone number in:
+
+`/admin/settings`
+
+the public website should automatically use the new phone number.
+
+If an administrator publishes a news article, it should automatically appear on the public News page and homepage.
+
+If an administrator uploads a gallery image, it should automatically appear in the public Gallery.
+
+The admin panel is the control center for the website.
+
+---
+
+# 27. FINAL ACCEPTANCE TEST
+
+Before considering the project complete, test the following workflow:
+
+1. Create an admin account.
+2. Log into `/admin`.
+3. Create a news category.
+4. Create a new news article.
+5. Upload a featured image.
+6. Save it as a draft.
+7. Preview it.
+8. Edit it.
+9. Publish it.
+10. Confirm it appears on `/news`.
+11. Confirm it appears on the homepage.
+12. Edit the article from the admin panel.
+13. Confirm the public article updates.
+14. Unpublish it.
+15. Confirm it disappears from public listings.
+16. Create a membership application.
+17. Confirm it appears in the admin dashboard.
+18. Change its status.
+19. Submit a contact form.
+20. Confirm it appears in `/admin/messages`.
+21. Change homepage/settings content.
+22. Confirm the public website updates.
+23. Upload a gallery image.
+24. Confirm it appears publicly.
+25. Test admin permissions with different roles.
+26. Test mobile responsiveness.
+27. Test serverless deployment.
+
+Do not mark the CMS as complete until these workflows work end-to-end.
+
+## Most important requirement
+
+**Build the GACODA website as a real database-driven CMS. The administrator must be able to control the website and create, edit, preview, publish, schedule, archive, and delete news articles entirely from the admin panel without touching the code.**
