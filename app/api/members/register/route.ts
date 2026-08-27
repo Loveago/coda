@@ -5,7 +5,7 @@ import { hashPassword } from '@/lib/password';
 import { rateLimit, requestAddress } from '@/lib/rate-limit';
 import { getFees } from '@/lib/fees';
 import { nextMemberNumber } from '@/lib/membership';
-import { generateToken, hashToken } from '@/lib/members-auth';
+import { MEMBER_SESSION_COOKIE, MEMBER_SESSION_MAX_AGE, createMemberSessionToken, generateToken, hashToken } from '@/lib/members-auth';
 
 const schema = z.object({
   firstName: z.string().trim().min(2),
@@ -84,11 +84,22 @@ export async function POST(request: Request) {
   const origin = new URL(request.url).origin;
   const devVerifyUrl = `${origin}/verify-email?token=${token}`;
 
-  return NextResponse.json({
+  // Auto-login the applicant so they can immediately pay the registration fee
+  // (when enabled) from the member portal. The application only reaches the
+  // admin panel once the fee is settled.
+  const response = NextResponse.json({
     success: true,
     memberNumber: member.memberNumber,
     registrationFeeRequired: fees.registrationFeeEnabled,
     registrationFeeAmount: fees.registrationFeeEnabled ? fees.registrationFeeAmount : 0,
     devVerifyUrl: process.env.SMTP_URL ? undefined : devVerifyUrl
   }, { status: 201 });
+  response.cookies.set(MEMBER_SESSION_COOKIE, createMemberSessionToken(member.id), {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: MEMBER_SESSION_MAX_AGE
+  });
+  return response;
 }

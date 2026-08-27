@@ -12,6 +12,10 @@ function maskName(fullName: string) {
   return parts.map((part, index) => (index === 0 ? part : `${part[0]}.`)).join(' ');
 }
 
+function digitsOnly(value: string) {
+  return value.replace(/\D/g, '');
+}
+
 export async function POST(request: Request) {
   const limit = rateLimit(`membership-status:${requestAddress(request)}`, 10);
   if (!limit.allowed) {
@@ -33,13 +37,18 @@ export async function POST(request: Request) {
   const query = parsed.data.query;
   const isEmail = query.includes('@');
 
-  const application = await db.membershipApplication.findFirst({
-    where: isEmail
-      ? { email: { equals: query.toLowerCase() } }
-      : { phone: query.replace(/[\s-]/g, '') },
-    orderBy: { createdAt: 'desc' },
-    select: { fullName: true, status: true, createdAt: true }
-  });
+  // Applications now live in the Member table (created via the registration
+  // form). Phone numbers are stored as typed, so compare digits only.
+  const application = isEmail
+    ? await db.member.findFirst({
+        where: { email: { equals: query.toLowerCase() } },
+        orderBy: { createdAt: 'desc' },
+        select: { firstName: true, lastName: true, status: true, createdAt: true }
+      })
+    : (await db.member.findMany({
+        orderBy: { createdAt: 'desc' },
+        select: { firstName: true, lastName: true, phone: true, status: true, createdAt: true }
+      })).find((member) => digitsOnly(member.phone) === digitsOnly(query)) ?? null;
 
   if (!application) {
     return NextResponse.json({ found: false });
@@ -48,7 +57,7 @@ export async function POST(request: Request) {
   return NextResponse.json({
     found: true,
     status: application.status,
-    name: maskName(application.fullName),
+    name: maskName(`${application.firstName} ${application.lastName}`),
     submittedAt: application.createdAt.toISOString()
   });
 }

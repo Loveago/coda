@@ -37,6 +37,7 @@ export type PortalMember = {
   lastName: string;
   phone: string;
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'SUSPENDED';
+  registrationPayment: 'NOT_REQUIRED' | 'PENDING' | 'PAID';
   photoUrl: string | null;
 };
 
@@ -47,7 +48,7 @@ export async function getPortalMember(): Promise<PortalMember | null> {
   if (!memberId) return null;
   const member = await db.member.findFirst({
     where: { id: memberId },
-    select: { id: true, memberNumber: true, email: true, firstName: true, lastName: true, phone: true, status: true, photoUrl: true }
+    select: { id: true, memberNumber: true, email: true, firstName: true, lastName: true, phone: true, status: true, registrationPayment: true, photoUrl: true }
   });
   return member ?? null;
 }

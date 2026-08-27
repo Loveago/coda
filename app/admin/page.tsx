@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import '../globals.css';
 import { db } from '@/lib/db';
+import { APPLICATION_FILTER } from '@/lib/membership';
 import {
   BarChart3, FileText, Image as ImageIcon, Inbox, Mail,
   Newspaper, Users
@@ -21,8 +22,8 @@ const actionLabels: Record<string, string> = {
 export default async function Admin() {
   const [members, applications, publishedNews, drafts, messages, subscribers, gallery, resources, statistics, activity] =
     await Promise.all([
-      db.membershipApplication.count({ where: { status: 'APPROVED' } }),
-      db.membershipApplication.count({ where: { status: 'PENDING' } }),
+      db.member.count({ where: { status: 'APPROVED' } }),
+      db.member.count({ where: APPLICATION_FILTER }),
       db.newsArticle.count({ where: { status: 'PUBLISHED' } }),
       db.newsArticle.count({ where: { status: 'DRAFT' } }),
       db.contactMessage.count({ where: { read: false, archived: false } }),

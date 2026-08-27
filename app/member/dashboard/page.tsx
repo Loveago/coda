@@ -37,7 +37,44 @@ const monthYear = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numer
 export default async function MemberDashboard() {
   const portal = await getPortalMember();
   if (!portal) redirect('/login');
-  if (portal.status !== 'APPROVED') redirect('/member/profile');
+
+  // PENDING applicants see the application gate: pay the registration fee
+  // (when enabled) to submit the application for admin review.
+  if (portal.status === 'PENDING') {
+    const fees = await getFees();
+    const unpaid = portal.registrationPayment === 'PENDING';
+    return (
+      <main className="mdash">
+        <section className="mdash-hero">
+          <div className="mdash-hero-left">
+            <p className="mdash-kicker">APPLICATION · {portal.memberNumber}</p>
+            <h1>Welcome, {portal.firstName}</h1>
+            <div className="mdash-chips">
+              <span><UserRound size={12} /> Application under review</span>
+            </div>
+          </div>
+          <div className="mdash-hero-right">
+            <span className="mdash-pill tone-warn">PENDING</span>
+          </div>
+        </section>
+        <Reveal as="section" className="renew-banner">
+          <div style={{ flex: 1, minWidth: 230, position: 'relative', zIndex: 1 }}>
+            <h2>{unpaid ? 'One step left — pay your registration fee' : 'Your application is with our team'}</h2>
+            <p>
+              {unpaid
+                ? `A one-time registration fee of ${formatGhs(fees.registrationFeeAmount)} is required before your application is submitted to the membership committee. Pay once and you're done.`
+                : 'Your application has been submitted and is being reviewed by the membership committee. You will be notified once a decision is made — approved members get instant access to the full portal and digital ID card.'}
+            </p>
+          </div>
+          <div style={{ position: 'relative', zIndex: 1, display: 'grid', gap: 10, justifyItems: 'start' }}>
+            {unpaid && <PayDuesButton type="REGISTRATION_FEE" label={`PAY ${formatGhs(fees.registrationFeeAmount)}`} />}
+            <Link href="/membership-status" className="admin-link">CHECK STATUS ANYTIME →</Link>
+          </div>
+        </Reveal>
+      </main>
+    );
+  }
+  if (portal.status === 'REJECTED') redirect('/member/profile');
 
   const [member, fees, totals, updates] = await Promise.all([
     db.member.findUnique({

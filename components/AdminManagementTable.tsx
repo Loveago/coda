@@ -13,7 +13,8 @@ type Props = {
 };
 
 const labels: Record<string, string> = {
-  members: 'Membership applications',
+  applications: 'Membership applications',
+  members: 'Members',
   messages: 'Contact messages',
   subscribers: 'Newsletter subscribers',
   statistics: 'Homepage statistics',
@@ -29,8 +30,8 @@ function dateValue(value: unknown) {
   return Number.isNaN(date.valueOf()) ? String(value) : new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' }).format(date);
 }
 
-const exportable = new Set(['members', 'subscribers', 'messages']);
-const deletable = new Set(['members', 'messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team']);
+const exportable = new Set(['applications', 'members', 'subscribers', 'messages']);
+const deletable = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team']);
 
 export default function AdminManagementTable({ resource, records: initialRecords }: Props) {
   const [records, setRecords] = useState(initialRecords);
@@ -90,7 +91,8 @@ export default function AdminManagementTable({ resource, records: initialRecords
       {records.length === 0 ? <p>No records found.</p> : (
         <table className="admin-table">
           <thead><tr>
-            {resource === 'members' && <><th>Name</th><th>Contact</th><th>Region</th><th>Status</th><th>Submitted</th><th>Action</th></>}
+            {resource === 'applications' && <><th>Name</th><th>Contact</th><th>Platform</th><th>Fee</th><th>Submitted</th><th>Action</th></>}
+            {resource === 'members' && <><th>Name</th><th>Contact</th><th>Platform</th><th>Status</th><th>Valid until</th><th>Action</th></>}
             {resource === 'messages' && <><th>Sender</th><th>Subject</th><th>Message</th><th>State</th><th>Received</th><th>Action</th></>}
             {resource === 'subscribers' && <><th>Email</th><th>State</th><th>Joined</th><th>Action</th></>}
             {resource === 'statistics' && <><th>Label</th><th>Value</th><th>Order</th><th>State</th><th>Action</th></>}
@@ -102,7 +104,8 @@ export default function AdminManagementTable({ resource, records: initialRecords
           <tbody>{records.map((record) => {
             const id = record.id;
             const deleteButton = deletable.has(resource) ? <button className="admin-action danger" disabled={busy === id} onClick={() => remove(id)}>DELETE</button> : null;
-            if (resource === 'members') return <tr key={id}><td><strong>{String(record.fullName)}</strong></td><td>{String(record.phone)}<br />{String(record.email || '')}</td><td>{String(record.region || '—')}</td><td><span className={`badge badge-${String(record.status)}`}>{String(record.status)}</span></td><td>{dateValue(record.createdAt)}</td><td><select value={String(record.status)} disabled={busy === id} onChange={(event) => update(id, { status: event.target.value })}><option>PENDING</option><option>APPROVED</option><option>REJECTED</option><option>SUSPENDED</option></select>{deleteButton}</td></tr>;
+            if (resource === 'applications') return <tr key={id}><td><strong>{String(record.firstName)} {String(record.lastName)}</strong></td><td>{String(record.phone)}<br />{String(record.email || '')}</td><td>{String(record.platform || '—')}</td><td><span className={`badge ${record.registrationPayment === 'PAID' ? 'badge-active' : 'badge-PENDING'}`}>{record.registrationPayment === 'PAID' ? 'FEE PAID' : 'FEE NOT REQUIRED'}</span></td><td>{dateValue(record.createdAt)}</td><td><button className="admin-action" disabled={busy === id} onClick={() => update(id, { status: 'APPROVED' })}>APPROVE</button><button className="admin-action danger" disabled={busy === id} onClick={() => update(id, { status: 'REJECTED' })}>REJECT</button></td></tr>;
+            if (resource === 'members') return <tr key={id}><td><strong>{String(record.firstName)} {String(record.lastName)}</strong></td><td>{String(record.phone)}<br />{String(record.email || '')}</td><td>{String(record.platform || '—')}</td><td><span className={`badge badge-${String(record.status)}`}>{String(record.status)}</span></td><td>{dateValue(record.membershipEndDate)}</td><td>{record.status === 'SUSPENDED' ? <button className="admin-action" disabled={busy === id} onClick={() => update(id, { status: 'APPROVED' })}>REINSTATE</button> : <button className="admin-action danger" disabled={busy === id} onClick={() => update(id, { status: 'SUSPENDED' })}>SUSPEND</button>}</td></tr>;
             if (resource === 'messages') return <tr key={id}><td><strong>{String(record.name)}</strong><br />{String(record.email)}</td><td>{String(record.subject)}</td><td className="admin-message-cell">{String(record.message)}</td><td><span className={`badge ${record.archived ? 'badge-ARCHIVED' : record.read ? 'badge-active' : 'badge-PENDING'}`}>{record.archived ? 'ARCHIVED' : record.read ? 'READ' : 'UNREAD'}</span></td><td>{dateValue(record.createdAt)}</td><td><button className="admin-action" disabled={busy === id} onClick={() => update(id, { read: !record.read })}>{record.read ? 'MARK UNREAD' : 'MARK READ'}</button><button className="admin-action" disabled={busy === id} onClick={() => update(id, { archived: !record.archived })}>{record.archived ? 'RESTORE' : 'ARCHIVE'}</button>{deleteButton}</td></tr>;
             if (resource === 'subscribers') return <tr key={id}><td>{String(record.email)}</td><td><span className={`badge ${record.active ? 'badge-active' : 'badge-INACTIVE'}`}>{record.active ? 'ACTIVE' : 'REMOVED'}</span></td><td>{dateValue(record.createdAt)}</td><td><button className="admin-action" disabled={busy === id} onClick={() => update(id, { active: !record.active })}>{record.active ? 'DEACTIVATE' : 'ACTIVATE'}</button>{deleteButton}</td></tr>;
             if (resource === 'statistics') return <tr key={id}><td><strong>{String(record.label)}</strong></td><td>{String(record.value)}</td><td>{String(record.displayOrder)}</td><td><span className={`badge ${record.active ? 'badge-active' : 'badge-INACTIVE'}`}>{record.active ? 'ACTIVE' : 'HIDDEN'}</span></td><td><button className="admin-action" disabled={busy === id} onClick={() => update(id, { label: record.label, value: record.value, description: record.description, displayOrder: record.displayOrder, active: !record.active })}>{record.active ? 'HIDE' : 'SHOW'}</button>{deleteButton}</td></tr>;

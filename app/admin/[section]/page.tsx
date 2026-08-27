@@ -2,8 +2,15 @@ import { db } from '@/lib/db';
 import AdminManagementTable from '@/components/AdminManagementTable';
 import GalleryManager from '@/components/GalleryManager';
 import ResourceManager from '@/components/ResourceManager';
+import { APPLICATION_FILTER } from '@/lib/membership';
 
-const supportedSections = new Set(['members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team']);
+const supportedSections = new Set(['applications', 'members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team']);
+
+const memberSelect = {
+  id: true, firstName: true, lastName: true, email: true, phone: true, platform: true,
+  vehicleInfo: true, location: true, status: true, registrationPayment: true,
+  membershipEndDate: true, internalNotes: true, createdAt: true
+} as const;
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +21,8 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   }
 
   let records: Array<{ id: string; [key: string]: unknown }> = [];
-  if (section === 'members') records = await db.membershipApplication.findMany({ orderBy: { createdAt: 'desc' } });
+  if (section === 'applications') records = await db.member.findMany({ where: APPLICATION_FILTER, select: memberSelect, orderBy: { createdAt: 'desc' } });
+  if (section === 'members') records = await db.member.findMany({ where: { status: { in: ['APPROVED', 'SUSPENDED'] } }, select: memberSelect, orderBy: { createdAt: 'desc' } });
   if (section === 'messages') records = await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'subscribers') records = await db.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'statistics') records = await db.statistic.findMany({ orderBy: { displayOrder: 'asc' } });

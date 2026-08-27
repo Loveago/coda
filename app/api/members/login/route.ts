@@ -27,9 +27,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
   }
 
-  if (member.status === 'PENDING') {
-    return NextResponse.json({ error: 'Your application is still under review. You will be able to log in once it is approved.' }, { status: 403 });
-  }
+  // PENDING applicants are allowed in so they can complete the registration
+  // fee payment; the portal gates everything else until an admin approves.
   if (member.status === 'REJECTED') {
     return NextResponse.json({ error: 'Your application was not approved. Please contact the association.' }, { status: 403 });
   }

@@ -24,8 +24,9 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
   {
     label: 'Community',
     items: [
+      ['Applications', '/admin/applications', Inbox],
       ['Members', '/admin/members', Users],
-      ['Messages', '/admin/messages', Inbox],
+      ['Messages', '/admin/messages', Mail],
       ['Subscribers', '/admin/subscribers', Mail]
     ]
   },

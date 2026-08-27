@@ -1,8 +1,19 @@
-import type { Member } from '@prisma/client';
+import type { Member, Prisma } from '@prisma/client';
 
 export type ComputedMembershipStatus = 'ACTIVE' | 'DUE' | 'OVERDUE' | 'SUSPENDED' | 'PENDING' | 'REJECTED';
 
 export const RENEWAL_WINDOW_DAYS = 30;
+
+/**
+ * An application is only submitted to the admin panel once the registration
+ * fee requirement is settled — either paid, or disabled by the admin
+ * (NOT_REQUIRED). Until then the applicant sees a "complete your payment"
+ * screen and admins never see the record.
+ */
+export const APPLICATION_FILTER: Prisma.MemberWhereInput = {
+  status: 'PENDING',
+  registrationPayment: { in: ['PAID', 'NOT_REQUIRED'] }
+};
 
 export function computeMembershipStatus(member: Pick<Member, 'status' | 'membershipEndDate'>): ComputedMembershipStatus {
   if (member.status === 'SUSPENDED') return 'SUSPENDED';

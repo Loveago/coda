@@ -23,7 +23,9 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
       sessionStorage.setItem('gacoda-applicant-email', String(raw.email));
       setResult({
         ok: true,
-        text: `Application received! Your reference is ${data.memberNumber}. Check your email to verify your account.`,
+        text: data.registrationFeeRequired
+          ? `Account created! Your reference is ${data.memberNumber}. Pay your one-time registration fee to submit your application for review.`
+          : `Application received! Your reference is ${data.memberNumber}. It has been submitted for review.`,
         devVerifyUrl: data.devVerifyUrl,
         pay: data.registrationFeeRequired
       });
@@ -37,11 +39,11 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
   if (result?.ok) {
     return (
       <div className="panel" style={{ maxWidth: 640, textAlign: 'center', display: 'grid', justifyItems: 'center', gap: 12 }}>
-        <h2 style={{ margin: 0 }}>Application submitted 🎉</h2>
+        <h2 style={{ margin: 0 }}>{result.pay ? 'Almost there — complete your payment 💳' : 'Application submitted 🎉'}</h2>
         <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.7, margin: 0 }}>{result.text}</p>
         {result.devVerifyUrl && <p style={{ fontSize: 12, wordBreak: 'break-all' }}>Email delivery is not configured yet — verify here: <a href={result.devVerifyUrl} style={{ color: 'var(--blue)', fontWeight: 700 }}>Verify my email</a></p>}
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
-          {result.pay && <Link href="/login" className="btn btn-primary">CONTINUE TO REGISTRATION FEE</Link>}
+          <Link href="/member/dashboard" className="btn btn-primary">{result.pay ? 'PAY REGISTRATION FEE NOW' : 'GO TO MY PORTAL'}</Link>
           <Link href="/membership-status" className="btn btn-ghost">CHECK STATUS LATER</Link>
         </div>
       </div>

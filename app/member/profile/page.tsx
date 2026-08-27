@@ -1,6 +1,9 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import { getPortalMember } from '@/lib/members-auth';
+import { formatGhs, getFees } from '@/lib/fees';
+import PayDuesButton from '@/components/PayDuesButton';
 import ProfileEditor from '@/components/ProfileEditor';
 
 export const dynamic = 'force-dynamic';
@@ -12,6 +15,8 @@ export default async function MemberProfile() {
   const member = await db.member.findUnique({ where: { id: portal.id } });
   if (!member) redirect('/login');
 
+  const fees = portal.status === 'PENDING' ? await getFees() : null;
+
   return (
     <main>
       <div className="admin-page-head">
@@ -20,6 +25,28 @@ export default async function MemberProfile() {
           <h1>My Profile</h1>
         </div>
       </div>
+
+      {portal.status === 'PENDING' && (
+        <div className="admin-panel" style={{ marginBottom: 22, borderLeft: '4px solid var(--blue, #2563eb)' }}>
+          <h2 style={{ marginTop: 0 }}>{member.registrationPayment === 'PENDING' ? 'Finish your application' : 'Application under review'}</h2>
+          {member.registrationPayment === 'PENDING' ? (
+            <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+              Pay the one-time registration fee of <strong>{formatGhs(fees!.registrationFeeAmount)}</strong> to submit your application to the membership committee.
+            </p>
+          ) : (
+            <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+              Your application has been submitted and is being reviewed. Approved members get full portal access and a digital ID card. <Link href="/membership-status" style={{ color: 'var(--blue)', fontWeight: 700 }}>Check status →</Link>
+            </p>
+          )}
+          {member.registrationPayment === 'PENDING' && <PayDuesButton type="REGISTRATION_FEE" label={`PAY ${formatGhs(fees!.registrationFeeAmount)} & SUBMIT`} />}
+        </div>
+      )}
+      {portal.status === 'REJECTED' && (
+        <div className="admin-panel" style={{ marginBottom: 22, borderLeft: '4px solid #c0392b' }}>
+          <h2 style={{ marginTop: 0 }}>Application not approved</h2>
+          <p style={{ fontSize: 13, color: 'var(--muted)' }}>Unfortunately your application was not approved at this time. Please <Link href="/contact" style={{ color: 'var(--blue)', fontWeight: 700 }}>contact the association</Link> for details.</p>
+        </div>
+      )}
 
       <div className="admin-panel" style={{ marginBottom: 22 }}>
         <h2>Account (locked fields)</h2>
