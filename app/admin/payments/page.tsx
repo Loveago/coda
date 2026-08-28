@@ -34,7 +34,7 @@ export default async function AdminPayments() {
         </div>
       </div>
 
-      <div className="admin-dashboard-cards" style={{ gridTemplateColumns: 'repeat(6, 1fr)' }}>
+      <div className="admin-dashboard-cards cards-6">
         {cards.map(([label, value]) => (
           <div className="admin-stat-card" key={label}>
             <strong>{value}</strong>
@@ -48,17 +48,17 @@ export default async function AdminPayments() {
         {payments.length === 0 ? (
           <p style={{ color: 'var(--muted)', fontSize: 13 }}>No transactions yet.</p>
         ) : (
-          <table className="admin-table">
+          <table className="admin-table card-table">
             <thead><tr><th>Date</th><th>Member</th><th>Type</th><th>Amount</th><th>Status</th><th>Reference</th></tr></thead>
             <tbody>
               {payments.map((payment) => (
                 <tr key={payment.id}>
-                  <td>{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(payment.createdAt)}</td>
-                  <td><strong>{payment.member.firstName} {payment.member.lastName}</strong><br /><small>{payment.member.memberNumber}</small></td>
-                  <td>{payment.type === 'ANNUAL_DUES' ? 'Annual dues' : 'Registration fee'}</td>
-                  <td><strong>{formatGhs(payment.amount)}</strong></td>
-                  <td><span className={`badge badge-${payment.status === 'SUCCESSFUL' ? 'PUBLISHED' : payment.status === 'PENDING' ? 'PENDING' : 'REJECTED'}`}>{payment.status}</span></td>
-                  <td><small>{payment.reference}</small></td>
+                  <td data-label="Date">{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(payment.createdAt)}</td>
+                  <td data-label="Member"><strong>{payment.member.firstName} {payment.member.lastName}</strong><br /><small>{payment.member.memberNumber}</small></td>
+                  <td data-label="Type">{payment.type === 'ANNUAL_DUES' ? 'Annual dues' : 'Registration fee'}</td>
+                  <td data-label="Amount"><strong>{formatGhs(payment.amount)}</strong></td>
+                  <td data-label="Status"><span className={`badge badge-${payment.status === 'SUCCESSFUL' ? 'PUBLISHED' : payment.status === 'PENDING' ? 'PENDING' : 'REJECTED'}`}>{payment.status}</span></td>
+                  <td data-label="Reference"><small>{payment.reference}</small></td>
                 </tr>
               ))}
             </tbody>

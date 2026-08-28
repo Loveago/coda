@@ -43,20 +43,27 @@ export async function POST(request: Request) {
     ? await db.member.findFirst({
         where: { email: { equals: query.toLowerCase() } },
         orderBy: { createdAt: 'desc' },
-        select: { firstName: true, lastName: true, status: true, createdAt: true }
+        select: { firstName: true, lastName: true, status: true, registrationPayment: true, createdAt: true }
       })
     : (await db.member.findMany({
         orderBy: { createdAt: 'desc' },
-        select: { firstName: true, lastName: true, phone: true, status: true, createdAt: true }
+        select: { firstName: true, lastName: true, phone: true, status: true, registrationPayment: true, createdAt: true }
       })).find((member) => digitsOnly(member.phone) === digitsOnly(query)) ?? null;
 
   if (!application) {
     return NextResponse.json({ found: false });
   }
 
+  // Pay-first flow: while the registration fee is outstanding the application
+  // has not actually reached the admin panel yet, so report that explicitly.
+  const status =
+    application.status === 'PENDING' && application.registrationPayment === 'PENDING'
+      ? 'AWAITING_PAYMENT'
+      : application.status;
+
   return NextResponse.json({
     found: true,
-    status: application.status,
+    status,
     name: maskName(`${application.firstName} ${application.lastName}`),
     submittedAt: application.createdAt.toISOString()
   });

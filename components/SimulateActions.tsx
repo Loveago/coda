@@ -16,13 +16,13 @@ export default function SimulateActions({ reference }: { reference: string }) {
         // treats non-success as FAILED for real Paystack; for the simulator we
         // simply report failure to the member without mutating the record.
         await new Promise((resolve) => setTimeout(resolve, 600));
-        window.location.href = '/member/payments';
+        window.location.href = '/member/dashboard?payment=failed';
         return;
       }
       const response = await fetch(`/api/payments/verify?reference=${encodeURIComponent(reference)}`, { method: 'POST' });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Verification failed.');
-      window.location.href = '/member/payments';
+      window.location.href = '/member/dashboard?payment=success';
     } catch (error) {
       setOutcome(error instanceof Error ? error.message : 'Simulation failed.');
     } finally {

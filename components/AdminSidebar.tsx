@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import {
   BarChart3, ChartPie, CreditCard, FileText, Home, Image as ImageIcon, Inbox, KeyRound, LayoutDashboard,
-  LogOut, Mail, Newspaper, Settings, Users
+  LogOut, Mail, Menu, Newspaper, Settings, Users, X
 } from 'lucide-react';
 
 const groups: { label: string; items: [string, string, typeof LayoutDashboard][] }[] = [
@@ -47,42 +48,98 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
 
 export default function AdminSidebar({ name, role }: { name: string; role: string }) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
   const initials = name.split(' ').map((part) => part[0]).slice(0, 2).join('').toUpperCase();
 
-  return (
-    <aside className="admin-sidebar">
-      <Link href="/admin" className="admin-brand">
-        <div className="brand-mark">◉</div>
-        <div>
-          <div className="brand-name">GACODA</div>
-          <small className="brand-sub" style={{ color: '#8fb0e0' }}>ADMIN PANEL</small>
-        </div>
-      </Link>
-      {groups.map((group) => (
-        <div className="admin-nav-group" key={group.label}>
-          <p className="admin-nav-label">{group.label}</p>
-          <nav className="admin-nav" aria-label={`${group.label} administration`}>
-            {group.items.map(([label, href, Icon]) => (
-              <Link key={href} href={href} className={pathname === href ? 'active' : ''}>
-                <Icon size={16} /> {label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      ))}
-      <div className="admin-sidebar-foot">
-        <div className="admin-user">
-          <span className="admin-avatar">{initials || 'GA'}</span>
-          <span className="admin-user-meta">
-            <strong>{name}</strong>
-            <small>{role.replace('_', ' ')}</small>
-          </span>
-        </div>
-        <form action="/api/admin/logout" method="post">
-          <button type="submit" className="admin-logout"><LogOut size={13} style={{ verticalAlign: -2, marginRight: 6 }} />SIGN OUT</button>
-        </form>
-        <Link href="/" className="admin-public-link"><Home size={13} /> VIEW PUBLIC SITE</Link>
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => { setOpen(false); }, [pathname]);
+
+  // Escape-to-close + body scroll lock while the drawer is open.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(false); };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  const brand = (
+    <Link href="/admin" className="admin-brand">
+      <div className="brand-mark">◉</div>
+      <div>
+        <div className="brand-name">GACODA</div>
+        <small className="brand-sub" style={{ color: '#8fb0e0' }}>ADMIN PANEL</small>
       </div>
-    </aside>
+    </Link>
+  );
+
+  const navGroups = groups.map((group) => (
+    <div className="admin-nav-group" key={group.label}>
+      <p className="admin-nav-label">{group.label}</p>
+      <nav className="admin-nav" aria-label={`${group.label} administration`}>
+        {group.items.map(([label, href, Icon]) => (
+          <Link key={href} href={href} className={pathname === href ? 'active' : ''} onClick={() => setOpen(false)}>
+            <Icon size={16} /> {label}
+          </Link>
+        ))}
+      </nav>
+    </div>
+  ));
+
+  const foot = (
+    <div className="admin-sidebar-foot">
+      <div className="admin-user">
+        <span className="admin-avatar">{initials || 'GA'}</span>
+        <span className="admin-user-meta">
+          <strong>{name}</strong>
+          <small>{role.replace('_', ' ')}</small>
+        </span>
+      </div>
+      <form action="/api/admin/logout" method="post">
+        <button type="submit" className="admin-logout"><LogOut size={13} style={{ verticalAlign: -2, marginRight: 6 }} />SIGN OUT</button>
+      </form>
+      <Link href="/" className="admin-public-link"><Home size={13} /> VIEW PUBLIC SITE</Link>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <aside className="admin-sidebar">
+        {brand}
+        {navGroups}
+        {foot}
+      </aside>
+
+      {/* Mobile top bar */}
+      <header className="admin-topbar">
+        <button type="button" className="admin-menu-btn" aria-label="Open administration menu" aria-expanded={open} onClick={() => setOpen(true)}>
+          <Menu size={20} />
+        </button>
+        <Link href="/admin" className="admin-topbar-brand">
+          <span className="admin-topbar-mark" aria-hidden>◉</span>
+          <span className="admin-topbar-name">GACODA<small>ADMIN PANEL</small></span>
+        </Link>
+        <span className="admin-topbar-avatar" aria-hidden>{initials || 'GA'}</span>
+      </header>
+
+      {/* Mobile slide-in drawer */}
+      <div className={`admin-drawer${open ? ' open' : ''}`} aria-hidden={!open}>
+        <button type="button" className="admin-drawer-backdrop" tabIndex={open ? 0 : -1} aria-label="Close menu" onClick={() => setOpen(false)} />
+        <div className="admin-drawer-panel" role="dialog" aria-modal="true" aria-label="Administration navigation">
+          <div className="admin-drawer-head">
+            {brand}
+            <button type="button" className="admin-drawer-close" aria-label="Close menu" onClick={() => setOpen(false)}>
+              <X size={18} />
+            </button>
+          </div>
+          <div className="admin-drawer-nav">{navGroups}</div>
+          {foot}
+        </div>
+      </div>
+    </>
   );
 }

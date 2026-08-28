@@ -16,6 +16,7 @@ import { db } from '@/lib/db';
 import { getPortalMember } from '@/lib/members-auth';
 import { computeMembershipStatus } from '@/lib/membership';
 import { formatGhs, getFees } from '@/lib/fees';
+import { applySuccessfulPayment, paystackConfigured, verifyWithPaystack } from '@/lib/payments/payment-service';
 import PayDuesButton from '@/components/PayDuesButton';
 import ValidityRing from '@/components/ValidityRing';
 import Reveal from '@/components/Reveal';
@@ -34,15 +35,50 @@ const statusCopy: Record<string, { label: string; tone: 'good' | 'warn' | 'bad' 
 const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 const monthYear = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' });
 
-export default async function MemberDashboard() {
-  const portal = await getPortalMember();
+const paymentNotices: Record<string, { title: string; text: string; tone: 'good' | 'warn' | 'bad' }> = {
+  success: { title: 'Payment received 🎉', text: 'Your registration fee is confirmed and your application has been submitted to the membership committee for review.', tone: 'good' },
+  failed: { title: 'Payment did not complete', text: 'The payment was cancelled or failed. No charge was made — try again below to submit your application.', tone: 'bad' },
+  pending: { title: 'Payment is processing', text: 'Your payment is still being confirmed by the payment provider. This page updates automatically once it clears — no need to pay again.', tone: 'warn' },
+  mismatch: { title: 'Payment could not be matched', text: 'The payment amount did not match your registration fee. Please contact support with your payment reference before trying again.', tone: 'bad' },
+  missing: { title: 'We could not find your payment', text: 'If you completed a payment, it may still be processing — check your payment history. Otherwise, try again below.', tone: 'warn' }
+};
+
+export default async function MemberDashboard({ searchParams }: { searchParams: Promise<{ payment?: string }> }) {
+  const [portal, { payment: paymentParam }] = await Promise.all([getPortalMember(), searchParams]);
   if (!portal) redirect('/login');
 
   // PENDING applicants see the application gate: pay the registration fee
   // (when enabled) to submit the application for admin review.
   if (portal.status === 'PENDING') {
     const fees = await getFees();
-    const unpaid = portal.registrationPayment === 'PENDING';
+
+    // Reconciliation fallback: when the applicant returns from checkout (or
+    // reloads this page) any still-PENDING paystack payment is re-verified
+    // server-side. This covers lost webhooks, closed tabs and slow providers —
+    // the browser never decides the outcome.
+    let registrationPayment = portal.registrationPayment;
+    if (registrationPayment === 'PENDING' && (await paystackConfigured())) {
+      const pending = await db.payment.findFirst({
+        where: { memberId: portal.id, type: 'REGISTRATION_FEE', status: 'PENDING', provider: 'paystack' },
+        orderBy: { createdAt: 'desc' }
+      });
+      if (pending) {
+        try {
+          const verified = await verifyWithPaystack(pending.reference);
+          if (verified.status === 'success' && verified.amount === pending.amount && verified.currency === pending.currency) {
+            await applySuccessfulPayment(pending.reference, String(verified.id));
+            registrationPayment = 'PAID';
+          } else if (verified.status === 'failed' || verified.status === 'abandoned' || verified.status === 'invalid') {
+            await db.payment.update({ where: { reference: pending.reference }, data: { status: 'FAILED' } });
+          }
+        } catch {
+          // Provider unreachable — leave the payment PENDING and let the
+          // webhook / next visit reconcile it.
+        }
+      }
+    }
+    const unpaid = registrationPayment === 'PENDING';
+    const notice = paymentNotices[paymentParam ?? ''] ?? null;
     return (
       <main className="mdash">
         <section className="mdash-hero">
@@ -50,13 +86,21 @@ export default async function MemberDashboard() {
             <p className="mdash-kicker">APPLICATION · {portal.memberNumber}</p>
             <h1>Welcome, {portal.firstName}</h1>
             <div className="mdash-chips">
-              <span><UserRound size={12} /> Application under review</span>
+              <span><UserRound size={12} /> {unpaid ? 'Awaiting registration fee' : 'Application under review'}</span>
             </div>
           </div>
           <div className="mdash-hero-right">
-            <span className="mdash-pill tone-warn">PENDING</span>
+            <span className={`mdash-pill tone-${unpaid ? 'warn' : 'good'}`}>{unpaid ? 'ACTION NEEDED' : 'SUBMITTED'}</span>
           </div>
         </section>
+        {notice && (
+          <Reveal as="section" className={`renew-banner${notice.tone === 'bad' ? ' bad' : notice.tone === 'good' ? ' good' : ''}`}>
+            <div style={{ flex: 1, minWidth: 230, position: 'relative', zIndex: 1 }}>
+              <h2>{notice.title}</h2>
+              <p>{notice.text}</p>
+            </div>
+          </Reveal>
+        )}
         <Reveal as="section" className="renew-banner">
           <div style={{ flex: 1, minWidth: 230, position: 'relative', zIndex: 1 }}>
             <h2>{unpaid ? 'One step left — pay your registration fee' : 'Your application is with our team'}</h2>

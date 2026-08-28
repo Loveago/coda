@@ -77,13 +77,13 @@ export default function ArticleEditor({ article }: { article?: Article }) {
     setBusy(false);
   }
 
-  return <main style={{ minHeight: '100vh', background: '#f4f7fc', padding: '55px 6%' }}>
+  return <main className="article-editor" style={{ minHeight: '100vh', background: '#f4f7fc', padding: '55px 6%' }}>
     <Link href="/admin/news" style={{ color: 'var(--blue)', fontSize: 12 }}>← BACK TO NEWS</Link>
     <h1 style={{ fontFamily: 'Barlow Condensed', fontSize: 44, margin: '20px 0' }}>{article ? 'Edit news article' : 'Create news article'}</h1>
     <form onSubmit={submit} style={{ background: '#fff', borderRadius: 14, padding: 26, maxWidth: 900, display: 'grid', gap: 16 }}>
       <input name="title" required defaultValue={article?.title} placeholder="Article title" style={field} onChange={(event) => { if (!slugEdited) setSlug(slugify(event.target.value)); }} />
       <input name="slug" required value={slug} onChange={(event) => { setSlugEdited(true); setSlug(slugify(event.target.value)); }} placeholder="URL slug, for example town-hall-meeting" style={field} />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}><input name="category" defaultValue={article?.category?.name} placeholder="Category" style={field} /><select name="status" style={field} defaultValue={article?.status || 'DRAFT'}><option>DRAFT</option><option>PUBLISHED</option><option>ARCHIVED</option></select></div>
+      <div className="article-editor-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}><input name="category" defaultValue={article?.category?.name} placeholder="Category" style={field} /><select name="status" style={field} defaultValue={article?.status || 'DRAFT'}><option>DRAFT</option><option>PUBLISHED</option><option>ARCHIVED</option></select></div>
       <input name="publishedAt" type="datetime-local" defaultValue={article?.publishedAt ? new Date(article.publishedAt).toISOString().slice(0, 16) : ''} style={field} />
       <input name="coverImage" type="url" defaultValue={article?.coverImage || ''} placeholder="Featured image URL" style={field} />
       <input name="openGraphImage" type="url" defaultValue={article?.openGraphImage || ''} placeholder="Open Graph image URL (optional)" style={field} />

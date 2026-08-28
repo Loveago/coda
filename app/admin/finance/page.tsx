@@ -103,7 +103,7 @@ export default async function AdminFinance() {
         <Link className="btn btn-ghost" href="/admin/payments"><Receipt size={15} /> ALL PAYMENTS</Link>
       </div>
 
-      <div className="admin-dashboard-cards" style={{ gridTemplateColumns: 'repeat(6, 1fr)' }}>
+      <div className="admin-dashboard-cards cards-6">
         {kpis.map(([label, value, note, Icon]) => (
           <div className="admin-stat-card" key={label}>
             <span className="admin-stat-icon"><Icon size={19} /></span>
@@ -144,15 +144,15 @@ export default async function AdminFinance() {
           {data.topPayers.length === 0 ? (
             <p style={{ color: 'var(--muted)', fontSize: 13 }}>No payments recorded yet.</p>
           ) : (
-            <table className="admin-table">
+            <table className="admin-table card-table">
               <thead><tr><th>#</th><th>Member</th><th>Payments</th><th>Total paid</th></tr></thead>
               <tbody>
                 {data.topPayers.map((payer, i) => (
                   <tr key={payer.memberId}>
-                    <td><span className={`fin-rank${i === 0 ? ' first' : ''}`}>{i + 1}</span></td>
-                    <td><strong>{payer.name}</strong><br /><small>{payer.memberNumber}</small></td>
-                    <td>{payer.payments}</td>
-                    <td><strong>{formatGhs(payer.total)}</strong></td>
+                    <td data-label="Rank"><span className={`fin-rank${i === 0 ? ' first' : ''}`}>{i + 1}</span></td>
+                    <td data-label="Member"><strong>{payer.name}</strong><br /><small>{payer.memberNumber}</small></td>
+                    <td data-label="Payments">{payer.payments}</td>
+                    <td data-label="Total paid"><strong>{formatGhs(payer.total)}</strong></td>
                   </tr>
                 ))}
               </tbody>
@@ -190,17 +190,17 @@ export default async function AdminFinance() {
         {data.recent.length === 0 ? (
           <p style={{ color: 'var(--muted)', fontSize: 13 }}>No transactions yet.</p>
         ) : (
-          <table className="admin-table">
+          <table className="admin-table card-table">
             <thead><tr><th>Date</th><th>Member</th><th>Type</th><th>Amount</th><th>Status</th><th>Reference</th></tr></thead>
             <tbody>
               {data.recent.map((p) => (
                 <tr key={p.id}>
-                  <td>{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(p.date)}</td>
-                  <td><strong>{p.memberName}</strong><br /><small>{p.memberNumber}</small></td>
-                  <td>{p.type === 'ANNUAL_DUES' ? 'Annual dues' : 'Registration fee'}</td>
-                  <td><strong>{formatGhs(p.amount)}</strong></td>
-                  <td><span className={`badge badge-${p.status === 'SUCCESSFUL' ? 'PUBLISHED' : p.status === 'PENDING' ? 'PENDING' : p.status === 'REFUNDED' ? 'ARCHIVED' : 'REJECTED'}`}>{p.status}</span></td>
-                  <td><small>{p.reference}</small></td>
+                  <td data-label="Date">{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(p.date)}</td>
+                  <td data-label="Member"><strong>{p.memberName}</strong><br /><small>{p.memberNumber}</small></td>
+                  <td data-label="Type">{p.type === 'ANNUAL_DUES' ? 'Annual dues' : 'Registration fee'}</td>
+                  <td data-label="Amount"><strong>{formatGhs(p.amount)}</strong></td>
+                  <td data-label="Status"><span className={`badge badge-${p.status === 'SUCCESSFUL' ? 'PUBLISHED' : p.status === 'PENDING' ? 'PENDING' : p.status === 'REFUNDED' ? 'ARCHIVED' : 'REJECTED'}`}>{p.status}</span></td>
+                  <td data-label="Reference"><small>{p.reference}</small></td>
                 </tr>
               ))}
             </tbody>

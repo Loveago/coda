@@ -112,7 +112,10 @@ export async function createPaymentIntent(memberId: string, type: PaymentType, o
     return { authorizationUrl: `${origin}/member/payments/simulate?reference=${encodeURIComponent(reference)}`, reference, simulated: true };
   }
 
-  const authorizationUrl = await paystackInit(reference, member.email, amount, { memberId, memberNumber: member.memberNumber, paymentType: type }, `${origin}/member/payments`);
+  // Paystack redirects the browser back to our own verification endpoint, which
+  // re-checks the transaction server-side before sending the user anywhere.
+  const callbackUrl = `${origin}/api/payments/callback?reference=${encodeURIComponent(reference)}`;
+  const authorizationUrl = await paystackInit(reference, member.email, amount, { memberId, memberNumber: member.memberNumber, paymentType: type }, callbackUrl);
   return { authorizationUrl, reference, simulated: false };
 }
 
