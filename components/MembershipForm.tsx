@@ -97,13 +97,13 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
         <div><label style={label}>First name *</label><input name="firstName" required minLength={2} className="field" /></div>
         <div><label style={label}>Last name *</label><input name="lastName" required minLength={2} className="field" /></div>
         <div><label style={label}>Phone number *</label><input name="phone" required minLength={7} className="field" /></div>
-        <div><label style={label}>Date of birth{optional}</label><input name="dateOfBirth" type="date" className="field" /></div>
-        <div><label style={label}>Gender{optional}</label>
-          <select name="gender" className="field" defaultValue="">
-            <option value="">Prefer not to say</option><option>Male</option><option>Female</option><option>Other</option>
+        <div><label style={label}>Date of birth *</label><input name="dateOfBirth" type="date" required className="field" /></div>
+        <div><label style={label}>Gender *</label>
+          <select name="gender" className="field" required defaultValue="">
+            <option value="" disabled>Select gender</option><option>Male</option><option>Female</option><option>Other</option>
           </select>
         </div>
-        <div><label style={label}>Residential location{optional}</label><input name="location" placeholder="e.g. Madina, Accra" className="field" /></div>
+        <div><label style={label}>Residential location *</label><input name="location" placeholder="e.g. Madina, Accra" required minLength={2} className="field" /></div>
       </div>
 
       <p className="section-label" style={{ marginTop: 22 }}>DRIVER INFORMATION</p>
@@ -119,7 +119,7 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
       <div className="form-grid">
         <div><label style={label}>Name *</label><input name="emergencyName" required minLength={2} className="field" /></div>
         <div><label style={label}>Phone *</label><input name="emergencyPhone" required minLength={7} className="field" /></div>
-        <div><label style={label}>Relationship{optional}</label><input name="emergencyRelationship" placeholder="e.g. Spouse, Sibling" className="field" /></div>
+        <div><label style={label}>Relationship *</label><input name="emergencyRelationship" placeholder="e.g. Spouse, Sibling" required minLength={2} className="field" /></div>
       </div>
       <p className="subsection-label" style={{ marginTop: 16 }}>Contact 2{optional}</p>
       <div className="form-grid">

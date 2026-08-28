@@ -99,7 +99,7 @@ export default function ProfileEditor({ initial }: { initial: Profile }) {
         <div className="form-grid">
           <div><label style={label}>Name *</label><input name="emergencyName" defaultValue={profile.emergencyName || ''} required minLength={2} className="field" /></div>
           <div><label style={label}>Phone *</label><input name="emergencyPhone" defaultValue={profile.emergencyPhone || ''} required minLength={7} className="field" /></div>
-          <div><label style={label}>Relationship{optional}</label><input name="emergencyRelationship" defaultValue={profile.emergencyRelationship || ''} className="field" /></div>
+          <div><label style={label}>Relationship *</label><input name="emergencyRelationship" defaultValue={profile.emergencyRelationship || ''} required minLength={2} className="field" /></div>
         </div>
         <p className="subsection-label" style={{ marginTop: 6 }}>Contact 2{optional}</p>
         <div className="form-grid">
