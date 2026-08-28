@@ -69,6 +69,9 @@ export default async function MemberProfile() {
         emergencyName: member.emergencyName,
         emergencyPhone: member.emergencyPhone,
         emergencyRelationship: member.emergencyRelationship,
+        emergency2Name: member.emergency2Name,
+        emergency2Phone: member.emergency2Phone,
+        emergency2Relationship: member.emergency2Relationship,
         photoUrl: member.photoUrl
       }} />
     </main>

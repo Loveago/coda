@@ -241,12 +241,15 @@ model Member {
   gender                String?
   location              String?
   platform              String?
-  yearsExperience       Int?
-  vehicleInfo           String?
-  vehicleRegistration   String?
-  emergencyName         String?
-  emergencyPhone        String?
-  emergencyRelationship String?
+  yearsExperience        Int?
+  vehicleInfo            String?
+  vehicleRegistration    String?
+  emergencyName          String?
+  emergencyPhone         String?
+  emergencyRelationship  String?
+  emergency2Name         String?
+  emergency2Phone        String?
+  emergency2Relationship String?
   status                MemberStatus             @default(PENDING)
   emailVerified         Boolean                  @default(false)
   photoUrl              String?

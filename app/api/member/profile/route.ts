@@ -9,9 +9,12 @@ const schema = z.object({
   platform: z.string().trim().max(80).optional(),
   vehicleInfo: z.string().trim().max(160).optional(),
   vehicleRegistration: z.string().trim().max(40).optional(),
-  emergencyName: z.string().trim().max(80).optional(),
-  emergencyPhone: z.string().trim().max(40).optional(),
+  emergencyName: z.string().trim().min(2).max(80),
+  emergencyPhone: z.string().trim().min(7).max(40),
   emergencyRelationship: z.string().trim().max(60).optional(),
+  emergency2Name: z.string().trim().max(80).optional(),
+  emergency2Phone: z.string().trim().max(40).optional(),
+  emergency2Relationship: z.string().trim().max(60).optional(),
   photoUrl: z.string().url().optional()
 });
 
@@ -35,6 +38,9 @@ export async function PATCH(request: Request) {
       emergencyName: updated.emergencyName,
       emergencyPhone: updated.emergencyPhone,
       emergencyRelationship: updated.emergencyRelationship,
+      emergency2Name: updated.emergency2Name,
+      emergency2Phone: updated.emergency2Phone,
+      emergency2Relationship: updated.emergency2Relationship,
       photoUrl: updated.photoUrl
     }
   });

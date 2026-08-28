@@ -21,9 +21,12 @@ const schema = z.object({
   yearsExperience: z.coerce.number().int().min(0).max(80).optional(),
   vehicleInfo: z.string().optional(),
   vehicleRegistration: z.string().optional(),
-  emergencyName: z.string().optional(),
-  emergencyPhone: z.string().optional(),
-  emergencyRelationship: z.string().optional()
+  emergencyName: z.string().trim().min(2),
+  emergencyPhone: z.string().trim().min(7),
+  emergencyRelationship: z.string().optional(),
+  emergency2Name: z.string().trim().optional(),
+  emergency2Phone: z.string().trim().optional(),
+  emergency2Relationship: z.string().trim().optional()
 });
 
 export async function POST(request: Request) {
@@ -67,9 +70,12 @@ export async function POST(request: Request) {
       yearsExperience: data.yearsExperience ?? null,
       vehicleInfo: data.vehicleInfo || null,
       vehicleRegistration: data.vehicleRegistration || null,
-      emergencyName: data.emergencyName || null,
-      emergencyPhone: data.emergencyPhone || null,
+      emergencyName: data.emergencyName,
+      emergencyPhone: data.emergencyPhone,
       emergencyRelationship: data.emergencyRelationship || null,
+      emergency2Name: data.emergency2Name || null,
+      emergency2Phone: data.emergency2Phone || null,
+      emergency2Relationship: data.emergency2Relationship || null,
       status: 'PENDING',
       registrationPayment: fees.registrationFeeEnabled ? 'PENDING' : 'NOT_REQUIRED'
     }

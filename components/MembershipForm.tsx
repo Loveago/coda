@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import PayDuesButton from '@/components/PayDuesButton';
 
 const label = { fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', display: 'block', marginBottom: 5, letterSpacing: '.4px' };
+const optional = <span className="opt-badge">OPTIONAL</span>;
 
 type Result = {
   ok: boolean;
@@ -96,28 +97,35 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
         <div><label style={label}>First name *</label><input name="firstName" required minLength={2} className="field" /></div>
         <div><label style={label}>Last name *</label><input name="lastName" required minLength={2} className="field" /></div>
         <div><label style={label}>Phone number *</label><input name="phone" required minLength={7} className="field" /></div>
-        <div><label style={label}>Date of birth</label><input name="dateOfBirth" type="date" className="field" /></div>
-        <div><label style={label}>Gender</label>
+        <div><label style={label}>Date of birth{optional}</label><input name="dateOfBirth" type="date" className="field" /></div>
+        <div><label style={label}>Gender{optional}</label>
           <select name="gender" className="field" defaultValue="">
             <option value="">Prefer not to say</option><option>Male</option><option>Female</option><option>Other</option>
           </select>
         </div>
-        <div><label style={label}>Residential location</label><input name="location" placeholder="e.g. Madina, Accra" className="field" /></div>
+        <div><label style={label}>Residential location{optional}</label><input name="location" placeholder="e.g. Madina, Accra" className="field" /></div>
       </div>
 
       <p className="section-label" style={{ marginTop: 22 }}>DRIVER INFORMATION</p>
       <div className="form-grid">
-        <div><label style={label}>Driving platform</label><input name="platform" placeholder="Bolt, Uber, Yango..." className="field" /></div>
-        <div><label style={label}>Years of experience</label><input name="yearsExperience" type="number" min={0} max={80} className="field" /></div>
-        <div><label style={label}>Vehicle information</label><input name="vehicleInfo" placeholder="e.g. Toyota Corolla 2018" className="field" /></div>
-        <div><label style={label}>Vehicle registration number</label><input name="vehicleRegistration" placeholder="e.g. GR-1234-20" className="field" /></div>
+        <div><label style={label}>Driving platform{optional}</label><input name="platform" placeholder="Bolt, Uber, Yango..." className="field" /></div>
+        <div><label style={label}>Years of experience{optional}</label><input name="yearsExperience" type="number" min={0} max={80} className="field" /></div>
+        <div><label style={label}>Vehicle information{optional}</label><input name="vehicleInfo" placeholder="e.g. Toyota Corolla 2018" className="field" /></div>
+        <div><label style={label}>Vehicle registration number{optional}</label><input name="vehicleRegistration" placeholder="e.g. GR-1234-20" className="field" /></div>
       </div>
 
-      <p className="section-label" style={{ marginTop: 22 }}>EMERGENCY CONTACT</p>
+      <p className="section-label" style={{ marginTop: 22 }}>EMERGENCY CONTACTS</p>
+      <p className="subsection-label">Contact 1</p>
       <div className="form-grid">
-        <div><label style={label}>Name</label><input name="emergencyName" className="field" /></div>
-        <div><label style={label}>Phone</label><input name="emergencyPhone" className="field" /></div>
-        <div><label style={label}>Relationship</label><input name="emergencyRelationship" placeholder="e.g. Spouse, Sibling" className="field" /></div>
+        <div><label style={label}>Name *</label><input name="emergencyName" required minLength={2} className="field" /></div>
+        <div><label style={label}>Phone *</label><input name="emergencyPhone" required minLength={7} className="field" /></div>
+        <div><label style={label}>Relationship{optional}</label><input name="emergencyRelationship" placeholder="e.g. Spouse, Sibling" className="field" /></div>
+      </div>
+      <p className="subsection-label" style={{ marginTop: 16 }}>Contact 2{optional}</p>
+      <div className="form-grid">
+        <div><label style={label}>Name{optional}</label><input name="emergency2Name" className="field" /></div>
+        <div><label style={label}>Phone{optional}</label><input name="emergency2Phone" className="field" /></div>
+        <div><label style={label}>Relationship{optional}</label><input name="emergency2Relationship" placeholder="e.g. Spouse, Sibling" className="field" /></div>
       </div>
 
       <p className="section-label" style={{ marginTop: 22 }}>YOUR ACCOUNT</p>

@@ -12,11 +12,15 @@ type Profile = {
   emergencyName: string | null;
   emergencyPhone: string | null;
   emergencyRelationship: string | null;
+  emergency2Name: string | null;
+  emergency2Phone: string | null;
+  emergency2Relationship: string | null;
   photoUrl: string | null;
 };
 
 const field = { padding: '12px 14px', border: '1px solid var(--line)', borderRadius: 10, background: '#fff', fontSize: 13, width: '100%' };
 const label = { fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', display: 'block', marginBottom: 5 };
+const optional = <span className="opt-badge">OPTIONAL</span>;
 
 export default function ProfileEditor({ initial }: { initial: Profile }) {
   const [profile, setProfile] = useState(initial);
@@ -90,11 +94,18 @@ export default function ProfileEditor({ initial }: { initial: Profile }) {
           <div><label style={label}>Vehicle information</label><input name="vehicleInfo" defaultValue={profile.vehicleInfo || ''} className="field" /></div>
           <div><label style={label}>Vehicle registration</label><input name="vehicleRegistration" defaultValue={profile.vehicleRegistration || ''} className="field" /></div>
         </div>
-        <p className="section-label" style={{ margin: 0 }}>EMERGENCY CONTACT</p>
+        <p className="section-label" style={{ margin: 0 }}>EMERGENCY CONTACTS</p>
+        <p className="subsection-label">Contact 1</p>
         <div className="form-grid">
-          <div><label style={label}>Name</label><input name="emergencyName" defaultValue={profile.emergencyName || ''} className="field" /></div>
-          <div><label style={label}>Phone</label><input name="emergencyPhone" defaultValue={profile.emergencyPhone || ''} className="field" /></div>
-          <div><label style={label}>Relationship</label><input name="emergencyRelationship" defaultValue={profile.emergencyRelationship || ''} className="field" /></div>
+          <div><label style={label}>Name *</label><input name="emergencyName" defaultValue={profile.emergencyName || ''} required minLength={2} className="field" /></div>
+          <div><label style={label}>Phone *</label><input name="emergencyPhone" defaultValue={profile.emergencyPhone || ''} required minLength={7} className="field" /></div>
+          <div><label style={label}>Relationship{optional}</label><input name="emergencyRelationship" defaultValue={profile.emergencyRelationship || ''} className="field" /></div>
+        </div>
+        <p className="subsection-label" style={{ marginTop: 6 }}>Contact 2{optional}</p>
+        <div className="form-grid">
+          <div><label style={label}>Name{optional}</label><input name="emergency2Name" defaultValue={profile.emergency2Name || ''} className="field" /></div>
+          <div><label style={label}>Phone{optional}</label><input name="emergency2Phone" defaultValue={profile.emergency2Phone || ''} className="field" /></div>
+          <div><label style={label}>Relationship{optional}</label><input name="emergency2Relationship" defaultValue={profile.emergency2Relationship || ''} className="field" /></div>
         </div>
         <button className="btn btn-primary" disabled={busy} style={{ justifySelf: 'start' }}>{busy ? 'SAVING...' : 'SAVE CHANGES'}</button>
         {message && <p role="status" className={message.ok ? 'status-ok' : 'status-err'} style={{ margin: 0 }}>{message.text}</p>}
