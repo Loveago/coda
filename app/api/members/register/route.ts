@@ -24,9 +24,9 @@ const schema = z.object({
   emergencyName: z.string().trim().min(2),
   emergencyPhone: z.string().trim().min(7),
   emergencyRelationship: z.string().trim().min(2),
-  emergency2Name: z.string().trim().optional(),
-  emergency2Phone: z.string().trim().optional(),
-  emergency2Relationship: z.string().trim().optional()
+  emergency2Name: z.string().trim().min(2),
+  emergency2Phone: z.string().trim().min(7),
+  emergency2Relationship: z.string().trim().min(2)
 });
 
 export async function POST(request: Request) {
@@ -72,10 +72,10 @@ export async function POST(request: Request) {
       vehicleRegistration: data.vehicleRegistration || null,
       emergencyName: data.emergencyName,
       emergencyPhone: data.emergencyPhone,
-      emergencyRelationship: data.emergencyRelationship || null,
-      emergency2Name: data.emergency2Name || null,
-      emergency2Phone: data.emergency2Phone || null,
-      emergency2Relationship: data.emergency2Relationship || null,
+      emergencyRelationship: data.emergencyRelationship,
+      emergency2Name: data.emergency2Name,
+      emergency2Phone: data.emergency2Phone,
+      emergency2Relationship: data.emergency2Relationship,
       status: 'PENDING',
       registrationPayment: fees.registrationFeeEnabled ? 'PENDING' : 'NOT_REQUIRED'
     }

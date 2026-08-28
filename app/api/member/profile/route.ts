@@ -12,9 +12,9 @@ const schema = z.object({
   emergencyName: z.string().trim().min(2).max(80),
   emergencyPhone: z.string().trim().min(7).max(40),
   emergencyRelationship: z.string().trim().min(2).max(60),
-  emergency2Name: z.string().trim().max(80).optional(),
-  emergency2Phone: z.string().trim().max(40).optional(),
-  emergency2Relationship: z.string().trim().max(60).optional(),
+  emergency2Name: z.string().trim().min(2).max(80),
+  emergency2Phone: z.string().trim().min(7).max(40),
+  emergency2Relationship: z.string().trim().min(2).max(60),
   photoUrl: z.string().url().optional()
 });
 

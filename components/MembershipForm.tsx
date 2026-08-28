@@ -121,11 +121,11 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
         <div><label style={label}>Phone *</label><input name="emergencyPhone" required minLength={7} className="field" /></div>
         <div><label style={label}>Relationship *</label><input name="emergencyRelationship" placeholder="e.g. Spouse, Sibling" required minLength={2} className="field" /></div>
       </div>
-      <p className="subsection-label" style={{ marginTop: 16 }}>Contact 2{optional}</p>
+      <p className="subsection-label" style={{ marginTop: 16 }}>Contact 2</p>
       <div className="form-grid">
-        <div><label style={label}>Name{optional}</label><input name="emergency2Name" className="field" /></div>
-        <div><label style={label}>Phone{optional}</label><input name="emergency2Phone" className="field" /></div>
-        <div><label style={label}>Relationship{optional}</label><input name="emergency2Relationship" placeholder="e.g. Spouse, Sibling" className="field" /></div>
+        <div><label style={label}>Name *</label><input name="emergency2Name" required minLength={2} className="field" /></div>
+        <div><label style={label}>Phone *</label><input name="emergency2Phone" required minLength={7} className="field" /></div>
+        <div><label style={label}>Relationship *</label><input name="emergency2Relationship" placeholder="e.g. Spouse, Sibling" required minLength={2} className="field" /></div>
       </div>
 
       <p className="section-label" style={{ marginTop: 22 }}>YOUR ACCOUNT</p>
