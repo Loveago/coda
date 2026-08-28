@@ -45,7 +45,9 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
       if (computed === 'ACTIVE') {
         outcome = { tone: 'ok', heading: 'Valid membership', message: 'This card belongs to an active GACODA member in good standing.' };
       } else if (computed === 'DUE') {
-        outcome = { tone: 'warn', heading: 'Renewal due', message: 'The member is recognised, but annual dues are due for renewal.' };
+        outcome = found.membershipEndDate
+          ? { tone: 'warn', heading: 'Renewal due', message: 'The member is recognised, but annual dues are due for renewal.' }
+          : { tone: 'warn', heading: 'Dues not yet paid', message: 'This membership is approved, but the annual dues have not been paid yet, so the card is not fully active.' };
       } else if (computed === 'OVERDUE') {
         outcome = { tone: 'warn', heading: 'Membership expired', message: 'This member is recognised, but their membership has expired.' };
       } else {

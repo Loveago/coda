@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
 import { z } from 'zod';
-import { APPLICATION_FILTER, nextMembershipPeriod } from '@/lib/membership';
+import { APPLICATION_FILTER } from '@/lib/membership';
 
 const resourceSchema = z.enum(['applications', 'members', 'messages', 'subscribers', 'statistics', 'settings', 'gallery', 'resources', 'team']);
 const applicationStatusSchema = z.enum(['APPROVED', 'REJECTED']);
@@ -48,21 +48,20 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
 
   let result: unknown;
   if (resource === 'applications') {
-    // Approving an application promotes the applicant to a full member and
-    // starts their first membership year. Rejecting keeps the record for audit.
+    // Approving an application promotes the applicant to a full member. It does
+    // NOT grant a free membership year: the annual dues stay unpaid
+    // (membershipStartDate/EndDate remain null) until the member pays them from
+    // their portal. Rejecting keeps the record for audit.
     const status = applicationStatusSchema.safeParse(body.status);
     if (!status.success) return NextResponse.json({ error: 'Applications can only be approved or rejected.' }, { status: 400 });
     const applicant = await db.member.findUnique({ where: { id: id.data } });
     if (!applicant) return NextResponse.json({ error: 'Application not found.' }, { status: 404 });
     if (applicant.status !== 'PENDING') return NextResponse.json({ error: 'This application has already been processed.' }, { status: 409 });
     if (status.data === 'APPROVED') {
-      const { start, end } = nextMembershipPeriod(applicant.membershipEndDate);
       result = await db.member.update({
         where: { id: id.data },
         data: {
           status: 'APPROVED',
-          membershipStartDate: applicant.membershipStartDate ?? start,
-          membershipEndDate: applicant.membershipEndDate ?? end,
           internalNotes: body.internalNotes === undefined ? undefined : String(body.internalNotes)
         }
       });

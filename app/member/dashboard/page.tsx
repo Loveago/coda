@@ -32,6 +32,11 @@ const statusCopy: Record<string, { label: string; tone: 'good' | 'warn' | 'bad' 
   SUSPENDED: { label: 'SUSPENDED', tone: 'bad' }
 };
 
+// A newly approved member has no membership period yet — that means their
+// annual dues are simply UNPAID (not "renewal due"). Approval alone never
+// grants a paid year; only the ANNUAL_DUES payment does.
+const duesUnpaidCopy = { label: 'DUES UNPAID', tone: 'warn' as const };
+
 const dateFormatter = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
 const monthYear = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' });
 
@@ -137,7 +142,8 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
   if (!member) redirect('/login');
 
   const computed = computeMembershipStatus(member);
-  const badge = statusCopy[computed] ?? statusCopy.ACTIVE;
+  const duesUnpaid = computed === 'DUE' && !member.membershipEndDate;
+  const badge = duesUnpaid ? duesUnpaidCopy : (statusCopy[computed] ?? statusCopy.ACTIVE);
 
   // Validity ring math — share of the membership year still remaining.
   let ringPercent = 0;
@@ -155,6 +161,9 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
   } else if (computed === 'OVERDUE') {
     ringCaption = '0';
     ringSub = 'membership expired';
+  } else if (duesUnpaid) {
+    ringCaption = '0';
+    ringSub = 'annual dues unpaid';
   }
 
   const needsRenewal = computed === 'DUE' || computed === 'OVERDUE';
@@ -213,19 +222,21 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
         </div>
       </section>
 
-      {/* ===== RENEWAL BANNER ===== */}
+      {/* ===== DUES / RENEWAL BANNER ===== */}
       {needsRenewal && (
         <Reveal as="section" className={`renew-banner${computed === 'OVERDUE' ? ' bad' : ''}`}>
           <div style={{ flex: 1, minWidth: 230, position: 'relative', zIndex: 1 }}>
-            <h2>{computed === 'OVERDUE' ? 'Your membership has expired' : 'Time to renew your dues'}</h2>
+            <h2>{duesUnpaid ? 'Welcome aboard — pay your annual dues' : computed === 'OVERDUE' ? 'Your membership has expired' : 'Time to renew your dues'}</h2>
             <p>
-              {computed === 'OVERDUE'
-                ? `Renew for ${formatGhs(fees.annualDuesAmount)} today to instantly restore your benefits and ID card validity.`
-                : `Annual dues of ${formatGhs(fees.annualDuesAmount)} keep your benefits and ID card active for another full year.`}
+              {duesUnpaid
+                ? `Your application has been approved! Annual membership dues of ${formatGhs(fees.annualDuesAmount)} are currently unpaid. Pay once to activate your membership and digital ID card for a full year.`
+                : computed === 'OVERDUE'
+                  ? `Renew for ${formatGhs(fees.annualDuesAmount)} today to instantly restore your benefits and ID card validity.`
+                  : `Annual dues of ${formatGhs(fees.annualDuesAmount)} keep your benefits and ID card active for another full year.`}
             </p>
           </div>
           <div style={{ position: 'relative', zIndex: 1 }}>
-            <PayDuesButton type="ANNUAL_DUES" label={computed === 'OVERDUE' ? 'RENEW NOW' : 'PAY ANNUAL DUES'} />
+            <PayDuesButton type="ANNUAL_DUES" label={duesUnpaid ? `PAY ${formatGhs(fees.annualDuesAmount)} DUES` : computed === 'OVERDUE' ? 'RENEW NOW' : 'PAY ANNUAL DUES'} />
           </div>
         </Reveal>
       )}
@@ -239,7 +250,7 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
             value: formatGhs(totals._sum.amount ?? 0),
             label: `Contributed · ${totals._count} payment${totals._count === 1 ? '' : 's'}`
           },
-          { Icon: CalendarDays, value: member.membershipEndDate ? dateFormatter.format(member.membershipEndDate) : '—', label: 'Valid until' },
+          { Icon: CalendarDays, value: member.membershipEndDate ? dateFormatter.format(member.membershipEndDate) : 'Unpaid', label: 'Valid until' },
           { Icon: BadgeCheck, value: regLabel, label: 'Registration fee' }
         ] as const).map(({ Icon, value, label }, index) => (
           <Reveal key={label} delay={index * 70} className="mdash-tile">

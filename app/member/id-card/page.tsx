@@ -54,7 +54,9 @@ export default async function IdCard() {
 
       {cardStatus !== 'ACTIVE' && (
         <p className="admin-note no-print" style={{ maxWidth: 420, marginTop: 18 }}>
-          This card is not currently valid. <Link href="/member/dashboard" className="admin-link">Renew your annual dues</Link> to reactivate it instantly.
+          {member.membershipEndDate
+            ? <>This card is not currently valid. <Link href="/member/dashboard" className="admin-link">Renew your annual dues</Link> to reactivate it instantly.</>
+            : <>Your annual dues are still unpaid, so this card is not yet active. <Link href="/member/dashboard" className="admin-link">Pay your membership dues</Link> to activate it instantly.</>}
         </p>
       )}
 
