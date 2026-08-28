@@ -18,10 +18,18 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
   if (!user) return NextResponse.json({ error: 'Administrator authentication required.' }, { status: 401 });
   const resource = (await params).resource;
 
+  // Only non-sensitive columns are ever exported (never passwordHash etc.).
+  const memberExportSelect = {
+    memberNumber: true, firstName: true, lastName: true, email: true, phone: true,
+    platform: true, vehicleInfo: true, vehicleRegistration: true, location: true,
+    status: true, registrationPayment: true, emailVerified: true,
+    membershipStartDate: true, membershipEndDate: true, createdAt: true
+  } as const;
+
   let rows: Record<string, unknown>[] = [];
-  if (resource === 'applications') rows = await db.member.findMany({ where: APPLICATION_FILTER, orderBy: { createdAt: 'desc' } });
-  else if (resource === 'members') rows = await db.member.findMany({ where: { status: { in: ['APPROVED', 'SUSPENDED'] } }, orderBy: { createdAt: 'desc' } });
-  else if (resource === 'subscribers') rows = await db.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' } });
+  if (resource === 'applications') rows = await db.member.findMany({ where: APPLICATION_FILTER, select: memberExportSelect, orderBy: { createdAt: 'desc' } });
+  else if (resource === 'members') rows = await db.member.findMany({ where: { status: { in: ['APPROVED', 'SUSPENDED'] } }, select: memberExportSelect, orderBy: { createdAt: 'desc' } });
+  else if (resource === 'subscribers') rows = await db.newsletterSubscriber.findMany({ select: { email: true, active: true, createdAt: true }, orderBy: { createdAt: 'desc' } });
   else if (resource === 'messages') rows = await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } });
   else return NextResponse.json({ error: 'Export is not available for this resource.' }, { status: 404 });
 

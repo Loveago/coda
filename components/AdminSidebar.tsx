@@ -68,7 +68,7 @@ export default function AdminSidebar({ name, role }: { name: string; role: strin
 
   const brand = (
     <Link href="/admin" className="admin-brand">
-      <div className="brand-mark">◉</div>
+      <img src="/logo-mark.png" alt="GACODA logo" className="brand-logo" width={42} height={42} />
       <div>
         <div className="brand-name">GACODA</div>
         <small className="brand-sub" style={{ color: '#8fb0e0' }}>ADMIN PANEL</small>
@@ -120,7 +120,7 @@ export default function AdminSidebar({ name, role }: { name: string; role: strin
           <Menu size={20} />
         </button>
         <Link href="/admin" className="admin-topbar-brand">
-          <span className="admin-topbar-mark" aria-hidden>◉</span>
+          <img src="/logo-mark.png" alt="" className="admin-topbar-mark" width={32} height={32} />
           <span className="admin-topbar-name">GACODA<small>ADMIN PANEL</small></span>
         </Link>
         <span className="admin-topbar-avatar" aria-hidden>{initials || 'GA'}</span>

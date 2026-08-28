@@ -59,7 +59,7 @@ export default function MemberCard(props: MemberCardProps) {
             aria-label="Membership card front — activate to flip">
             <span className="idcard-band" aria-hidden />
             <div className="idcard-head">
-              <div className="brand-mark">◉</div>
+              <img src="/logo-mark.png" alt="" className="idcard-logo" width={34} height={34} />
               <div>
                 <strong>GACODA</strong>
                 <small>GREATER ACCRA CONCERNED ONLINE DRIVERS ASSOCIATION</small>

@@ -85,7 +85,7 @@ export default async function Admin() {
         <div className="admin-panel">
           <h2>Quick links</h2>
           <div className="quick-links">
-            <Link href="/admin/members">REVIEW APPLICATIONS</Link>
+            <Link href="/admin/applications">REVIEW APPLICATIONS</Link>
             <Link href="/admin/messages">VIEW MESSAGES</Link>
             <Link href="/admin/news">MANAGE NEWS</Link>
             <Link href="/admin/settings">SITE SETTINGS</Link>

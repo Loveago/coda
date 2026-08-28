@@ -2,6 +2,7 @@ import { db } from '@/lib/db';
 import AdminManagementTable from '@/components/AdminManagementTable';
 import GalleryManager from '@/components/GalleryManager';
 import ResourceManager from '@/components/ResourceManager';
+import MembersManager from '@/components/MembersManager';
 import { APPLICATION_FILTER } from '@/lib/membership';
 
 const supportedSections = new Set(['applications', 'members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team']);
@@ -22,7 +23,6 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
 
   let records: Array<{ id: string; [key: string]: unknown }> = [];
   if (section === 'applications') records = await db.member.findMany({ where: APPLICATION_FILTER, select: memberSelect, orderBy: { createdAt: 'desc' } });
-  if (section === 'members') records = await db.member.findMany({ where: { status: { in: ['APPROVED', 'SUSPENDED'] } }, select: memberSelect, orderBy: { createdAt: 'desc' } });
   if (section === 'messages') records = await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'subscribers') records = await db.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'statistics') records = await db.statistic.findMany({ orderBy: { displayOrder: 'asc' } });
@@ -33,6 +33,23 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   if (section === 'team') records = await db.teamMember.findMany({ orderBy: { displayOrder: 'asc' } });
 
   const title = section.charAt(0).toUpperCase() + section.slice(1);
+  // The members area has a dedicated manager (search, dues filters, manual
+  // renewals, deletion) that loads its own data client-side.
+  if (section === 'members') {
+    return (
+      <main>
+        <div className="admin-page-head">
+          <div>
+            <p className="kicker" style={{ color: 'var(--blue)' }}>COMMUNITY</p>
+            <h1>Members</h1>
+          </div>
+          <a className="btn btn-ghost" href="/api/admin/export/members">EXPORT CSV</a>
+        </div>
+        <MembersManager />
+      </main>
+    );
+  }
+
   return (
     <main>
       <div className="admin-page-head">

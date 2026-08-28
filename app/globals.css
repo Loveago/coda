@@ -256,6 +256,7 @@ h1, h2, h3 { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .3px; 
 .admin-sidebar { position: fixed; inset: 0 auto 0 0; width: 248px; background: linear-gradient(180deg, #072457 0%, #061b49 60%, #041435 100%); color: #fff; padding: 22px 18px; z-index: 40; display: flex; flex-direction: column; overflow-y: auto; }
 .admin-brand { display: flex; align-items: center; gap: 11px; padding: 4px 6px 18px; border-bottom: 1px solid rgba(255, 255, 255, .1); }
 .admin-brand .brand-mark { width: 42px; height: 42px; font-size: 21px; border-width: 3px; }
+.admin-brand .brand-logo { width: 42px; height: 42px; background: #fff; border-radius: 50%; padding: 4px; box-shadow: 0 4px 12px rgba(2, 10, 30, .35); filter: none; }
 .admin-brand .brand-name { font-size: 23px; color: #fff; }
 .admin-nav-group { margin-top: 20px; }
 .admin-nav-label { font-size: 9.5px; letter-spacing: 2px; color: #6f8cc4; font-weight: 700; padding: 0 10px; margin: 0 0 8px; text-transform: uppercase; }
@@ -366,8 +367,8 @@ h1, h2, h3 { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .3px; 
 .admin-menu-btn:active { background: rgba(22, 132, 255, .4); }
 .admin-topbar-brand { display: flex; align-items: center; gap: 9px; color: #fff; min-width: 0; }
 .admin-topbar-mark {
-  width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; flex-shrink: 0;
-  background: linear-gradient(135deg, #1684ff, #064ec9); font-size: 15px; box-shadow: 0 4px 12px rgba(22, 132, 255, .4);
+  width: 32px; height: 32px; border-radius: 9px; flex-shrink: 0; object-fit: contain;
+  background: #fff; padding: 2px; box-shadow: 0 4px 12px rgba(2, 10, 30, .35);
 }
 .admin-topbar-name { font-family: 'Barlow Condensed'; font-size: 19px; letter-spacing: 1px; line-height: 1; display: grid; }
 .admin-topbar-name small { font-family: 'Barlow Condensed'; font-size: 8px; letter-spacing: 2.4px; color: #8fb0e0; }
@@ -406,6 +407,52 @@ h1, h2, h3 { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .3px; 
 .admin-drawer .admin-nav a:hover { transform: none; }
 .admin-drawer .admin-sidebar-foot { margin-top: 20px; }
 .admin-drawer .admin-logout { padding: 12px; }
+
+/* ================================================================ */
+/* MEMBERS MANAGER + ADMIN MODALS                                    */
+/* ================================================================ */
+.admin-dashboard-cards.cards-4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1020px) { .admin-dashboard-cards.cards-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .admin-dashboard-cards.cards-4 { grid-template-columns: 1fr; } }
+
+.member-search {
+  display: flex; align-items: center; gap: 9px; flex: 1 1 260px; background: #fff;
+  border: 1px solid var(--line); border-radius: 10px; padding: 0 12px; color: var(--muted);
+  transition: border-color .2s, box-shadow .2s;
+}
+.member-search:focus-within { border-color: var(--bright); box-shadow: 0 0 0 4px rgba(22, 132, 255, .14); }
+.member-search input { border: 0; outline: none; width: 100%; font-size: 12.5px; background: transparent; padding: 11px 0; color: var(--navy); }
+.member-search-clear { border: 0; background: #eef2f9; color: var(--muted); width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; flex-shrink: 0; }
+.member-search-clear:hover { background: #dfe8f6; color: var(--navy); }
+
+.payfilter-count {
+  display: inline-block; min-width: 18px; text-align: center; margin-left: 4px; padding: 1px 5px;
+  border-radius: 99px; background: rgba(7, 36, 87, .08); font-size: 9.5px;
+}
+.payfilter.on .payfilter-count { background: rgba(255, 255, 255, .18); }
+
+.admin-table-wrap { overflow-x: auto; }
+
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 120; background: rgba(4, 14, 38, .6);
+  backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+  display: grid; place-items: center; padding: 20px; animation: fadeIn .2s ease both;
+}
+.modal-card {
+  width: min(100%, 480px); background: #fff; border-radius: 18px; padding: 24px;
+  box-shadow: 0 30px 80px rgba(2, 10, 30, .45); animation: zoomIn .25s var(--ease) both;
+  max-height: calc(100vh - 40px); overflow-y: auto;
+}
+.modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+.modal-head h2 { margin: 2px 0 4px; font-size: 24px; }
+.modal-close {
+  width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line); background: #fff;
+  color: var(--muted); display: grid; place-items: center; cursor: pointer; flex-shrink: 0; transition: all .2s;
+}
+.modal-close:hover { background: #fdeaea; border-color: #f3bcbc; color: #c0392b; }
+.modal-label { display: block; font-size: 11px; font-weight: 800; letter-spacing: .5px; color: var(--muted); margin: 14px 0 6px; text-transform: uppercase; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+.modal-actions .btn { flex-shrink: 0; }
 
 /* ================================================================ */
 /* ADMIN RESPONSIVE CARD TABLES (phones)                             */
@@ -829,9 +876,8 @@ h1, h2, h3 { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .3px; 
   }
   .mtop-brand { display: flex; align-items: center; gap: 9px; color: #fff; }
   .mtop-mark {
-    width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center;
-    background: linear-gradient(135deg, #1684ff, #064ec9); font-size: 15px;
-    box-shadow: 0 4px 12px rgba(22, 132, 255, .4);
+    width: 32px; height: 32px; border-radius: 9px; object-fit: contain;
+    background: #fff; padding: 2px; box-shadow: 0 4px 12px rgba(2, 10, 30, .35);
   }
   .mtop-name { font-family: 'Barlow Condensed'; font-size: 19px; letter-spacing: 1px; line-height: 1; display: grid; }
   .mtop-name small { font-family: 'Barlow Condensed'; font-size: 8px; letter-spacing: 2.4px; color: #8fb0e0; }
@@ -899,6 +945,7 @@ h1, h2, h3 { font-family: 'Barlow Condensed', sans-serif; letter-spacing: .3px; 
 .idcard-front .idcard-band { position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #1684ff, #7141c9); }
 .idcard-head { display: flex; align-items: center; gap: 9px; position: relative; z-index: 1; }
 .idcard-head .brand-mark { width: 34px; height: 34px; font-size: 16px; border-width: 2.5px; color: #fff; border-color: #fff; box-shadow: inset 0 0 0 2.5px rgba(22, 132, 255, .5); }
+.idcard-logo { width: 34px; height: 34px; border-radius: 9px; object-fit: contain; background: #fff; padding: 2.5px; box-shadow: 0 4px 10px rgba(0, 0, 0, .35); flex-shrink: 0; }
 .idcard-head strong { display: block; font-family: 'Barlow Condensed'; font-size: 18px; letter-spacing: 1.2px; line-height: 1; }
 .idcard-head small { display: block; color: #93aede; font-size: 6.3px; letter-spacing: .5px; line-height: 1.45; margin-top: 2px; }
 .idcard-valid-tag { margin-left: auto; font-size: 8px; font-weight: 800; letter-spacing: 1.6px; color: #9fc2ff; border: 1px solid rgba(159, 194, 255, .35); padding: 4px 8px; border-radius: 99px; }

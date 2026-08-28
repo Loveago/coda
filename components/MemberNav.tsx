@@ -34,7 +34,7 @@ export default function MemberNav({ member }: { member: NavMember }) {
       {/* ===== Desktop sidebar ===== */}
       <aside className="msidebar">
         <Link href="/" className="admin-brand">
-          <div className="brand-mark">◉</div>
+          <img src="/logo-mark.png" alt="GACODA logo" className="brand-logo" width={42} height={42} />
           <div>
             <div className="brand-name">GACODA</div>
             <small className="brand-sub" style={{ color: '#8fb0e0' }}>MEMBER PORTAL</small>
@@ -70,7 +70,7 @@ export default function MemberNav({ member }: { member: NavMember }) {
       {/* ===== Mobile top bar ===== */}
       <header className="mtopbar">
         <Link href="/member/dashboard" className="mtop-brand" aria-label="GACODA member home">
-          <span className="mtop-mark">◉</span>
+          <img src="/logo-mark.png" alt="" className="mtop-mark" width={32} height={32} />
           <span className="mtop-name">GACODA<small>MEMBER PORTAL</small></span>
         </Link>
         <div className="mtop-actions">

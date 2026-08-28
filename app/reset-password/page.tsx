@@ -35,7 +35,7 @@ function ResetForm() {
     <main className="login-wrap">
       <form onSubmit={submit} className="login-card">
         <div className="brand">
-          <div className="brand-mark">◉</div>
+          <img src="/logo-mark.png" alt="GACODA logo" className="brand-logo" width={51} height={51} />
           <div><div className="brand-name">GACODA</div><small className="brand-sub">MEMBER PORTAL</small></div>
         </div>
         <h1>Choose a new password</h1>

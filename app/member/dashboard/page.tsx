@@ -308,7 +308,7 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
             <Link href="/member/id-card" className="idcard-mini" aria-label="Open your digital ID card">
               <span className="idcard-mini-face" aria-hidden>
                 <span className="idcard-mini-band" />
-                <span className="idcard-mini-brand">◉ GACODA</span>
+                <span className="idcard-mini-brand" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><img src="/logo-mark.png" alt="" width={11} height={11} style={{ borderRadius: 3 }} /> GACODA</span>
                 <strong>{member.memberNumber}</strong>
                 <small>{member.firstName} {member.lastName}</small>
               </span>
