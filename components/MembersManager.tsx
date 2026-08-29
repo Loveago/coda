@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
-  AlertTriangle, BadgeCheck, CalendarClock, CheckCircle2, CircleDollarSign, Loader2,
+  AlertTriangle, BadgeCheck, CalendarClock, CheckCircle2, ChevronDown, CircleDollarSign, Loader2,
   Pause, Play, RefreshCw, Search, ShieldCheck, Trash2, Users, X
 } from 'lucide-react';
 
@@ -14,11 +14,26 @@ type Row = {
   name: string;
   email: string;
   phone: string;
+  ghanaCardNumber: string | null;
+  dateOfBirth: string | null;
+  gender: string | null;
+  location: string | null;
   platform: string | null;
+  yearsExperience: number | null;
+  vehicleInfo: string | null;
+  vehicleRegistration: string | null;
+  emergencyName: string | null;
+  emergencyPhone: string | null;
+  emergencyRelationship: string | null;
+  emergency2Name: string | null;
+  emergency2Phone: string | null;
+  emergency2Relationship: string | null;
   status: string;
   emailVerified: boolean;
   registrationPayment: string;
+  membershipStartDate: string | null;
   membershipEndDate: string | null;
+  internalNotes: string | null;
   dues: DuesState;
   totalPaid: number;
   lastPaidAt: string | null;
@@ -43,7 +58,8 @@ const duesBadge: Record<DuesState, { label: string; className: string }> = {
   UNPAID: { label: 'DUES UNPAID', className: 'badge badge-REJECTED' }
 };
 
-const mediumDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
+const mediumDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeZone: 'UTC' });
+const mediumDateTime = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' });
 
 function formatGhs(pesewas: number) {
   return `GHS ${(pesewas / 100).toLocaleString('en-GH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -53,6 +69,12 @@ function dateText(value: string | null) {
   if (!value) return '—';
   const date = new Date(value);
   return Number.isNaN(date.valueOf()) ? '—' : mediumDate.format(date);
+}
+
+function dateTimeText(value: string | null) {
+  if (!value) return '—';
+  const date = new Date(value);
+  return Number.isNaN(date.valueOf()) ? '—' : mediumDateTime.format(date);
 }
 
 export default function MembersManager() {
@@ -71,6 +93,16 @@ export default function MembersManager() {
   const [busy, setBusy] = useState<string | null>(null);
   const [renewTarget, setRenewTarget] = useState<Row | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Row | null>(null);
+  const [expanded, setExpanded] = useState<Set<string>>(() => new Set());
+
+  function toggleRow(id: string) {
+    setExpanded((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   // Debounce the search box so we don't hammer the API on every keystroke.
   useEffect(() => {
@@ -202,48 +234,67 @@ export default function MembersManager() {
                 {rows.map((row) => {
                   const badge = duesBadge[row.dues];
                   const disabled = busy === row.id;
+                  const open = expanded.has(row.id);
                   return (
-                    <tr key={row.id}>
-                      <td data-label="Member">
-                        <strong>{row.name}</strong>
-                        <br /><small>{row.memberNumber}</small>
-                        {!row.emailVerified && <span className="badge badge-DRAFT" style={{ marginLeft: 6 }}>EMAIL UNVERIFIED</span>}
-                      </td>
-                      <td data-label="Contact">{row.phone}<br /><small>{row.email}</small></td>
-                      <td data-label="Platform">{row.platform || '—'}</td>
-                      <td data-label="Status"><span className={`badge badge-${row.status}`}>{row.status}</span></td>
-                      <td data-label="Dues"><span className={badge.className}>{badge.label}</span></td>
-                      <td data-label="Valid until">{dateText(row.membershipEndDate)}</td>
-                      <td data-label="Total paid"><strong>{formatGhs(row.totalPaid)}</strong>{row.lastPaidAt && <small><br />last {dateText(row.lastPaidAt)}</small>}</td>
-                      <td data-label="Joined">{dateText(row.joined)}</td>
-                      <td data-label="Actions">
-                        <button className="admin-action" disabled={disabled} onClick={() => setRenewTarget(row)}>
-                          <CalendarClock size={12} /> RENEW
-                        </button>
-                        {row.status === 'SUSPENDED' ? (
-                          <button className="admin-action" disabled={disabled} onClick={() => void act(row, { action: 'REINSTATE' }, 'reinstate')}>
-                            <Play size={12} /> REINSTATE
+                    <Fragment key={row.id}>
+                      <tr className={open ? 'member-row-open' : undefined}>
+                        <td data-label="Member">
+                          <button
+                            type="button"
+                            className="member-expand-btn"
+                            aria-expanded={open}
+                            aria-label={open ? `Hide details for ${row.name}` : `Show all registration details for ${row.name}`}
+                            onClick={() => toggleRow(row.id)}
+                          >
+                            <ChevronDown size={14} className={open ? 'member-chevron open' : 'member-chevron'} />
                           </button>
-                        ) : (
-                          <button className="admin-action" disabled={disabled} onClick={() => void act(row, { action: 'SUSPEND' }, 'suspended')}>
-                            <Pause size={12} /> SUSPEND
+                          <strong>{row.name}</strong>
+                          <br /><small>{row.memberNumber}</small>
+                          {!row.emailVerified && <span className="badge badge-DRAFT" style={{ marginLeft: 6 }}>EMAIL UNVERIFIED</span>}
+                        </td>
+                        <td data-label="Contact">{row.phone}<br /><small>{row.email}</small></td>
+                        <td data-label="Platform">{row.platform || '—'}</td>
+                        <td data-label="Status"><span className={`badge badge-${row.status}`}>{row.status}</span></td>
+                        <td data-label="Dues"><span className={badge.className}>{badge.label}</span></td>
+                        <td data-label="Valid until">{dateText(row.membershipEndDate)}</td>
+                        <td data-label="Total paid"><strong>{formatGhs(row.totalPaid)}</strong>{row.lastPaidAt && <small><br />last {dateText(row.lastPaidAt)}</small>}</td>
+                        <td data-label="Joined">{dateText(row.joined)}</td>
+                        <td data-label="Actions">
+                          <button className="admin-action" disabled={disabled} onClick={() => setRenewTarget(row)}>
+                            <CalendarClock size={12} /> RENEW
                           </button>
-                        )}
-                        {!row.emailVerified && (
-                          <button className="admin-action" disabled={disabled} onClick={() => void act(row, { action: 'VERIFY_EMAIL' }, 'email marked verified')}>
-                            <ShieldCheck size={12} /> VERIFY
+                          {row.status === 'SUSPENDED' ? (
+                            <button className="admin-action" disabled={disabled} onClick={() => void act(row, { action: 'REINSTATE' }, 'reinstate')}>
+                              <Play size={12} /> REINSTATE
+                            </button>
+                          ) : (
+                            <button className="admin-action" disabled={disabled} onClick={() => void act(row, { action: 'SUSPEND' }, 'suspended')}>
+                              <Pause size={12} /> SUSPEND
+                            </button>
+                          )}
+                          {!row.emailVerified && (
+                            <button className="admin-action" disabled={disabled} onClick={() => void act(row, { action: 'VERIFY_EMAIL' }, 'email marked verified')}>
+                              <ShieldCheck size={12} /> VERIFY
+                            </button>
+                          )}
+                          {row.registrationPayment === 'PENDING' && (
+                            <button className="admin-action" disabled={disabled} onClick={() => void act(row, { action: 'MARK_REGISTRATION_PAID' }, 'registration fee marked paid')}>
+                              <BadgeCheck size={12} /> FEE PAID
+                            </button>
+                          )}
+                          <button className="admin-action danger" disabled={disabled} onClick={() => setDeleteTarget(row)}>
+                            <Trash2 size={12} /> DELETE
                           </button>
-                        )}
-                        {row.registrationPayment === 'PENDING' && (
-                          <button className="admin-action" disabled={disabled} onClick={() => void act(row, { action: 'MARK_REGISTRATION_PAID' }, 'registration fee marked paid')}>
-                            <BadgeCheck size={12} /> FEE PAID
-                          </button>
-                        )}
-                        <button className="admin-action danger" disabled={disabled} onClick={() => setDeleteTarget(row)}>
-                          <Trash2 size={12} /> DELETE
-                        </button>
-                      </td>
-                    </tr>
+                        </td>
+                      </tr>
+                      {open && (
+                        <tr className="member-detail-row">
+                          <td colSpan={9}>
+                            <MemberDetails row={row} />
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   );
                 })}
               </tbody>
@@ -277,6 +328,81 @@ export default function MembersManager() {
         />
       )}
     </>
+  );
+}
+
+/**
+ * Full registration record for a member, revealed when an admin expands the
+ * row. Mirrors every field collected on the sign-up form (plus the derived
+ * membership/payment state) so nothing entered during registration is hidden.
+ */
+function MemberDetails({ row }: { row: Row }) {
+  return (
+    <div className="member-details">
+      <DetailGroup title="Personal information">
+        <Detail label="Full name" value={row.name} />
+        <Detail label="Member number" value={row.memberNumber} />
+        <Detail label="Ghana Card number" value={row.ghanaCardNumber} />
+        <Detail label="Date of birth" value={dateText(row.dateOfBirth)} />
+        <Detail label="Gender" value={row.gender} />
+        <Detail label="Residential location" value={row.location} />
+        <Detail label="Phone" value={row.phone} />
+        <Detail label="Email" value={row.email} />
+        <Detail label="Email verified" value={row.emailVerified ? 'Yes' : 'No'} />
+      </DetailGroup>
+
+      <DetailGroup title="Driver information">
+        <Detail label="Driving platform" value={row.platform} />
+        <Detail label="Years of experience" value={row.yearsExperience === null ? null : `${row.yearsExperience} year${row.yearsExperience === 1 ? '' : 's'}`} />
+        <Detail label="Vehicle information" value={row.vehicleInfo} />
+        <Detail label="Vehicle registration" value={row.vehicleRegistration} />
+      </DetailGroup>
+
+      <DetailGroup title="Emergency contacts">
+        <Detail label="Contact 1 · name" value={row.emergencyName} />
+        <Detail label="Contact 1 · phone" value={row.emergencyPhone} />
+        <Detail label="Contact 1 · relationship" value={row.emergencyRelationship} />
+        <Detail label="Contact 2 · name" value={row.emergency2Name} />
+        <Detail label="Contact 2 · phone" value={row.emergency2Phone} />
+        <Detail label="Contact 2 · relationship" value={row.emergency2Relationship} />
+      </DetailGroup>
+
+      <DetailGroup title="Membership & payments">
+        <Detail label="Status" value={row.status} />
+        <Detail label="Registration fee" value={row.registrationPayment === 'PAID' ? 'Paid' : row.registrationPayment === 'PENDING' ? 'Awaiting payment' : 'Not required'} />
+        <Detail label="Membership starts" value={dateText(row.membershipStartDate)} />
+        <Detail label="Valid until" value={dateText(row.membershipEndDate)} />
+        <Detail label="Dues state" value={duesBadge[row.dues].label} />
+        <Detail label="Total paid" value={formatGhs(row.totalPaid)} />
+        <Detail label="Last payment" value={dateTimeText(row.lastPaidAt)} />
+        <Detail label="Joined" value={dateTimeText(row.joined)} />
+      </DetailGroup>
+
+      {row.internalNotes && (
+        <DetailGroup title="Internal notes">
+          <p className="member-details-notes">{row.internalNotes}</p>
+        </DetailGroup>
+      )}
+    </div>
+  );
+}
+
+function DetailGroup({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="member-detail-group">
+      <p className="member-detail-title">{title}</p>
+      <dl className="member-detail-grid">{children}</dl>
+    </div>
+  );
+}
+
+function Detail({ label, value }: { label: string; value: string | number | null | undefined }) {
+  const empty = value === null || value === undefined || value === '';
+  return (
+    <div className="member-detail-item">
+      <dt>{label}</dt>
+      <dd className={empty ? 'is-empty' : undefined}>{empty ? '—' : value}</dd>
+    </div>
   );
 }
 

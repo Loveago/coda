@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { ArrowRight } from 'lucide-react';
 import { db } from '@/lib/db';
-import { announcementKey, getSiteSettings } from '@/lib/settings';
+import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import Reveal from '@/components/Reveal';
@@ -53,6 +53,7 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
         phone={site.contact_phone}
         email={site.contact_email}
         announcement={site.announcement_enabled === 'true' && site.announcement_text ? { text: site.announcement_text, key: announcementKey(site.announcement_text) } : null}
+        socials={socialLinks(site)}
       />
       <main className="container" style={{ padding: '60px 0 70px', maxWidth: 900 }}>
         <Reveal>
@@ -96,7 +97,7 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
           </section>
         )}
       </main>
-      <SiteFooter phone={site.contact_phone} email={site.contact_email} whatsapp={site.whatsapp_number} />
+      <SiteFooter phone={site.contact_phone} email={site.contact_email} whatsapp={site.whatsapp_number} socials={socialLinks(site)} />
     </>
   );
 }

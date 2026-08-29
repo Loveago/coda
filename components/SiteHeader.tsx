@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ArrowRight, Facebook, Instagram, LogIn, Mail, MapPin, Megaphone, Menu, Phone, Twitter, X } from 'lucide-react';
+import { ArrowRight, LogIn, Mail, MapPin, Megaphone, Menu, Phone, X } from 'lucide-react';
+import SocialIcon from '@/components/SocialIcon';
+import type { SocialLink } from '@/lib/settings';
 
 const links = [
   ['Home', '/'],
@@ -18,11 +20,13 @@ const links = [
 export default function SiteHeader({
   phone = '+233 24 123 4567',
   email = 'info@gacoda.org',
-  announcement
+  announcement,
+  socials = []
 }: {
   phone?: string;
   email?: string;
   announcement?: { text: string; key: string } | null;
+  socials?: SocialLink[];
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -70,12 +74,16 @@ export default function SiteHeader({
             <span><Mail size={12} /> {email}</span>
             <span className="hide-sm"><MapPin size={12} /> Accra, Ghana</span>
           </div>
-          <div className="socials">
-            <span className="hide-sm">Follow us</span>
-            <a href="https://facebook.com" target="_blank" rel="noreferrer" aria-label="Facebook"><Facebook size={13} /></a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={13} /></a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" aria-label="Twitter"><Twitter size={13} /></a>
-          </div>
+          {socials.length > 0 && (
+            <div className="socials">
+              <span className="hide-sm">Follow us</span>
+              {socials.map((social) => (
+                <a key={social.key} href={social.url} target="_blank" rel="noreferrer me" aria-label={social.label}>
+                  <SocialIcon platform={social.key} />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
       {announcement && !bannerDismissed && (

@@ -26,8 +26,9 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   if (section === 'messages') records = await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'subscribers') records = await db.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'statistics') records = await db.statistic.findMany({ orderBy: { displayOrder: 'asc' } });
-  // Paystack keys are secrets – they are only managed via /admin/settings/paystack.
-  if (section === 'settings') records = await db.siteSetting.findMany({ where: { key: { not: { startsWith: 'paystack_' } } }, orderBy: { key: 'asc' } });
+  // Paystack keys are secrets and social links have their own editor — both
+  // are managed via their dedicated pages under /admin/settings.
+  if (section === 'settings') records = await db.siteSetting.findMany({ where: { AND: [{ key: { not: { startsWith: 'paystack_' } } }, { key: { not: { startsWith: 'social_' } } }] }, orderBy: { key: 'asc' } });
   if (section === 'gallery') records = await db.galleryItem.findMany({ orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }] });
   if (section === 'resources') records = await db.resource.findMany({ orderBy: { updatedAt: 'desc' } });
   if (section === 'team') records = await db.teamMember.findMany({ orderBy: { displayOrder: 'asc' } });

@@ -237,6 +237,7 @@ model Member {
   firstName             String
   lastName              String
   phone                 String
+  ghanaCardNumber       String?                  @unique
   dateOfBirth           DateTime?
   gender                String?
   location              String?

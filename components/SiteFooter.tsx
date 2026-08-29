@@ -1,15 +1,19 @@
 import Link from 'next/link';
 import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react';
 import FloatingActions from '@/components/FloatingActions';
+import SocialIcon from '@/components/SocialIcon';
+import type { SocialLink } from '@/lib/settings';
 
 export default function SiteFooter({
   phone = '+233 24 123 4567',
   email = 'info@gacoda.org',
-  whatsapp
+  whatsapp,
+  socials = []
 }: {
   phone?: string;
   email?: string;
   whatsapp?: string;
+  socials?: SocialLink[];
 }) {
   return (
     <>
@@ -48,7 +52,17 @@ export default function SiteFooter({
         </div>
         <div className="container footer-bottom">
           <span>© {new Date().getFullYear()} Greater Accra Concerned Online Drivers Association. All rights reserved.</span>
-          <span>Built for the drivers of Greater Accra.</span>
+          {socials.length > 0 ? (
+            <span className="footer-socials" aria-label="GACODA on social media">
+              {socials.map((social) => (
+                <a key={social.key} href={social.url} target="_blank" rel="noreferrer me" aria-label={social.label}>
+                  <SocialIcon platform={social.key} size={15} />
+                </a>
+              ))}
+            </span>
+          ) : (
+            <span>Built for the drivers of Greater Accra.</span>
+          )}
         </div>
       </footer>
       <FloatingActions whatsapp={whatsapp} />

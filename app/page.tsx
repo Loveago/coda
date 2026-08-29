@@ -3,7 +3,7 @@ import './globals.css';
 import Link from 'next/link';
 import { ArrowRight, Bell, Building2, Handshake, HeartHandshake, Megaphone, Award, ShieldCheck, Users } from 'lucide-react';
 import { db } from '@/lib/db';
-import { announcementKey, getSiteSettings } from '@/lib/settings';
+import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import Reveal from '@/components/Reveal';
@@ -56,6 +56,7 @@ export default async function Home() {
         phone={settings.contact_phone}
         email={settings.contact_email}
         announcement={settings.announcement_enabled === 'true' && settings.announcement_text ? { text: settings.announcement_text, key: announcementKey(settings.announcement_text) } : null}
+        socials={socialLinks(settings)}
       />
       <main>
         <Hero />
@@ -117,7 +118,7 @@ export default async function Home() {
           </div>
         </section>
       </main>
-      <SiteFooter phone={settings.contact_phone} email={settings.contact_email} whatsapp={settings.whatsapp_number} />
+      <SiteFooter phone={settings.contact_phone} email={settings.contact_email} whatsapp={settings.whatsapp_number} socials={socialLinks(settings)} />
     </>
   );
 }

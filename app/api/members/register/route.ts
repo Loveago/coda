@@ -8,11 +8,25 @@ import { nextMemberNumber } from '@/lib/membership';
 import { MEMBER_SESSION_COOKIE, MEMBER_SESSION_MAX_AGE, createMemberSessionToken, generateToken, hashToken } from '@/lib/members-auth';
 import { createPaymentIntent } from '@/lib/payments/payment-service';
 
+// Ghana Card numbers follow the format GHC-XXXXXXXXX-X (9 digits, then a check digit).
+const ghanaCardSchema = z
+  .string()
+  .trim()
+  .transform((value) => value.toUpperCase().replace(/\s+/g, ''))
+  .refine((value) => /^GHC-?\d{9}-?\d$/.test(value), {
+    message: 'Ghana Card number must look like GHC-123456789-0.'
+  })
+  .transform((value) => {
+    const digits = value.replace(/^GHC-?/, '').replace(/-/g, '');
+    return `GHC-${digits.slice(0, 9)}-${digits.slice(9)}`;
+  });
+
 const schema = z.object({
   firstName: z.string().trim().min(2),
   lastName: z.string().trim().min(2),
   email: z.string().trim().email(),
   phone: z.string().trim().min(7),
+  ghanaCardNumber: ghanaCardSchema,
   password: z.string().min(8),
   dateOfBirth: z.string().trim().min(1),
   gender: z.string().trim().min(1),
@@ -41,13 +55,26 @@ export async function POST(request: Request) {
   }
 
   const parsed = schema.safeParse(body);
-  if (!parsed.success) return NextResponse.json({ error: 'Please complete all required fields correctly (password must be at least 8 characters).' }, { status: 400 });
+  if (!parsed.success) {
+    const first = parsed.error.issues[0];
+    const field = first?.path[0];
+    // Surface format problems (e.g. the Ghana Card pattern) directly, but keep
+    // the generic prompt for missing/blank required fields.
+    const message = field === 'ghanaCardNumber'
+      ? first.message
+      : 'Please complete all required fields correctly (password must be at least 8 characters).';
+    return NextResponse.json({ error: message }, { status: 400 });
+  }
   const data = parsed.data;
   const email = data.email.toLowerCase();
 
   const existing = await db.member.findUnique({ where: { email } });
   if (existing) {
     return NextResponse.json({ error: 'This email is already registered. Please log in or reset your password.' }, { status: 409 });
+  }
+  const cardCollision = await db.member.findUnique({ where: { ghanaCardNumber: data.ghanaCardNumber } });
+  if (cardCollision) {
+    return NextResponse.json({ error: 'This Ghana Card number is already registered to another member.' }, { status: 409 });
   }
   const adminCollision = await db.user.findUnique({ where: { email } });
   if (adminCollision) {
@@ -63,6 +90,7 @@ export async function POST(request: Request) {
       firstName: data.firstName,
       lastName: data.lastName,
       phone: data.phone,
+      ghanaCardNumber: data.ghanaCardNumber,
       dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
       gender: data.gender || null,
       location: data.location || null,

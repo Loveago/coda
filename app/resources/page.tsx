@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ArrowRight } from 'lucide-react';
 import { db } from '@/lib/db';
-import { announcementKey, getSiteSettings } from '@/lib/settings';
+import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import Reveal from '@/components/Reveal';
@@ -22,6 +22,7 @@ export default async function Resources() {
         phone={site.contact_phone}
         email={site.contact_email}
         announcement={site.announcement_enabled === 'true' && site.announcement_text ? { text: site.announcement_text, key: announcementKey(site.announcement_text) } : null}
+        socials={socialLinks(site)}
       />
       <main>
         <section className="page-hero">
@@ -55,7 +56,7 @@ export default async function Resources() {
           )}
         </section>
       </main>
-      <SiteFooter phone={site.contact_phone} email={site.contact_email} whatsapp={site.whatsapp_number} />
+      <SiteFooter phone={site.contact_phone} email={site.contact_email} whatsapp={site.whatsapp_number} socials={socialLinks(site)} />
     </>
   );
 }

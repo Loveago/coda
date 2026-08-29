@@ -6,7 +6,7 @@ import { computeMembershipStatus } from '@/lib/membership';
 import { verifyCardCode } from '@/lib/card-verify';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
-import { announcementKey, getSiteSettings } from '@/lib/settings';
+import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,6 +62,7 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
         phone={site.contact_phone}
         email={site.contact_email}
         announcement={site.announcement_enabled === 'true' && site.announcement_text ? { text: site.announcement_text, key: announcementKey(site.announcement_text) } : null}
+        socials={socialLinks(site)}
       />
       <main>
         <section className="page-hero">
@@ -106,7 +107,7 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
           </p>
         </section>
       </main>
-      <SiteFooter phone={site.contact_phone} email={site.contact_email} whatsapp={site.whatsapp_number} />
+      <SiteFooter phone={site.contact_phone} email={site.contact_email} whatsapp={site.whatsapp_number} socials={socialLinks(site)} />
     </>
   );
 }

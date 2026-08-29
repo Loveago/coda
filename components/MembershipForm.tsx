@@ -97,6 +97,20 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
         <div><label style={label}>First name *</label><input name="firstName" required minLength={2} className="field" /></div>
         <div><label style={label}>Last name *</label><input name="lastName" required minLength={2} className="field" /></div>
         <div><label style={label}>Phone number *</label><input name="phone" required minLength={7} className="field" /></div>
+        <div>
+          <label style={label}>Ghana Card number *</label>
+          <input
+            name="ghanaCardNumber"
+            required
+            placeholder="GHC-123456789-0"
+            pattern="GHC-?\d{9}-?\d"
+            title="Enter your Ghana Card (national ID) number, e.g. GHC-123456789-0"
+            maxLength={15}
+            className="field"
+            style={{ textTransform: 'uppercase' }}
+            autoComplete="off"
+          />
+        </div>
         <div><label style={label}>Date of birth *</label><input name="dateOfBirth" type="date" required className="field" /></div>
         <div><label style={label}>Gender *</label>
           <select name="gender" className="field" required defaultValue="">
