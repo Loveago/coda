@@ -8,7 +8,7 @@ import Reveal from '@/components/Reveal';
 import '../globals.css';
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'Resources', description: 'Driver guides, policies, safety documents and downloadable resources from GACODA.' };
+export const metadata: Metadata = { title: 'Resources', description: 'Driver guides, policies, safety documents and downloadable resources from Mr Truth Agency.' };
 
 export default async function Resources() {
   const [resources, site] = await Promise.all([
@@ -29,7 +29,7 @@ export default async function Resources() {
           <div className="container">
             <p className="kicker">DRIVER RESOURCES</p>
             <h1>Resources</h1>
-            <p>Guides, policies, safety information and important documents for every GACODA member.</p>
+            <p>Guides, policies, safety information and important documents for every Mr Truth Agency driver and Fan Club member.</p>
           </div>
         </section>
         <section className="container page-body">

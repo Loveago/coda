@@ -38,7 +38,7 @@ export function nextMembershipPeriod(currentEnd: Date | null): { start: Date; en
 }
 
 export function generateMemberNumber(sequence: number) {
-  return `GACODA-${String(sequence).padStart(6, '0')}`;
+  return `MRTF-${String(sequence).padStart(6, '0')}`;
 }
 
 export async function nextMemberNumber() {

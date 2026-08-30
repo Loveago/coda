@@ -64,7 +64,7 @@ export default async function IdCard() {
         <Info size={15} style={{ flexShrink: 0, marginTop: 2 }} />
         <span>
           Anyone can confirm your card by scanning the QR code on the back — it opens a signed,
-          tamper-proof verification page on the GACODA website. Your personal details are never exposed.
+          tamper-proof verification page on the Mr Truth Agency website. Your personal details are never exposed.
         </span>
       </div>
 

@@ -11,15 +11,15 @@ import StatsCounter from '@/components/StatsCounter';
 import NewsletterForm from '@/components/NewsletterForm';
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'GACODA | United Drivers. Stronger Voices. Safer Roads.', description: 'The collective voice of online drivers in Greater Accra, Ghana.' };
+export const metadata: Metadata = { title: 'Mr Truth Agency | Automotive & Mobility', description: 'Automotive and mobility solutions for people, drivers and businesses.' };
 
 const values = [
-  ['Unity', 'Uniting online drivers for a common purpose.', Users],
-  ['Advocacy', 'Advocating for fair policies and better working conditions.', Megaphone],
-  ['Support', 'Supporting members with resources and guidance.', HeartHandshake],
-  ['Professionalism', 'Promoting professionalism and road safety at all times.', Award],
-  ['Partnership', 'Building strong partnerships for growth and recognition.', Handshake],
-  ['Safety', 'Promoting safer roads for drivers and the community.', ShieldCheck]
+  ['Driver Recruitment', 'Connect with opportunities built around professional drivers.', Users],
+  ['Fleet Management', 'Keep vehicles, drivers and operations moving efficiently.', Building2],
+  ['Car Rentals', 'Flexible vehicle access for individuals and businesses.', ShieldCheck],
+  ['Vehicle Sales', 'Source the right vehicle with confidence and clarity.', Award],
+  ['Automotive Goods', 'Access practical parts, products and equipment.', Handshake],
+  ['Corporate Mobility', 'Mobility solutions designed for growing businesses.', Megaphone]
 ] as const;
 
 function Hero() {
@@ -27,16 +27,16 @@ function Hero() {
     <section className="hero">
       <div className="container hero-grid">
         <div className="hero-copy">
-          <p className="kicker">GREATER ACCRA CONCERNED ONLINE DRIVERS ASSOCIATION</p>
-          <h1>UNITED DRIVERS.<br /><em>STRONGER VOICES.</em><br />SAFER ROADS.</h1>
-          <p>GACODA is the collective voice of online drivers in the Greater Accra Region. Together, we are building a safer, stronger and more professional future.</p>
+          <p className="kicker">MR TRUTH AGENCY · AUTOMOTIVE & MOBILITY</p>
+          <h1>MOVE PEOPLE.<br /><em>MOVE BUSINESS.</em><br />MOVE FORWARD.</h1>
+          <p>Automotive, driver and mobility solutions built for the way Africa moves. From fleet operations to vehicle sourcing, we help people and businesses keep moving.</p>
           <div className="hero-actions">
-            <Link href="/membership" className="btn btn-primary">JOIN OUR ASSOCIATION <ArrowRight size={15} /></Link>
-            <Link href="/about" className="btn btn-outline">LEARN MORE</Link>
+            <Link href="#services" className="btn btn-primary">EXPLORE SERVICES <ArrowRight size={15} /></Link>
+            <Link href="/membership" className="btn btn-outline">JOIN FAN CLUB</Link>
           </div>
         </div>
         <div className="hero-visual">
-          <div className="hero-orb">WE ARE<br />FOR EACH<br /><span>OTHER</span></div>
+          <div className="hero-orb">TRUTH<br />IN<br /><span>MOTION</span></div>
         </div>
       </div>
     </section>
@@ -60,7 +60,7 @@ export default async function Home() {
       />
       <main>
         <Hero />
-        <section className="container values">
+        <section className="container values" id="services">
           {values.map(([title, text, Icon], index) => (
             <Reveal key={title} delay={index * 70} className="value">
               <div className="value-icon"><Icon size={23} /></div>
@@ -69,12 +69,21 @@ export default async function Home() {
             </Reveal>
           ))}
         </section>
+        <section className="container services-grid" aria-label="Mr Truth Agency services">
+          {values.map(([title, text, Icon]) => (
+            <Reveal key={`service-${title}`} className="service-card">
+              <Icon size={22} color="var(--accent)" />
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </Reveal>
+          ))}
+        </section>
         <section className="container split">
           <Reveal className="about-card">
-            <p className="kicker">ABOUT GACODA</p>
-            <h2>Who We Are</h2>
-            <p>GACODA represents the interests of online drivers in the Greater Accra Region. We work to improve road safety, encourage professionalism, and create a sustainable and respectful partnership between drivers, platforms, and public institutions.</p>
-            <Link href="/about" className="btn btn-primary">MORE ABOUT US <ArrowRight size={14} /></Link>
+            <p className="kicker">WHAT WE DO</p>
+            <h2>Mobility, without the friction.</h2>
+            <p>Mr Truth Agency is an automotive and mobility company connecting drivers, vehicles and businesses to practical solutions. Explore vehicle sourcing, fleet support, rentals, automotive goods and the people who keep movement alive.</p>
+            <Link href="/about" className="btn btn-primary">DISCOVER THE AGENCY <ArrowRight size={14} /></Link>
           </Reveal>
           <Reveal delay={120} className="stats">
             {stats.map((stat) => (
@@ -89,7 +98,7 @@ export default async function Home() {
         <section className="container news-section">
           <Reveal>
             <div className="section-head">
-              <h2>LATEST NEWS & UPDATES</h2>
+              <h2>INSIDE THE AGENCY</h2>
               <Link href="/news">VIEW ALL NEWS <ArrowRight size={14} /></Link>
             </div>
           </Reveal>

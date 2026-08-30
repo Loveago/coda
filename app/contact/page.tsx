@@ -8,7 +8,7 @@ import ContactForm from '@/components/ContactForm';
 import '../globals.css';
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'Contact Us', description: 'Get in touch with GACODA — phone, email, location and contact form.' };
+export const metadata: Metadata = { title: 'Contact Us', description: 'Get in touch with Mr Truth Agency for automotive, mobility and member support.' };
 
 export default async function Contact() {
   const site = await getSiteSettings();
@@ -24,8 +24,8 @@ export default async function Contact() {
         <section className="page-hero">
           <div className="container">
             <p className="kicker">GET IN TOUCH</p>
-            <h1>Contact GACODA</h1>
-            <p>For official enquiries, partnership proposals or member support, reach the association through the details below.</p>
+            <h1>Contact Mr Truth Agency</h1>
+            <p>For service enquiries, partnership proposals or Fan Club support, reach the agency through the details below.</p>
           </div>
         </section>
         <section className="container page-body">
@@ -36,7 +36,7 @@ export default async function Contact() {
                 <p style={{ display: 'flex', alignItems: 'center', gap: 9 }}><MapPin size={14} /> Accra, Greater Accra Region, Ghana</p>
                 <p style={{ display: 'flex', alignItems: 'center', gap: 9 }}><Phone size={14} /> {site.contact_phone}</p>
                 <p style={{ display: 'flex', alignItems: 'center', gap: 9 }}><Mail size={14} /> {site.contact_email}</p>
-                <div style={{ marginTop: 22, borderRadius: 12, height: 170, background: 'linear-gradient(135deg, rgba(255,255,255,.1), rgba(255,255,255,.03))', display: 'grid', placeItems: 'center', color: '#cfe0ff', fontSize: 12 }}>
+                <div style={{ marginTop: 22, borderRadius: 12, height: 170, background: 'linear-gradient(135deg, rgba(255,255,255,.1), rgba(255,255,255,.03))', display: 'grid', placeItems: 'center', color: '#FFD2B3', fontSize: 12 }}>
                   Interactive map coming soon
                 </div>
               </div>

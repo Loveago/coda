@@ -1,0 +1,1742 @@
+# MR TRUTH AGENCY — COMPLETE BRAND REBUILD & WEBSITE REDESIGN
+
+You are a senior product designer, UX engineer, and full-stack developer.
+
+We are completely rebranding an existing association website that was previously called **GACODA**.
+
+The new organization/brand name is:
+
+# MR TRUTH AGENCY
+
+Do NOT simply replace the GACODA logo/name inside the existing design.
+
+I want a **complete visual, UX and information-architecture redesign**.
+
+The existing application already has a serverless architecture, PostgreSQL database, membership system, registration fees, annual dues, Paystack payment integration, admin functionality, authentication, and CMS concepts.
+
+**Preserve and improve the existing functionality, but completely redesign the frontend, admin panel, and member dashboard.**
+
+The result should feel like a serious modern African mobility/automotive company — NOT an association website.
+
+---
+
+# 1. NEW BRAND POSITIONING
+
+Mr Truth Agency is now a broader automotive and mobility business.
+
+The platform should combine:
+
+### AUTOMOTIVE & MOBILITY
+
+* Driver recruitment
+* Fleet management
+* Car rentals
+* Vehicle sourcing
+* Vehicle sales
+* Automotive goods
+* Car spare parts
+* Automotive services
+* Driver services
+* Fleet services
+* Corporate mobility solutions
+
+AND:
+
+### MR TRUTH FAN CLUB
+
+The existing membership system becomes a **fan/community membership program**.
+
+This is why we are keeping:
+
+* Registration fee
+* Annual membership dues
+* Member accounts
+* Member profiles
+* Member dashboard
+* Membership status
+* Annual renewal
+* Payment history
+
+The fan club should feel like a community/product inside the larger Mr Truth Agency ecosystem.
+
+---
+
+# 2. IMPORTANT BRAND ARCHITECTURE
+
+Do NOT make the fan club the entire identity of the website.
+
+The primary brand is:
+
+**MR TRUTH AGENCY**
+
+The fan/community program is:
+
+**MR TRUTH FAN CLUB**
+
+Think of the structure like:
+
+```text
+MR TRUTH AGENCY
+│
+├── Automotive & Mobility
+│   ├── Driver Recruitment
+│   ├── Fleet Management
+│   ├── Car Rentals
+│   ├── Vehicle Sales
+│   ├── Spare Parts
+│   └── Automotive Services
+│
+├── Business Solutions
+│   ├── Corporate Fleet
+│   ├── Driver Solutions
+│   └── Vehicle Solutions
+│
+└── MR TRUTH FAN CLUB
+    ├── Join
+    ├── Member Profile
+    ├── Membership
+    ├── Annual Dues
+    └── Member Dashboard
+```
+
+This distinction is extremely important.
+
+---
+
+# 3. BRAND PERSONALITY
+
+The new website should feel:
+
+* Bold
+* Premium
+* Automotive
+* Modern
+* Fast
+* Confident
+* African
+* Entrepreneurial
+* Trustworthy
+* Technology-driven
+* Commercial
+* Young
+* Energetic
+
+Avoid:
+
+* Government-association aesthetics
+* Traditional NGO layouts
+* Generic corporate templates
+* Excessive rounded cards everywhere
+* Old-fashioned gradients
+* Stock-template appearance
+* Excessive blue branding from the previous GACODA design
+
+We are starting over visually.
+
+---
+
+# 4. CREATIVE DIRECTION
+
+Create a distinctive visual identity around:
+
+**TRUTH + MOTION + AUTOMOTIVE + PEOPLE**
+
+The brand should communicate movement.
+
+Think:
+
+* Automotive photography
+* Roads
+* City movement
+* Vehicles
+* Drivers
+* Fleet operations
+* Motion blur
+* Strong typography
+* Editorial layouts
+* Large photography
+* Dark premium surfaces
+* Sharp geometric elements
+* Subtle automotive-inspired details
+
+The design should feel closer to a **premium mobility startup / automotive technology company** than an association.
+
+---
+
+# 5. COLOR SYSTEM
+
+Do NOT reuse the previous GACODA blue-and-white design.
+
+Create a new brand palette.
+
+Use a sophisticated automotive palette such as:
+
+### Primary
+
+Deep Charcoal / Almost Black
+
+### Secondary
+
+Warm White
+
+### Accent
+
+Electric Orange / Amber
+
+### Supporting
+
+Metallic Grey
+
+### Optional Accent
+
+Deep Red or subtle warm gold where appropriate
+
+The final palette should feel premium and distinctive.
+
+Use color intentionally.
+
+Avoid making the website look like a construction company or generic car dealership.
+
+---
+
+# 6. TYPOGRAPHY
+
+Use modern, bold typography.
+
+Headings should be:
+
+* Large
+* Confident
+* Editorial
+* High contrast
+
+Body text should remain highly readable.
+
+Consider fonts such as:
+
+* Inter
+* Manrope
+* Plus Jakarta Sans
+* Space Grotesk
+* Sora
+
+Use a strong display font if appropriate.
+
+Create a proper typography system instead of randomly sizing headings.
+
+---
+
+# 7. LOGO / BRANDING
+
+The existing GACODA identity must NOT simply be recolored.
+
+Create a completely new visual identity for:
+
+**MR TRUTH**
+
+and:
+
+**MR TRUTH AGENCY**
+
+Explore a wordmark-based identity.
+
+The brand should work well:
+
+* On websites
+* On vehicles
+* On uniforms
+* On social media
+* On documents
+* On business cards
+* On mobile apps
+* On member cards
+
+Create a clean logo placeholder if an official logo has not yet been supplied.
+
+Do not permanently invent an official logo without making it easy to replace.
+
+---
+
+# 8. HOMEPAGE REDESIGN
+
+Completely redesign the homepage.
+
+Do NOT preserve the old GACODA homepage structure.
+
+The homepage should immediately communicate that Mr Truth Agency is a **multi-service automotive and mobility company**.
+
+---
+
+# 9. HERO SECTION
+
+Create an extremely strong hero.
+
+Possible messaging direction:
+
+**MOVE PEOPLE.
+MOVE BUSINESS.
+MOVE FORWARD.**
+
+Or another equally strong brand statement.
+
+Do not blindly use this exact wording if you can create something better.
+
+The hero should communicate:
+
+* Automotive
+* Mobility
+* People
+* Business
+* Trust
+* Movement
+
+Use high-quality automotive imagery.
+
+Potential visual:
+
+A premium vehicle driving through Accra at night/day with subtle motion treatment.
+
+Use a split-screen or editorial composition rather than the old association hero.
+
+Include CTAs such as:
+
+**EXPLORE OUR SERVICES**
+
+and:
+
+**JOIN MR TRUTH FAN CLUB**
+
+---
+
+# 10. HERO INTERACTION
+
+Make the hero feel alive.
+
+Use:
+
+* Subtle image movement
+* Motion blur
+* Animated typography
+* Smooth reveal
+* Cursor interactions
+* Floating statistics
+* Micro-interactions
+* Scroll-based transitions
+
+Do NOT make it gimmicky.
+
+The goal is:
+
+**Premium + smooth + cinematic.**
+
+---
+
+# 11. SERVICES SECTION
+
+This should be one of the strongest sections on the homepage.
+
+Create a modern services showcase.
+
+Services:
+
+### DRIVER RECRUITMENT
+
+Recruiting and connecting qualified drivers with opportunities.
+
+### FLEET MANAGEMENT
+
+Helping businesses manage vehicles, drivers, operations and fleet performance.
+
+### CAR RENTALS
+
+Vehicle rental solutions for individuals and businesses.
+
+### VEHICLE SALES
+
+Vehicle sourcing and sales solutions.
+
+### SPARE PARTS
+
+Car spare parts and automotive components.
+
+### AUTOMOTIVE GOODS
+
+Automotive products and equipment.
+
+### AUTOMOTIVE SERVICES
+
+Vehicle-related services and maintenance solutions.
+
+### CORPORATE MOBILITY
+
+Mobility solutions for businesses and organizations.
+
+Do not make these simple boring cards.
+
+Experiment with:
+
+* Large interactive cards
+* Image panels
+* Hover expansion
+* Horizontal scrolling
+* Editorial layouts
+* Numbered services
+* Image overlays
+
+---
+
+# 12. DRIVER RECRUITMENT
+
+Create a dedicated page:
+
+`/services/driver-recruitment`
+
+Include:
+
+* Driver opportunities
+* Driver application
+* Requirements
+* Benefits
+* Recruitment process
+* Available opportunities
+* FAQ
+* Apply button
+
+Create a database-backed driver recruitment/application system.
+
+---
+
+# 13. FLEET MANAGEMENT
+
+Create:
+
+`/services/fleet-management`
+
+Explain services such as:
+
+* Fleet onboarding
+* Driver management
+* Vehicle tracking integration readiness
+* Maintenance management
+* Fleet reporting
+* Vehicle allocation
+* Operational support
+
+Create the architecture so fleet-management features can be expanded later.
+
+---
+
+# 14. CAR RENTALS
+
+Create:
+
+`/rentals`
+
+Allow visitors to:
+
+* Browse vehicles
+* Filter vehicles
+* View vehicle details
+* View rental rates
+* Submit rental requests
+* Select dates
+* Submit contact information
+
+Do not necessarily build a full real-time rental booking engine unless the existing backend supports it.
+
+Build the foundation correctly so booking can be expanded later.
+
+Vehicle model should support:
+
+* Make
+* Model
+* Year
+* Category
+* Transmission
+* Fuel type
+* Seats
+* Images
+* Daily price
+* Availability
+* Description
+* Features
+
+---
+
+# 15. VEHICLE SALES
+
+Create:
+
+`/vehicles`
+
+A modern vehicle marketplace/catalog.
+
+Allow visitors to:
+
+* Browse vehicles
+* Search
+* Filter
+* Sort
+* View vehicle details
+* Request information
+* Request a viewing
+* Contact Mr Truth Agency
+
+Vehicle listings should be database-driven.
+
+---
+
+# 16. SPARE PARTS & AUTOMOTIVE GOODS
+
+Create:
+
+`/automotive`
+
+Include:
+
+* Spare parts
+* Automotive accessories
+* Oils/fluids
+* Vehicle equipment
+* Automotive goods
+* Other products
+
+Structure the backend so products can eventually become a complete e-commerce system.
+
+Each product can have:
+
+* Name
+* SKU
+* Category
+* Description
+* Images
+* Price
+* Stock
+* Availability
+* Brand
+* Vehicle compatibility
+
+---
+
+# 17. FAN CLUB
+
+The fan club should be visually distinct but still part of the Mr Truth ecosystem.
+
+Brand it:
+
+# MR TRUTH FAN CLUB
+
+Position it as a community for people connected to the Mr Truth ecosystem.
+
+Potential benefits can include:
+
+* Member identity
+* Community access
+* Member events
+* Member discounts
+* Automotive offers
+* Driver opportunities
+* Exclusive updates
+* Partner benefits
+
+Do not claim benefits that haven't been officially confirmed.
+
+Use placeholder content where necessary.
+
+---
+
+# 18. MEMBERSHIP FEES
+
+KEEP THE EXISTING PAYMENT STRUCTURE.
+
+### Registration Fee
+
+Default:
+
+**GHS 20**
+
+### Annual Membership Dues
+
+Default:
+
+**GHS 200**
+
+These must remain configurable from the admin panel.
+
+---
+
+# 19. REGISTRATION FEE SWITCH
+
+The admin must be able to turn the registration fee ON/OFF.
+
+Setting:
+
+**Registration Fee Enabled**
+
+If ON:
+
+GHS 20 registration fee.
+
+If OFF:
+
+Registration is free.
+
+Do NOT hardcode these values.
+
+Store them in PostgreSQL.
+
+---
+
+# 20. FAN CLUB REGISTRATION
+
+Create:
+
+`/fan-club/join`
+
+The registration process should collect:
+
+* Full name
+* Email
+* Phone
+* Location
+* Driver/automotive role
+* Relevant profile information
+* Password
+* Password confirmation
+* Consent
+
+Password must be securely hashed.
+
+Email must be unique.
+
+---
+
+# 21. APPLICATION WORKFLOW
+
+Use:
+
+```text
+Applicant
+↓
+Create account
+↓
+Email verification
+↓
+Registration payment if enabled
+↓
+Application submitted
+↓
+Admin review
+↓
+Approved
+↓
+Member becomes ACTIVE
+↓
+Member dashboard
+```
+
+If registration fee is disabled:
+
+```text
+Applicant
+↓
+Create account
+↓
+Email verification
+↓
+Application submitted
+↓
+Admin review
+↓
+Approved
+↓
+ACTIVE
+```
+
+Do NOT automatically approve someone just because they paid.
+
+---
+
+# 22. MEMBER DASHBOARD REDESIGN
+
+Completely redesign the member dashboard.
+
+Do NOT reuse the old dashboard.
+
+It should feel like a premium membership product.
+
+Route:
+
+`/member/dashboard`
+
+---
+
+# 23. MEMBER DASHBOARD EXPERIENCE
+
+Create a beautiful personalized dashboard.
+
+Header:
+
+**Welcome back, [Name]**
+
+Display:
+
+### Membership
+
+ACTIVE
+
+### Member ID
+
+Example:
+
+`MRTF-000123`
+
+### Membership validity
+
+Start/end date.
+
+### Annual dues
+
+GHS 200
+
+### Payment status
+
+PAID / DUE / OVERDUE
+
+### Registration
+
+PAID / FREE
+
+---
+
+# 24. MEMBER DASHBOARD SECTIONS
+
+Include:
+
+* Overview
+* My Profile
+* Membership
+* Payments
+* Fan Club Benefits
+* Events
+* Offers
+* Notifications
+* Support
+* Settings
+
+The sidebar should be elegant and modern.
+
+Mobile should use a bottom navigation or compact mobile navigation.
+
+---
+
+# 25. MEMBER PROFILE
+
+Create:
+
+`/member/profile`
+
+Allow users to manage:
+
+* Profile picture
+* Name
+* Phone
+* Email
+* Location
+* Driver information
+* Vehicle information
+* Emergency contact
+
+Lock verified/administrative fields where necessary.
+
+---
+
+# 26. PAYMENT CENTER
+
+Create:
+
+`/member/payments`
+
+Show:
+
+* Registration fee
+* Annual dues
+* Payment status
+* Payment history
+* Paystack references
+* Receipts
+
+Provide:
+
+**PAY ANNUAL DUES**
+
+when dues are due.
+
+---
+
+# 27. PAYSTACK
+
+Preserve the existing Paystack integration.
+
+All payments must be server verified.
+
+Never trust the browser to determine:
+
+* Amount
+* Payment status
+* Membership status
+
+Use:
+
+* Transaction initialization
+* Transaction verification
+* Secure webhook
+* Idempotency
+* Payment records
+* Payment metadata
+
+Do not store card information.
+
+---
+
+# 28. ADMIN PANEL — COMPLETE REDESIGN
+
+Completely redesign `/admin`.
+
+The old GACODA admin dashboard should NOT simply be recolored.
+
+Build a modern SaaS-style administration platform.
+
+Think:
+
+**Stripe Dashboard + modern CMS + automotive operations platform**
+
+---
+
+# 29. ADMIN SIDEBAR
+
+Create sections:
+
+### OVERVIEW
+
+* Dashboard
+
+### CONTENT
+
+* Pages
+* News
+* Media
+* Resources
+* Gallery
+
+### BUSINESS
+
+* Services
+* Vehicles
+* Rentals
+* Automotive Products
+* Driver Recruitment
+* Fleet Management
+
+### MEMBERSHIP
+
+* Members
+* Applications
+* Fan Club
+* Membership Fees
+* Payments
+
+### COMMUNICATION
+
+* Messages
+* Notifications
+* Newsletter
+
+### MANAGEMENT
+
+* Team
+* Admin Users
+* Roles & Permissions
+* Settings
+* Audit Logs
+
+---
+
+# 30. ADMIN DASHBOARD
+
+Show business metrics such as:
+
+* Total members
+* Active members
+* Pending applications
+* Monthly revenue
+* Annual dues collected
+* Registration fees
+* Rental inquiries
+* Vehicle inquiries
+* Driver applications
+* Contact messages
+
+Use beautiful charts.
+
+---
+
+# 31. NEWS CMS
+
+Retain the complete news CMS.
+
+Admin can:
+
+* Create articles
+* Edit articles
+* Draft
+* Preview
+* Publish
+* Schedule
+* Archive
+* Delete
+* Categories
+* Featured images
+* Authors
+* SEO
+* Slugs
+
+Public:
+
+`/news`
+
+Article:
+
+`/news/[slug]`
+
+---
+
+# 32. SERVICE MANAGEMENT
+
+Create:
+
+`/admin/services`
+
+Admins can:
+
+* Create services
+* Edit services
+* Delete services
+* Reorder services
+* Enable/disable services
+* Upload images
+* Edit descriptions
+* Add features
+* Add CTA links
+
+The homepage services section should pull from this database.
+
+---
+
+# 33. VEHICLE MANAGEMENT
+
+Create:
+
+`/admin/vehicles`
+
+Admins can:
+
+* Add vehicle
+* Edit vehicle
+* Delete vehicle
+* Upload multiple images
+* Set price
+* Mark sold
+* Mark available
+* Mark featured
+* Add specifications
+* Manage categories
+
+---
+
+# 34. RENTAL MANAGEMENT
+
+Create:
+
+`/admin/rentals`
+
+Admins can manage:
+
+* Vehicles
+* Rental rates
+* Availability
+* Rental inquiries
+* Customer requests
+* Rental status
+
+Statuses:
+
+```text
+NEW
+CONTACTED
+CONFIRMED
+COMPLETED
+CANCELLED
+```
+
+---
+
+# 35. DRIVER RECRUITMENT ADMIN
+
+Create:
+
+`/admin/recruitment`
+
+Admins can:
+
+* Create driver opportunities
+* View applications
+* Filter applicants
+* Change applicant status
+* Add internal notes
+* Contact applicants
+* Archive applications
+
+Statuses:
+
+```text
+NEW
+REVIEWING
+SHORTLISTED
+INTERVIEW
+ACCEPTED
+REJECTED
+```
+
+---
+
+# 36. AUTOMOTIVE PRODUCT MANAGEMENT
+
+Create:
+
+`/admin/products`
+
+Admins can manage:
+
+* Spare parts
+* Automotive goods
+* Accessories
+* Products
+* Stock
+* Prices
+* Categories
+* Images
+
+Design the architecture so full online checkout can be added later.
+
+---
+
+# 37. CONTENT MANAGEMENT
+
+Admins should control:
+
+* Homepage
+* About
+* Services
+* Fan Club
+* Contact
+* Footer
+* Navigation
+* SEO
+* Social links
+
+Content must be database-driven wherever appropriate.
+
+---
+
+# 38. WEBSITE SETTINGS
+
+Create:
+
+`/admin/settings`
+
+Include:
+
+### General
+
+* Agency name
+* Logo
+* Contact information
+* Address
+* Social media
+
+### Membership
+
+* Registration fee
+* Registration fee enabled/disabled
+* Annual dues
+* Membership duration
+* Renewal settings
+
+### Payments
+
+* Paystack settings
+* Currency
+* Payment configuration
+
+### SEO
+
+* Default title
+* Meta description
+* Social sharing image
+
+---
+
+# 39. FAN CLUB ADMIN
+
+Create:
+
+`/admin/fan-club`
+
+Admins can:
+
+* View members
+* Approve members
+* Suspend members
+* Manage membership
+* Manage benefits
+* Manage events
+* Manage offers
+* Manage announcements
+
+---
+
+# 40. MEMBER MANAGEMENT
+
+Admins can:
+
+* View members
+* Search
+* Filter
+* Approve
+* Reject
+* Suspend
+* Reactivate
+* Edit profiles
+* View payments
+* View membership history
+* View audit history
+
+---
+
+# 41. FINANCIAL DASHBOARD
+
+Create:
+
+`/admin/payments`
+
+Show:
+
+* Registration fee revenue
+* Annual dues revenue
+* Total revenue
+* Successful payments
+* Failed payments
+* Pending payments
+* Refunds
+
+Filters:
+
+* Date
+* Member
+* Payment type
+* Status
+
+---
+
+# 42. NOTIFICATION SYSTEM
+
+Create notifications for:
+
+### Members
+
+* Application received
+* Application approved
+* Application rejected
+* Payment successful
+* Dues reminder
+* Membership expiring
+
+### Admins
+
+* New application
+* New payment
+* New rental inquiry
+* New vehicle inquiry
+* New recruitment application
+* New contact message
+
+---
+
+# 43. AUDIT LOG
+
+Track important administrator actions.
+
+Examples:
+
+* Article published
+* Member approved
+* Fee changed
+* Payment status updated
+* Vehicle added
+* Service edited
+* Admin account created
+
+Store:
+
+* User
+* Action
+* Entity
+* Entity ID
+* Timestamp
+* Metadata
+
+---
+
+# 44. DESIGN SYSTEM
+
+Create a centralized design system.
+
+Do not style every component independently.
+
+Define:
+
+* Colors
+* Typography
+* Spacing
+* Border radius
+* Shadows
+* Buttons
+* Inputs
+* Cards
+* Modals
+* Tables
+* Badges
+* Toasts
+
+Use reusable components.
+
+---
+
+# 45. ANIMATIONS
+
+The entire website should have fluid animation.
+
+Use Motion/Framer Motion where appropriate.
+
+Examples:
+
+* Page transitions
+* Hero reveals
+* Scroll reveals
+* Image transitions
+* Hover interactions
+* Card expansion
+* Navigation transitions
+* Dashboard transitions
+* Modal animations
+* Number counters
+
+Respect:
+
+`prefers-reduced-motion`
+
+Animations should be fast and subtle.
+
+Never sacrifice usability or performance.
+
+---
+
+# 46. MOBILE EXPERIENCE
+
+Redesign mobile independently.
+
+The mobile website must feel intentional.
+
+Create:
+
+* Mobile navigation
+* Touch-friendly cards
+* Swipeable service sections
+* Compact dashboard
+* Bottom navigation for member portal where appropriate
+* Responsive admin dashboard
+* Responsive forms
+
+Test:
+
+* iPhone-sized screens
+* Android-sized screens
+* Tablets
+* Desktop
+* Large monitors
+
+---
+
+# 47. DATABASE
+
+Continue using:
+
+* PostgreSQL
+* Prisma
+
+Expand the schema appropriately.
+
+Potential models:
+
+```text
+User
+Member
+MembershipApplication
+MembershipPeriod
+Payment
+PaymentEvent
+FeeSetting
+FeeSettingHistory
+
+Service
+Vehicle
+VehicleImage
+RentalInquiry
+RentalBooking
+Product
+ProductCategory
+DriverOpportunity
+DriverApplication
+FleetInquiry
+
+NewsArticle
+NewsCategory
+Media
+GalleryItem
+Resource
+
+ContactMessage
+NewsletterSubscriber
+Notification
+TeamMember
+SiteSetting
+NavigationItem
+AuditLog
+```
+
+Do not create unnecessary models if a simpler architecture is better.
+
+---
+
+# 48. SERVERLESS ARCHITECTURE
+
+Continue using:
+
+* Next.js
+* React
+* TypeScript
+* Node.js serverless runtime
+* PostgreSQL
+* Prisma
+* Server Actions
+* Route Handlers
+* Server Components
+* Object storage
+
+The application must remain deployable to Vercel or another serverless platform.
+
+Do not introduce a permanently running Express server.
+
+---
+
+# 49. SECURITY
+
+Maintain strong security.
+
+Requirements:
+
+* Secure authentication
+* Password hashing
+* Email verification
+* Password reset
+* Role-based authorization
+* Server-side validation
+* Zod validation
+* Rate limiting where appropriate
+* Secure Paystack webhook
+* No secrets in frontend
+* No card storage
+* Audit logs
+* Protected admin routes
+* Protected member routes
+
+---
+
+# 50. SEO
+
+Implement SEO for:
+
+* Homepage
+* Services
+* Driver recruitment
+* Fleet management
+* Rentals
+* Vehicles
+* Automotive products
+* News
+* Fan Club
+
+Generate appropriate metadata dynamically.
+
+Include:
+
+* Sitemap
+* Robots.txt
+* Open Graph
+* Canonical URLs
+* Structured metadata where useful
+
+---
+
+# 51. IMPORTANT CONTENT RULE
+
+Do NOT invent fake company claims.
+
+Where information is unknown, use realistic placeholder copy clearly structured for replacement.
+
+Do not claim:
+
+* Specific partnerships
+* Number of vehicles
+* Number of employees
+* Government relationships
+* Certifications
+* Years in operation
+* Customer counts
+
+unless provided.
+
+---
+
+# 52. UX GOAL
+
+The website should make a visitor immediately understand:
+
+**"Mr Truth Agency helps people and businesses move, manage vehicles, find automotive solutions, and access driver opportunities."**
+
+Then introduce:
+
+**"MR TRUTH FAN CLUB"**
+
+as the community layer.
+
+---
+
+# 53. HOMEPAGE INFORMATION ARCHITECTURE
+
+A possible homepage structure:
+
+```text
+TOP NAVIGATION
+
+↓
+CINEMATIC HERO
+
+↓
+WHAT IS MR TRUTH AGENCY?
+
+↓
+OUR SERVICES
+
+Driver Recruitment
+Fleet Management
+Car Rentals
+Vehicle Sales
+Spare Parts
+Automotive Services
+
+↓
+AUTOMOTIVE / MOBILITY SHOWCASE
+
+↓
+WHY MR TRUTH?
+
+↓
+FEATURED VEHICLES / RENTALS
+
+↓
+DRIVER OPPORTUNITIES
+
+↓
+MR TRUTH FAN CLUB
+
+↓
+LATEST NEWS
+
+↓
+CTA
+
+"LET'S MOVE."
+
+↓
+FOOTER
+```
+
+Feel free to improve this structure if UX research/design reasoning suggests a better arrangement.
+
+---
+
+# 54. MEMBER PORTAL INFORMATION ARCHITECTURE
+
+```text
+MEMBER DASHBOARD
+
+Overview
+│
+├── My Profile
+├── Membership
+├── Payments
+├── Receipts
+├── Fan Club
+├── Offers
+├── Events
+├── Notifications
+└── Settings
+```
+
+---
+
+# 55. ADMIN INFORMATION ARCHITECTURE
+
+```text
+ADMIN
+
+Dashboard
+
+Content
+├── Pages
+├── News
+├── Media
+├── Resources
+└── Gallery
+
+Business
+├── Services
+├── Vehicles
+├── Rentals
+├── Products
+├── Recruitment
+└── Fleet
+
+Membership
+├── Members
+├── Applications
+├── Fan Club
+├── Fees
+└── Payments
+
+Communication
+├── Messages
+├── Notifications
+└── Newsletter
+
+Management
+├── Team
+├── Admin Users
+├── Roles
+├── Settings
+└── Audit Logs
+```
+
+---
+
+# 56. DO NOT LOSE EXISTING FUNCTIONALITY
+
+During this redesign, preserve working functionality that already exists.
+
+Do NOT break:
+
+* Authentication
+* PostgreSQL
+* Prisma
+* Membership registration
+* Registration fee
+* Annual dues
+* Paystack
+* Payment verification
+* Webhooks
+* Member accounts
+* Admin accounts
+* News CMS
+* Admin permissions
+
+If existing functionality is poorly structured, refactor it carefully rather than deleting it.
+
+---
+
+# 57. MIGRATION FROM GACODA
+
+Remove GACODA branding from the user-facing application.
+
+Replace with:
+
+**MR TRUTH AGENCY**
+
+and:
+
+**MR TRUTH FAN CLUB**
+
+However, inspect the database before removing old fields.
+
+Do not destroy existing membership/payment records simply because the brand changed.
+
+Create a safe migration strategy.
+
+Existing member/payment data must remain intact.
+
+---
+
+# 58. FINAL DESIGN STANDARD
+
+The finished website should look like something that could genuinely launch as a modern automotive/mobility company in 2026.
+
+It should NOT look like:
+
+* A school website
+* NGO website
+* Church website
+* Government website
+* Generic WordPress template
+* Basic car dealership
+* Generic SaaS dashboard
+
+It should look like a **premium automotive mobility platform**.
+
+---
+
+# 59. BUILD ORDER
+
+Work in this order:
+
+### PHASE 1
+
+Create the new Mr Truth Agency design system.
+
+### PHASE 2
+
+Redesign public website.
+
+### PHASE 3
+
+Build services architecture.
+
+### PHASE 4
+
+Redesign Fan Club membership experience.
+
+### PHASE 5
+
+Redesign member dashboard.
+
+### PHASE 6
+
+Redesign admin dashboard.
+
+### PHASE 7
+
+Integrate business management modules.
+
+### PHASE 8
+
+Connect everything to PostgreSQL/Prisma.
+
+### PHASE 9
+
+Verify Paystack integration.
+
+### PHASE 10
+
+Test authentication, authorization and security.
+
+### PHASE 11
+
+Test responsive layouts.
+
+### PHASE 12
+
+Optimize performance and SEO.
+
+---
+
+# 60. FINAL ACCEPTANCE CRITERIA
+
+The project is NOT complete until:
+
+* The old GACODA visual identity is completely replaced.
+* Mr Truth Agency has a distinct visual identity.
+* The homepage is completely redesigned.
+* The navigation is redesigned.
+* Services are database-driven.
+* Vehicle listings work.
+* Rental inquiries work.
+* Driver recruitment works.
+* Automotive products have a foundation.
+* Fan Club membership works.
+* Registration fee works.
+* Registration fee ON/OFF works.
+* Annual dues work.
+* Paystack works.
+* Paystack webhooks work.
+* Members can log in.
+* Members have redesigned dashboards.
+* Members can view profiles.
+* Members can view payment history.
+* Members can pay annual dues.
+* Receipts work.
+* Admin dashboard is completely redesigned.
+* Admin can control website content.
+* Admin can create news articles.
+* Admin can manage services.
+* Admin can manage vehicles.
+* Admin can manage recruitment.
+* Admin can manage members.
+* Admin can manage payments.
+* Admin can manage fees.
+* Admin can manage Fan Club.
+* Admin permissions work.
+* Audit logging works.
+* Mobile design works.
+* Animations are smooth.
+* SEO is implemented.
+* Existing database records are preserved.
+
+# FINAL INSTRUCTION
+
+**Do not think of this as a GACODA website with a new name.**
+
+Think of it as building an entirely new company called:
+
+# MR TRUTH AGENCY
+
+with three connected experiences:
+
+**1. PUBLIC AUTOMOTIVE & MOBILITY PLATFORM**
+
+**2. MR TRUTH FAN CLUB MEMBER PLATFORM**
+
+**3. MR TRUTH AGENCY ADMIN / BUSINESS OPERATIONS PLATFORM**
+
+Create a bold, premium, highly visual, automotive-inspired digital experience that connects all three systems into one cohesive product.
+
+Be creative.
+
+Do not blindly follow the previous design.
+
+The previous GACODA design is now only a reference for functionality, not a visual reference.
+
+**The new Mr Truth Agency identity should feel like its own brand from the ground up.**
+
+
+
+

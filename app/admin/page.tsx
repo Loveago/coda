@@ -3,8 +3,8 @@ import '../globals.css';
 import { db } from '@/lib/db';
 import { APPLICATION_FILTER } from '@/lib/membership';
 import {
-  BarChart3, FileText, Image as ImageIcon, Inbox, Mail,
-  Newspaper, Users
+  BarChart3, CarFront, FileText, Image as ImageIcon, Inbox, Mail,
+  Newspaper, Package, Users
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +20,7 @@ const actionLabels: Record<string, string> = {
 };
 
 export default async function Admin() {
-  const [members, applications, publishedNews, drafts, messages, subscribers, gallery, resources, statistics, activity] =
+  const [members, applications, publishedNews, drafts, messages, subscribers, gallery, resources, statistics, activity, services, vehicles, rentals, products, recruitment] =
     await Promise.all([
       db.member.count({ where: { status: 'APPROVED' } }),
       db.member.count({ where: APPLICATION_FILTER }),
@@ -31,7 +31,12 @@ export default async function Admin() {
       db.galleryItem.count(),
       db.resource.count(),
       db.statistic.count({ where: { active: true } }),
-      db.auditLog.findMany({ orderBy: { createdAt: 'desc' }, take: 8, include: { user: { select: { name: true } } } })
+      db.auditLog.findMany({ orderBy: { createdAt: 'desc' }, take: 8, include: { user: { select: { name: true } } } }),
+      db.service.count({ where: { enabled: true } }),
+      db.vehicle.count({ where: { availability: { not: 'SOLD' } } }),
+      db.rentalInquiry.count({ where: { status: 'NEW' } }),
+      db.product.count({ where: { available: true } }),
+      db.driverApplication.count({ where: { status: 'NEW' } })
     ]);
 
   const cards = [
@@ -42,7 +47,12 @@ export default async function Admin() {
     ['Subscribers', subscribers.toLocaleString(), 'Newsletter audience', Mail],
     ['Gallery images', gallery.toLocaleString(), 'Photos in the gallery', ImageIcon],
     ['Resources', resources.toLocaleString(), 'Published documents', FileText],
-    ['Statistics', statistics.toLocaleString(), 'Active impact metrics', BarChart3]
+    ['Statistics', statistics.toLocaleString(), 'Active impact metrics', BarChart3],
+    ['Services', services.toLocaleString(), 'Enabled offerings', FileText],
+    ['Vehicles', vehicles.toLocaleString(), 'Available inventory', CarFront],
+    ['Rentals', rentals.toLocaleString(), 'New enquiries', Inbox],
+    ['Products', products.toLocaleString(), 'Available goods', Package],
+    ['Recruitment', recruitment.toLocaleString(), 'New applications', Users]
   ] as const;
 
   return (

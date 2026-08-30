@@ -8,7 +8,7 @@ import GalleryGrid from '@/components/GalleryGrid';
 import '../globals.css';
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'Gallery', description: 'Photos from GACODA events, meetings and community activities.' };
+export const metadata: Metadata = { title: 'Gallery', description: 'Photos from Mr Truth Agency events, vehicles and community activities.' };
 
 export default async function Gallery() {
   const [images, site] = await Promise.all([
@@ -29,7 +29,7 @@ export default async function Gallery() {
       <main>
         <section className="page-hero">
           <div className="container">
-            <p className="kicker">GACODA IN ACTION</p>
+            <p className="kicker">MR TRUTH IN MOTION</p>
             <h1>Gallery</h1>
             <p>Moments from our meetings, outreach programmes and community activities across Greater Accra.</p>
           </div>
@@ -38,7 +38,7 @@ export default async function Gallery() {
           {images.length === 0 ? (
             <section className="empty-state">
               <h2>Gallery coming soon</h2>
-              <p>Approved association photos will appear here.</p>
+              <p>Approved Mr Truth Agency photos will appear here.</p>
             </section>
           ) : (
             <Reveal><GalleryGrid items={images} /></Reveal>

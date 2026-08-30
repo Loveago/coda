@@ -8,7 +8,7 @@ import Reveal from '@/components/Reveal';
 import StatsCounter from '@/components/StatsCounter';
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'About Us', description: 'Learn about GACODA — who we are, our purpose, values, mission, vision and leadership.' };
+export const metadata: Metadata = { title: 'About Us', description: 'Learn about Mr Truth Agency — our purpose, values, mission, vision and leadership.' };
 
 const standFor = [
   ['Unity', 'We bring online drivers together as one community, regardless of the platform they operate on.', Users],
@@ -39,9 +39,9 @@ export default async function About() {
       <main>
         <section className="page-hero">
           <div className="container">
-            <p className="kicker">ABOUT GACODA</p>
+            <p className="kicker">ABOUT MR TRUTH AGENCY</p>
             <h1>{setting.about_title || 'Who We Are'}</h1>
-            <p>{setting.about_body || 'The Greater Accra Concerned Online Drivers Association (GACODA) is an association established to unite, represent, protect, and promote the welfare and interests of online drivers operating within the Greater Accra Region.'}</p>
+            <p>{setting.about_body || 'Mr Truth Agency is an automotive and mobility company connecting drivers, vehicles and businesses to practical solutions across Ghana.'}</p>
           </div>
         </section>
         <section className="container page-body">
@@ -61,27 +61,27 @@ export default async function About() {
 
           <Reveal className="about-intro" delay={100}>
             <p>
-              <strong>Greater Accra Concerned Online Drivers Association (GACODA)</strong> — <em>“We Are For Each Other.”</em>
+              <strong>Mr Truth Agency</strong> — <em>“Move people. Move business. Move forward.”</em>
             </p>
             <p>
-              The Greater Accra Concerned Online Drivers Association (GACODA) is an association established to unite, represent, protect, and promote the welfare and interests of online drivers operating within the Greater Accra Region.
+              We connect people, professional drivers, vehicles and businesses through dependable automotive and mobility services.
             </p>
             <p>
-              Founded on 1st August 2025 by Daniel Adjetey Boye, GACODA was formed from the need for online drivers to come together as one organized body to address common challenges, promote professionalism, protect their rights, and create a safer, fairer, and more supportive working environment.
+              Our work brings together vehicle sourcing, rentals, fleet support, driver opportunities and automotive goods in one practical ecosystem.
             </p>
             <p>
-              As online driving continues to become an important part of Ghana’s transportation and digital economy, drivers face a number of challenges, including issues relating to safety, working conditions, fair treatment, platform policies, passenger relations, vehicle operations, and economic sustainability. GACODA seeks to provide a collective voice through which these concerns can be properly communicated, discussed, and addressed.
+              We build clear pathways for movement: helping drivers find opportunities, helping businesses operate fleets, and helping customers access the right vehicles and support.
             </p>
           </Reveal>
 
           <Reveal className="about-section">
             <p className="section-label">OUR PURPOSE</p>
-            <h2>Stronger Together</h2>
+            <h2>Movement with meaning</h2>
             <p>
-              Our purpose is to promote the welfare and interests of online drivers, enhance their professionalism, and advocate for their rights and well-being.
+              Our purpose is to make automotive and mobility access more useful, transparent and human for drivers, customers and growing businesses.
             </p>
             <p>
-              We believe that drivers are stronger when they stand together. Through unity, cooperation, education, advocacy, and mutual support, GACODA aims to ensure that every member has access to a community that understands their challenges and is willing to stand with them.
+              Through reliable service, responsible operations and a strong community layer, Mr Truth Agency helps every part of the mobility journey work better together.
             </p>
           </Reveal>
 
@@ -104,11 +104,11 @@ export default async function About() {
           <div className="split" style={{ marginTop: 54 }}>
             <Reveal className="panel">
               <p className="section-label">OUR MISSION</p>
-              <p style={{ lineHeight: 1.75, color: 'var(--muted)', margin: 0 }}>{setting.about_mission || 'Our mission is to unite online drivers, protect their legitimate interests, promote their welfare, encourage professionalism, provide support and education, and advocate for policies and practices that create a fair and sustainable working environment for drivers.'}</p>
+              <p style={{ lineHeight: 1.75, color: 'var(--muted)', margin: 0 }}>{setting.about_mission || 'Our mission is to move people and business reliably — connecting individuals and organisations to practical automotive, mobility, driver and vehicle solutions delivered with honesty, professionalism and care.'}</p>
             </Reveal>
             <Reveal delay={100} className="panel">
               <p className="section-label">OUR VISION</p>
-              <p style={{ lineHeight: 1.75, color: 'var(--muted)', margin: 0 }}>{setting.about_vision || 'To become a strong, respected, and united association that represents the interests of online drivers and contributes meaningfully to the development of a safer, more professional, and sustainable online transportation industry in Ghana.'}</p>
+              <p style={{ lineHeight: 1.75, color: 'var(--muted)', margin: 0 }}>{setting.about_vision || 'To become the most trusted automotive and mobility partner in Ghana — a respected name in vehicle access, fleet operations, driver opportunities and automotive commerce, built around people in motion.'}</p>
             </Reveal>
           </div>
 
@@ -116,28 +116,28 @@ export default async function About() {
             <p className="section-label">OUR COMMITMENT</p>
             <h2>Built on Responsibility</h2>
             <p>
-              GACODA is committed to building a community where online drivers do not have to face challenges alone. We believe that collective action, open communication, responsible leadership, and cooperation with relevant stakeholders can create meaningful improvements in the lives and working conditions of drivers.
+              Mr Truth Agency is committed to dependable service, transparent communication and responsible participation in the automotive and mobility ecosystem.
             </p>
             <p>
-              We also recognize that a successful association must not only speak for its members but must encourage its members to uphold high standards themselves. We therefore promote responsible conduct, respect for the law, professionalism, road safety, and positive relationships with passengers, communities, transport authorities, and online service platforms.
+              We promote professionalism, road safety, respect for customers and partners, and practical solutions that create lasting value for the people and businesses we serve.
             </p>
           </Reveal>
 
           <Reveal className="about-section">
             <p className="section-label">OUR FUTURE</p>
-            <h2>Growing Stronger</h2>
+            <h2>Ready for what moves next</h2>
             <p>
-              GACODA aims to continue growing its membership and strengthening its organizational structure while developing programs and initiatives that directly benefit online drivers.
+              We are building a trusted platform for vehicle access, fleet operations, driver opportunities and automotive commerce.
             </p>
             <p>
-              As we grow, our focus will remain on representation, welfare, advocacy, safety, education, professionalism, and unity. We believe the future is stronger when we work together.
+              As the agency grows, our focus will remain on clarity, quality, safety, innovation and the communities that keep Africa moving.
             </p>
           </Reveal>
 
           <Reveal className="about-motto">
-            <p className="kicker">GREATER ACCRA CONCERNED ONLINE DRIVERS ASSOCIATION</p>
-            <h2>GACODA</h2>
-            <p>“We Are For Each Other.”</p>
+            <p className="kicker">MR TRUTH AGENCY · AUTOMOTIVE & MOBILITY</p>
+            <h2>MR TRUTH</h2>
+            <p>“Move people. Move business. Move forward.”</p>
           </Reveal>
 
           {team.length > 0 && (

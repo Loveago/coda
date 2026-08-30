@@ -4,7 +4,7 @@ export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith('/admin') && pathname !== '/admin/login') {
-    const hasSession = request.cookies.has('gacoda_admin_session');
+    const hasSession = request.cookies.has('mrtruth_admin_session') || request.cookies.has('gacoda_admin_session');
     if (!hasSession) {
       const url = request.nextUrl.clone();
       url.pathname = '/admin/login';
@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (pathname.startsWith('/member')) {
-    const hasSession = request.cookies.has('gacoda_member_session');
+    const hasSession = request.cookies.has('mrtruth_member_session') || request.cookies.has('gacoda_member_session');
     if (!hasSession) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';

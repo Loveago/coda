@@ -34,7 +34,7 @@ export function validateDocument(file: File): string | null {
 }
 
 async function uploadToVercelBlob(file: File, token: string, extension: string): Promise<UploadResult> {
-  const pathname = `gacoda/${randomUUID()}.${extension}`;
+  const pathname = `mr-truth-agency/${randomUUID()}.${extension}`;
   const response = await fetch(`https://blob.vercel-storage.com/${pathname}`, {
     method: 'PUT',
     headers: {

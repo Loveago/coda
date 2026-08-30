@@ -71,7 +71,7 @@ export default function SocialLinksForm() {
         <h2 style={{ margin: 0 }}>Social profiles</h2>
         <p style={{ margin: '6px 0 0', fontSize: 13, color: 'var(--muted)', lineHeight: 1.65 }}>
           These links appear in the top bar and footer of every public page. Leave a field blank to hide that
-          network — you only need to fill in the profiles GACODA actually has.
+          network — you only need to fill in the profiles Mr Truth Agency actually has.
         </p>
       </div>
 
@@ -86,7 +86,7 @@ export default function SocialLinksForm() {
                 className="field"
                 value={row.url}
                 onChange={(event) => setUrl(row.key, event.target.value)}
-                placeholder={`https://${row.key === 'x' ? 'x.com' : row.key}.com/gacoda`}
+                placeholder={`https://${row.key === 'x' ? 'x.com' : row.key}.com/mrtruthagency`}
                 autoComplete="off"
                 spellCheck={false}
               />

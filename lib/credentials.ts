@@ -64,7 +64,7 @@ export async function syncDemoMemberFromEnv() {
     end.setFullYear(end.getFullYear() + 1);
     await db.member.create({
       data: {
-        memberNumber: `GACODA-${Date.now().toString().slice(-6)}`,
+        memberNumber: `MRTF-${Date.now().toString().slice(-6)}`,
         email: env.email,
         passwordHash: await hashPassword(env.password),
         firstName: env.firstName,

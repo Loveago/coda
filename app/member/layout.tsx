@@ -13,7 +13,7 @@ export default async function MemberLayout({ children }: Readonly<{ children: Re
       <main className="login-wrap">
         <div className="login-card" style={{ textAlign: 'center' }}>
           <h1>Account suspended</h1>
-          <p style={{ color: 'var(--muted)', fontSize: 13 }}>Your membership is currently suspended. Please contact the association for assistance.</p>
+          <p style={{ color: 'var(--muted)', fontSize: 13 }}>Your membership is currently suspended. Please contact the Mr Truth team for assistance.</p>
           <form action="/api/members/logout" method="post"><button className="btn btn-ghost">SIGN OUT</button></form>
         </div>
       </main>

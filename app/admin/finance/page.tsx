@@ -39,8 +39,8 @@ function Sparkline({ months }: { months: { total: number; label: string }[] }) {
       })}
       <defs>
         <linearGradient id="finBar" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1684ff" />
-          <stop offset="100%" stopColor="#064ec9" />
+          <stop offset="0%" stopColor="#FF6B00" />
+          <stop offset="100%" stopColor="#C65300" />
         </linearGradient>
       </defs>
     </svg>
@@ -58,9 +58,9 @@ function Donut({ registration, dues }: { registration: number; dues: number }) {
         <circle cx="70" cy="70" r={r} fill="none" stroke="#eef2f9" strokeWidth="18" />
         {total > 0 && (
           <>
-            <circle cx="70" cy="70" r={r} fill="none" stroke="#064ec9" strokeWidth="18"
+            <circle cx="70" cy="70" r={r} fill="none" stroke="#C65300" strokeWidth="18"
               strokeDasharray={`${c * regShare} ${c}`} strokeDashoffset={0} transform="rotate(-90 70 70)" strokeLinecap="round" />
-            <circle cx="70" cy="70" r={r} fill="none" stroke="#1684ff" strokeWidth="18"
+            <circle cx="70" cy="70" r={r} fill="none" stroke="#FF6B00" strokeWidth="18"
               strokeDasharray={`${c * (1 - regShare)} ${c}`} strokeDashoffset={-c * regShare} transform="rotate(-90 70 70)" strokeLinecap="round" />
           </>
         )}
@@ -68,8 +68,8 @@ function Donut({ registration, dues }: { registration: number; dues: number }) {
         <text x="70" y="82" textAnchor="middle" className="fin-donut-sub">registration</text>
       </svg>
       <div className="fin-legend">
-        <span><i style={{ background: '#064ec9' }} /> Registration fees <strong>{formatGhs(registration)}</strong></span>
-        <span><i style={{ background: '#1684ff' }} /> Annual dues <strong>{formatGhs(dues)}</strong></span>
+        <span><i style={{ background: '#C65300' }} /> Registration fees <strong>{formatGhs(registration)}</strong></span>
+        <span><i style={{ background: '#FF6B00' }} /> Annual dues <strong>{formatGhs(dues)}</strong></span>
       </div>
     </div>
   );

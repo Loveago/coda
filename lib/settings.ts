@@ -26,7 +26,7 @@ export const SOCIAL_SETTING_KEYS = SOCIAL_PLATFORMS.map((platform) => `social_${
 
 export const DEFAULT_SETTINGS: SiteSettings = {
   contact_phone: '+233 24 123 4567',
-  contact_email: 'info@gacoda.org',
+  contact_email: 'info@mrtruthagency.com',
   whatsapp_number: '233241234567',
   address_locality: 'Accra, Ghana',
   announcement_enabled: 'false',
@@ -50,7 +50,7 @@ export function socialLinks(settings: SiteSettings): SocialLink[] {
 
 /**
  * Accept what an admin typed and make it a usable absolute URL. Bare handles
- * like "facebook.com/gacoda" get https:// prepended; anything that cannot be
+ * like "facebook.com/mrtruthagency" get https:// prepended; anything that cannot be
  * parsed is rejected so we never render a broken or javascript: link.
  */
 export function normalizeSocialUrl(raw: string): string | null {

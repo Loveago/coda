@@ -186,6 +186,137 @@ model Media {
   createdAt DateTime @default(now())
 }
 
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String
+  category    String
+  imageUrl    String?
+  features    Json?
+  ctaLabel    String?
+  ctaHref     String?
+  displayOrder Int     @default(0)
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Vehicle {
+  id            String   @id @default(uuid())
+  make          String
+  model         String
+  year          Int
+  category      String
+  transmission  String?
+  fuelType      String?
+  seats         Int?
+  description   String?
+  features      Json?
+  price         Int?
+  dailyRate     Int?
+  availability  String   @default("AVAILABLE")
+  featured      Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  images        VehicleImage[]
+  inquiries     VehicleInquiry[]
+  rentalInquiries RentalInquiry[]
+
+  @@index([category, availability])
+}
+
+model VehicleImage {
+  id        String  @id @default(uuid())
+  vehicleId String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  url       String
+  altText   String?
+  position  Int     @default(0)
+}
+
+model VehicleInquiry {
+  id          String   @id @default(uuid())
+  vehicleId   String
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+  name        String
+  email       String
+  phone       String?
+  requestType String
+  message     String?
+  createdAt   DateTime @default(now())
+  @@index([vehicleId, createdAt])
+}
+
+model RentalInquiry {
+  id        String   @id @default(uuid())
+  vehicleId String?
+  vehicle   Vehicle? @relation(fields: [vehicleId], references: [id])
+  name      String
+  email     String
+  phone     String?
+  startDate DateTime
+  endDate   DateTime
+  status    String   @default("NEW")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([status, createdAt])
+}
+
+model ProductCategory {
+  id       String    @id @default(uuid())
+  name     String    @unique
+  slug     String    @unique
+  products Product[]
+}
+
+model Product {
+  id            String          @id @default(uuid())
+  name          String
+  sku           String           @unique
+  categoryId    String?
+  category      ProductCategory? @relation(fields: [categoryId], references: [id])
+  description   String?
+  imageUrl      String?
+  price         Int?
+  stock         Int             @default(0)
+  brand         String?
+  compatibility Json?
+  available     Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model DriverOpportunity {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String   @unique
+  description String
+  requirements Json?
+  benefits     Json?
+  status      String   @default("OPEN")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  applications DriverApplication[]
+}
+
+model DriverApplication {
+  id             String   @id @default(uuid())
+  opportunityId  String
+  opportunity    DriverOpportunity @relation(fields: [opportunityId], references: [id])
+  fullName       String
+  email          String
+  phone          String
+  experience     String?
+  message        String?
+  status         String   @default("NEW")
+  internalNotes  String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  @@index([status, createdAt])
+}
+
 model AuditLog {
   id        String   @id @default(uuid())
   userId    String?

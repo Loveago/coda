@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
-  BarChart3, ChartPie, CreditCard, FileText, Home, Image as ImageIcon, Inbox, KeyRound, LayoutDashboard,
-  LogOut, Mail, Menu, Newspaper, Settings, Share2, Users, X
+  BarChart3, CarFront, ChartPie, CreditCard, FileText, Home, Image as ImageIcon, Inbox, KeyRound, LayoutDashboard,
+  LogOut, Mail, Menu, Newspaper, Package, Settings, Share2, Users, X
 } from 'lucide-react';
 
 const groups: { label: string; items: [string, string, typeof LayoutDashboard][] }[] = [
@@ -41,6 +41,16 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
     ]
   },
   {
+    label: 'Agency Operations',
+    items: [
+      ['Services', '/admin/services', LayoutDashboard],
+      ['Vehicles', '/admin/vehicles', CarFront],
+      ['Rental enquiries', '/admin/rentals', Inbox],
+      ['Automotive goods', '/admin/products', Package],
+      ['Recruitment', '/admin/recruitment', Users]
+    ]
+  },
+  {
     label: 'Site',
     items: [
       ['Settings', '/admin/settings', Settings],
@@ -71,10 +81,10 @@ export default function AdminSidebar({ name, role }: { name: string; role: strin
 
   const brand = (
     <Link href="/admin" className="admin-brand">
-      <img src="/logo-mark.png" alt="GACODA logo" className="brand-logo" width={42} height={42} />
+      <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={42} height={42} />
       <div>
-        <div className="brand-name">GACODA</div>
-        <small className="brand-sub" style={{ color: '#8fb0e0' }}>ADMIN PANEL</small>
+        <div className="brand-name">MR TRUTH</div>
+        <small className="brand-sub" style={{ color: '#FFD2B3' }}>AGENCY CONTROL</small>
       </div>
     </Link>
   );
@@ -95,7 +105,7 @@ export default function AdminSidebar({ name, role }: { name: string; role: strin
   const foot = (
     <div className="admin-sidebar-foot">
       <div className="admin-user">
-        <span className="admin-avatar">{initials || 'GA'}</span>
+        <span className="admin-avatar">{initials || 'MT'}</span>
         <span className="admin-user-meta">
           <strong>{name}</strong>
           <small>{role.replace('_', ' ')}</small>
@@ -124,9 +134,9 @@ export default function AdminSidebar({ name, role }: { name: string; role: strin
         </button>
         <Link href="/admin" className="admin-topbar-brand">
           <img src="/logo-mark.png" alt="" className="admin-topbar-mark" width={32} height={32} />
-          <span className="admin-topbar-name">GACODA<small>ADMIN PANEL</small></span>
+          <span className="admin-topbar-name">MR TRUTH<small>AGENCY CONTROL</small></span>
         </Link>
-        <span className="admin-topbar-avatar" aria-hidden>{initials || 'GA'}</span>
+        <span className="admin-topbar-avatar" aria-hidden>{initials || 'MT'}</span>
       </header>
 
       {/* Mobile slide-in drawer */}

@@ -9,7 +9,7 @@ function State({ state }: { state: string }) {
       <>
         <CheckCircle2 size={44} color="#0c7a43" />
         <h1>Email verified!</h1>
-        <p style={{ color: 'var(--muted)', fontSize: 13 }}>Thank you for verifying your email. Your application is now with the GACODA membership team for review.</p>
+        <p style={{ color: 'var(--muted)', fontSize: 13 }}>Thank you for verifying your email. Your application is now with the Mr Truth Fan Club team for review.</p>
         <Link href="/" className="btn btn-primary">BACK TO HOMEPAGE</Link>
       </>
     );
@@ -18,7 +18,7 @@ function State({ state }: { state: string }) {
     <>
       <XCircle size={44} color="#c0392b" />
       <h1>Invalid verification link</h1>
-      <p style={{ color: 'var(--muted)', fontSize: 13 }}>This link is invalid or has expired. If you have not received a verification email yet, please contact the association.</p>
+      <p style={{ color: 'var(--muted)', fontSize: 13 }}>This link is invalid or has expired. If you have not received a verification email yet, please contact the Mr Truth team.</p>
       <Link href="/" className="btn btn-ghost">BACK TO HOMEPAGE</Link>
     </>
   );

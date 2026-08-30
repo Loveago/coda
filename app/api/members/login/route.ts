@@ -30,7 +30,7 @@ export async function POST(request: Request) {
   // PENDING applicants are allowed in so they can complete the registration
   // fee payment; the portal gates everything else until an admin approves.
   if (member.status === 'REJECTED') {
-    return NextResponse.json({ error: 'Your application was not approved. Please contact the association.' }, { status: 403 });
+    return NextResponse.json({ error: 'Your application was not approved. Please contact the Mr Truth team.' }, { status: 403 });
   }
 
   const response = NextResponse.json({ success: true, suspended: member.status === 'SUSPENDED' });

@@ -44,7 +44,7 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
       const response = await fetch('/api/members/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Unable to submit your application.');
-      sessionStorage.setItem('gacoda-applicant-email', String(raw.email));
+      sessionStorage.setItem('mrtruth-applicant-email', String(raw.email));
       setResult({
         ok: true,
         text: data.registrationFeeRequired
@@ -70,7 +70,7 @@ export default function MembershipForm({ registrationFeeEnabled, registrationFee
         {redirecting ? (
           <>
             <h2 style={{ margin: 0, display: 'inline-flex', alignItems: 'center', gap: 10 }}><Loader2 size={22} className="spin" /> Redirecting to secure payment…</h2>
-            <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.7, margin: 0 }}>You will be returned here automatically once your payment is confirmed. Your application is submitted to GACODA the moment payment succeeds.</p>
+            <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.7, margin: 0 }}>You will be returned here automatically once your payment is confirmed. Your application is submitted to the Mr Truth Fan Club when payment succeeds.</p>
             <p style={{ fontSize: 12.5, margin: 0 }}>Not redirected? <a href={result.authorizationUrl} style={{ color: 'var(--blue)', fontWeight: 700 }}>Continue to payment →</a></p>
           </>
         ) : (

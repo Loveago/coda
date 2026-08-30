@@ -6,7 +6,7 @@ import type { SocialLink } from '@/lib/settings';
 
 export default function SiteFooter({
   phone = '+233 24 123 4567',
-  email = 'info@gacoda.org',
+  email = 'info@mrtruthagency.com',
   whatsapp,
   socials = []
 }: {
@@ -21,13 +21,13 @@ export default function SiteFooter({
         <div className="container footer-grid">
           <div>
             <div className="brand brand-invert">
-              <img src="/logo-mark.png" alt="GACODA logo" className="brand-logo" width={51} height={51} />
+              <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={51} height={51} />
               <div>
-                <div className="brand-name">GACODA</div>
-                <small className="brand-sub">GREATER ACCRA CONCERNED<br />ONLINE DRIVERS ASSOCIATION</small>
+                <div className="brand-name">MR TRUTH</div>
+                <small className="brand-sub">AGENCY · AUTOMOTIVE & MOBILITY</small>
               </div>
             </div>
-            <p>United drivers. Stronger voices. Safer roads. The collective voice of online drivers in Greater Accra.</p>
+            <p>Move people. Move business. Move forward. Automotive and mobility solutions for a moving Africa.</p>
           </div>
           <div>
             <h3>QUICK LINKS</h3>
@@ -45,15 +45,15 @@ export default function SiteFooter({
             <p><MapPin size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} />Accra, Ghana</p>
           </div>
           <div>
-            <h3>JOIN OUR COMMUNITY</h3>
-            <p>Be part of a growth-oriented community of professional online drivers.</p>
-            <Link href="/membership" className="btn btn-primary">JOIN GACODA <ArrowRight size={14} /></Link>
+            <h3>MR TRUTH FAN CLUB</h3>
+            <p>Join the community layer of the Mr Truth Agency ecosystem.</p>
+            <Link href="/membership" className="btn btn-primary">JOIN FAN CLUB <ArrowRight size={14} /></Link>
           </div>
         </div>
         <div className="container footer-bottom">
-          <span>© {new Date().getFullYear()} Greater Accra Concerned Online Drivers Association. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Mr Truth Agency. All rights reserved.</span>
           {socials.length > 0 ? (
-            <span className="footer-socials" aria-label="GACODA on social media">
+            <span className="footer-socials" aria-label="Mr Truth Agency on social media">
               {socials.map((social) => (
                 <a key={social.key} href={social.url} target="_blank" rel="noreferrer me" aria-label={social.label}>
                   <SocialIcon platform={social.key} size={15} />
@@ -61,7 +61,7 @@ export default function SiteFooter({
               ))}
             </span>
           ) : (
-            <span>Built for the drivers of Greater Accra.</span>
+            <span>Built for the people and businesses that keep Africa moving.</span>
           )}
         </div>
       </footer>

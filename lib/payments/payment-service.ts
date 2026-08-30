@@ -89,7 +89,7 @@ export async function createPaymentIntent(memberId: string, type: PaymentType, o
   }
 
   const paystackReady = await paystackConfigured();
-  const reference = `GACODA-${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+  const reference = `MRT-${type}-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
   await db.payment.create({
     data: {
       memberId,

@@ -10,7 +10,10 @@ import type { SocialLink } from '@/lib/settings';
 const links = [
   ['Home', '/'],
   ['About Us', '/about'],
-  ['Membership', '/membership'],
+  ['Services', '/services'],
+  ['Vehicles', '/vehicles'],
+  ['Rentals', '/rentals'],
+  ['Fan Club', '/membership'],
   ['News & Updates', '/news'],
   ['Resources', '/resources'],
   ['Gallery', '/gallery'],
@@ -19,7 +22,7 @@ const links = [
 
 export default function SiteHeader({
   phone = '+233 24 123 4567',
-  email = 'info@gacoda.org',
+  email = 'info@mrtruthagency.com',
   announcement,
   socials = []
 }: {
@@ -35,7 +38,7 @@ export default function SiteHeader({
 
   useEffect(() => {
     if (announcement) {
-      setBannerDismissed(window.localStorage.getItem(`gacoda-announcement-${announcement.key}`) === 'dismissed');
+      setBannerDismissed(window.localStorage.getItem(`mrtruth-announcement-${announcement.key}`) === 'dismissed');
     }
   }, [announcement]);
 
@@ -61,7 +64,7 @@ export default function SiteHeader({
   const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
 
   function dismiss() {
-    if (announcement) window.localStorage.setItem(`gacoda-announcement-${announcement.key}`, 'dismissed');
+    if (announcement) window.localStorage.setItem(`mrtruth-announcement-${announcement.key}`, 'dismissed');
     setBannerDismissed(true);
   }
 
@@ -76,7 +79,7 @@ export default function SiteHeader({
           </div>
           {socials.length > 0 && (
             <div className="socials">
-              <span className="hide-sm">Follow us</span>
+              <span className="hide-sm">Follow Mr Truth Agency</span>
               {socials.map((social) => (
                 <a key={social.key} href={social.url} target="_blank" rel="noreferrer me" aria-label={social.label}>
                   <SocialIcon platform={social.key} />
@@ -98,10 +101,10 @@ export default function SiteHeader({
       <nav className={`nav${scrolled ? ' nav-scrolled' : ''}`} aria-label="Main navigation">
         <div className="container nav-inner">
           <Link href="/" className="brand">
-            <img src="/logo-mark.png" alt="GACODA logo" className="brand-logo" width={51} height={51} />
+            <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={51} height={51} />
             <div>
-              <div className="brand-name">GACODA</div>
-              <small className="brand-sub">GREATER ACCRA CONCERNED<br />ONLINE DRIVERS ASSOCIATION</small>
+              <div className="brand-name">MR TRUTH</div>
+              <small className="brand-sub">AGENCY · AUTOMOTIVE & MOBILITY</small>
             </div>
           </Link>
           <div className="nav-links">
@@ -111,7 +114,7 @@ export default function SiteHeader({
           </div>
           <div className="nav-cta nav-actions">
             <Link className="btn btn-ghost nav-signin" href="/login"><LogIn size={14} /> SIGN IN</Link>
-            <Link className="btn btn-primary" href="/membership">JOIN GACODA <ArrowRight size={15} /></Link>
+            <Link className="btn btn-primary" href="/membership">JOIN FAN CLUB <ArrowRight size={15} /></Link>
           </div>
           <button
             type="button"
@@ -150,7 +153,7 @@ export default function SiteHeader({
         <div className="drawer-cta drawer-actions">
           <Link href="/login" className="btn btn-ghost" tabIndex={open ? 0 : -1}><LogIn size={14} /> SIGN IN</Link>
           <Link href="/membership" className="btn btn-primary" tabIndex={open ? 0 : -1}>
-            JOIN GACODA <ArrowRight size={15} />
+            JOIN FAN CLUB <ArrowRight size={15} />
           </Link>
         </div>
         <div className="drawer-contact">

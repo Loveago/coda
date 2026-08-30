@@ -18,10 +18,10 @@ export default function FloatingActions({ whatsapp }: { whatsapp?: string }) {
       {whatsapp && (
         <a
           className="fab fab-whatsapp"
-          href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Hello GACODA, I would like to make an enquiry.')}`}
+          href={`https://wa.me/${whatsapp}?text=${encodeURIComponent('Hello Mr Truth Agency, I would like to make an enquiry.')}`}
           target="_blank"
           rel="noreferrer"
-          aria-label="Chat with GACODA on WhatsApp"
+          aria-label="Chat with Mr Truth Agency on WhatsApp"
         >
           <MessageCircle size={22} />
         </a>

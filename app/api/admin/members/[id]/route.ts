@@ -57,7 +57,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     const end = new Date(base);
     end.setMonth(end.getMonth() + months);
 
-    const reference = `GACODA-ANNUAL_DUES-MANUAL-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+    const reference = `MRT-ANNUAL_DUES-MANUAL-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
     const result = await db.$transaction(async (tx) => {
       const payment = await tx.payment.create({
         data: {
@@ -88,7 +88,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
   if (input.action === 'MARK_REGISTRATION_PAID') {
     if (member.registrationPayment === 'PAID') return NextResponse.json({ error: 'Registration fee is already marked paid.' }, { status: 409 });
     const fees = await getFees();
-    const reference = `GACODA-REGISTRATION_FEE-MANUAL-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+    const reference = `MRT-REGISTRATION_FEE-MANUAL-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
     await db.$transaction(async (tx) => {
       await tx.payment.create({
         data: {

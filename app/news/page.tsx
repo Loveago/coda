@@ -8,7 +8,7 @@ import NewsExplorer from '@/components/NewsExplorer';
 import '../globals.css';
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'News & Updates', description: 'The latest news, announcements and updates from GACODA.' };
+export const metadata: Metadata = { title: 'News & Updates', description: 'The latest news, announcements and updates from Mr Truth Agency.' };
 
 export default async function News() {
   const [articles, settings] = await Promise.all([
@@ -43,8 +43,8 @@ export default async function News() {
         <section className="page-hero">
           <div className="container">
             <p className="kicker">NEWS & UPDATES</p>
-            <h1>Latest from GACODA</h1>
-            <p>Announcements, advocacy wins, events and everything happening across the association.</p>
+            <h1>Latest from Mr Truth</h1>
+            <p>Agency announcements, mobility insights, events and updates from across the ecosystem.</p>
           </div>
         </section>
         <section className="container page-body">
@@ -52,7 +52,7 @@ export default async function News() {
             {explorerArticles.length === 0 ? (
               <section className="empty-state">
                 <h2>No published articles yet</h2>
-                <p>Approved association news will appear here.</p>
+                <p>Approved Mr Truth Agency news will appear here.</p>
               </section>
             ) : (
               <NewsExplorer articles={explorerArticles} />

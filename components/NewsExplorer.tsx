@@ -53,7 +53,7 @@ export default function NewsExplorer({ articles }: { articles: Article[] }) {
           <article className="news-card" key={article.id}>
             <div className="news-img" style={{ backgroundImage: `url(${article.coverImage || 'https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=700&q=80'})` }} />
             <div className="news-body">
-              <span className="news-date">{article.categoryName || 'GACODA NEWS'} · {article.dateLabel}</span>
+              <span className="news-date">{article.categoryName || 'MR TRUTH NEWS'} · {article.dateLabel}</span>
               <h3>{article.title}</h3>
               <p>{article.excerpt}</p>
               <Link className="read" href={`/news/${article.slug}`}>READ MORE <ArrowRight size={12} /></Link>

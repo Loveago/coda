@@ -2,7 +2,8 @@ import { createHmac, randomBytes, createHash, timingSafeEqual } from 'node:crypt
 import { cookies } from 'next/headers';
 import { db } from '@/lib/db';
 
-export const MEMBER_SESSION_COOKIE = 'gacoda_member_session';
+export const MEMBER_SESSION_COOKIE = 'mrtruth_member_session';
+export const LEGACY_MEMBER_SESSION_COOKIE = 'gacoda_member_session';
 const SESSION_TTL = 60 * 60 * 24 * 14;
 
 function secret() {
@@ -43,7 +44,9 @@ export type PortalMember = {
 
 export async function getPortalMember(): Promise<PortalMember | null> {
   const cookieStore = await cookies();
-  const session = cookieStore.get(MEMBER_SESSION_COOKIE)?.value;
+  const session =
+    cookieStore.get(MEMBER_SESSION_COOKIE)?.value ||
+    cookieStore.get(LEGACY_MEMBER_SESSION_COOKIE)?.value;
   const memberId = session ? verifyMemberSessionToken(session) : null;
   if (!memberId) return null;
   const member = await db.member.findFirst({

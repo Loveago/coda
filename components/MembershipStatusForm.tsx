@@ -14,9 +14,9 @@ type Result = {
 const statusCopy: Record<string, string> = {
   AWAITING_PAYMENT: 'Your account is created — but your application is not yet submitted. Complete the one-time registration fee from your member portal and your application will be sent to our membership committee immediately.',
   PENDING: 'Your application is under review. Our membership team will contact you soon.',
-  APPROVED: 'Congratulations! Your application has been approved. Welcome to GACODA!',
-  REJECTED: 'Unfortunately your application was not approved at this time. You may contact the association for details.',
-  SUSPENDED: 'Your membership is currently suspended. Please contact the association for more information.'
+  APPROVED: 'Congratulations! Your application has been approved. Welcome to the Mr Truth Fan Club!',
+  REJECTED: 'Unfortunately your application was not approved at this time. Please contact the Mr Truth Agency team for details.',
+  SUSPENDED: 'Your membership is currently suspended. Please contact the Mr Truth team for more information.'
 };
 
 export default function MembershipStatusForm() {

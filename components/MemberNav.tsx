@@ -34,9 +34,9 @@ export default function MemberNav({ member }: { member: NavMember }) {
       {/* ===== Desktop sidebar ===== */}
       <aside className="msidebar">
         <Link href="/" className="admin-brand">
-          <img src="/logo-mark.png" alt="GACODA logo" className="brand-logo" width={42} height={42} />
+          <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={42} height={42} />
           <div>
-            <div className="brand-name">GACODA</div>
+            <div className="brand-name">MR TRUTH</div>
             <small className="brand-sub" style={{ color: '#8fb0e0' }}>MEMBER PORTAL</small>
           </div>
         </Link>
@@ -69,9 +69,9 @@ export default function MemberNav({ member }: { member: NavMember }) {
 
       {/* ===== Mobile top bar ===== */}
       <header className="mtopbar">
-        <Link href="/member/dashboard" className="mtop-brand" aria-label="GACODA member home">
+        <Link href="/member/dashboard" className="mtop-brand" aria-label="Mr Truth member home">
           <img src="/logo-mark.png" alt="" className="mtop-mark" width={32} height={32} />
-          <span className="mtop-name">GACODA<small>MEMBER PORTAL</small></span>
+          <span className="mtop-name">MR TRUTH<small>FAN CLUB</small></span>
         </Link>
         <div className="mtop-actions">
           <Link href="/member/profile" className="mtop-avatar" aria-label="My profile">{avatar}</Link>

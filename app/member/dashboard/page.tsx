@@ -207,7 +207,7 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
             )}
           </div>
           <div>
-            <p className="mdash-kicker">MEMBER PORTAL · {member.memberNumber}</p>
+            <p className="mdash-kicker">MR TRUTH FAN CLUB · {member.memberNumber}</p>
             <h1>{greeting}, {member.firstName}</h1>
             <div className="mdash-chips">
               <span><CalendarDays size={12} /> Member since {monthYear.format(member.createdAt)}</span>
@@ -289,7 +289,7 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
 
           {updates.length > 0 && (
             <Reveal className="admin-panel" delay={80}>
-              <h2>Association updates</h2>
+              <h2>Mr Truth updates</h2>
               <div className="mini-news">
                 {updates.map((article) => (
                   <Link key={article.slug} href={`/news/${article.slug}`}>
@@ -308,7 +308,7 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
             <Link href="/member/id-card" className="idcard-mini" aria-label="Open your digital ID card">
               <span className="idcard-mini-face" aria-hidden>
                 <span className="idcard-mini-band" />
-                <span className="idcard-mini-brand" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><img src="/logo-mark.png" alt="" width={11} height={11} style={{ borderRadius: 3 }} /> GACODA</span>
+                <span className="idcard-mini-brand" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><img src="/logo-mark.png" alt="" width={11} height={11} style={{ borderRadius: 3 }} /> MR TRUTH</span>
                 <strong>{member.memberNumber}</strong>
                 <small>{member.firstName} {member.lastName}</small>
               </span>
@@ -327,7 +327,7 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
               <strong>{completeness}%</strong>
             </div>
             <div className="pmeter-bar"><span style={{ width: `${completeness}%` }} /></div>
-            <p className="pmeter-note">{filledCount} of {profileFields.length} sections complete. A fuller profile helps the association serve you faster.</p>
+            <p className="pmeter-note">{filledCount} of {profileFields.length} sections complete. A fuller profile helps the Mr Truth team serve you faster.</p>
             {missingFields.length > 0 ? (
               <div className="pmiss-wrap">
                 {missingFields.map((label) => (

@@ -26,8 +26,8 @@ export default async function Receipt({ params }: { params: Promise<{ id: string
       <div className="receipt" id="receipt">
         <div className="receipt-head">
           <div className="brand brand-invert">
-            <img src="/logo-mark.png" alt="GACODA logo" className="brand-logo" width={51} height={51} />
-            <div><div className="brand-name">GACODA</div><small className="brand-sub">GREATER ACCRA CONCERNED ONLINE DRIVERS ASSOCIATION</small></div>
+            <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={51} height={51} />
+            <div><div className="brand-name">MR TRUTH</div><small className="brand-sub">FAN CLUB · MEMBER COMMUNITY</small></div>
           </div>
           <span className={`badge badge-${payment.status === 'SUCCESSFUL' ? 'PUBLISHED' : payment.status === 'PENDING' ? 'PENDING' : 'REJECTED'}`}>{payment.status}</span>
         </div>
@@ -44,7 +44,7 @@ export default async function Receipt({ params }: { params: Promise<{ id: string
           </tbody>
         </table>
         <p style={{ color: '#8b9bb5', fontSize: 10.5, marginTop: 18 }}>
-          This receipt was generated electronically by the GACODA membership platform and is valid without signature.
+          This receipt was generated electronically by the Mr Truth Fan Club membership platform and is valid without signature.
         </p>
       </div>
     </main>

@@ -3,7 +3,8 @@ import { cookies } from 'next/headers';
 import { db } from '@/lib/db';
 import type { Role, User } from '@prisma/client';
 
-export const ADMIN_SESSION_COOKIE = 'gacoda_admin_session';
+export const ADMIN_SESSION_COOKIE = 'mrtruth_admin_session';
+export const LEGACY_ADMIN_SESSION_COOKIE = 'gacoda_admin_session';
 const SESSION_TTL = 60 * 60 * 8;
 
 type AdminUser = Pick<User, 'id' | 'email' | 'name' | 'role' | 'active'>;
@@ -36,7 +37,7 @@ function verifySessionToken(token: string) {
 
 export async function getAdminUser(): Promise<AdminUser | null> {
   const cookieStore = await cookies();
-  const session = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+  const session = cookieStore.get(ADMIN_SESSION_COOKIE)?.value || cookieStore.get(LEGACY_ADMIN_SESSION_COOKIE)?.value;
   const userId = session ? verifySessionToken(session) : null;
   if (!userId) return null;
   return db.user.findFirst({ where: { id: userId, active: true }, select: { id: true, email: true, name: true, role: true, active: true } });

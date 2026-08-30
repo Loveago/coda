@@ -34,7 +34,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
   else return NextResponse.json({ error: 'Export is not available for this resource.' }, { status: 404 });
 
   const csv = toCsv(rows);
-  const filename = `gacoda-${resource}-${new Date().toISOString().slice(0, 10)}.csv`;
+  const filename = `mr-truth-${resource}-${new Date().toISOString().slice(0, 10)}.csv`;
   await db.auditLog.create({ data: { userId: user.id, action: 'EXPORT', entity: resource, metadata: { count: rows.length } } });
 
   return new NextResponse(csv, {

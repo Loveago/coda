@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Verify Membership Card',
-  description: 'Verify the authenticity of a GACODA membership card.'
+  description: 'Verify the authenticity of a Mr Truth Fan Club membership card.'
 };
 
 const mediumDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
@@ -38,12 +38,12 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
       select: { firstName: true, lastName: true, memberNumber: true, photoUrl: true, membershipEndDate: true, status: true }
     });
     if (!found || !verifyCardCode(number, code)) {
-      outcome = { tone: 'bad', heading: 'Card could not be verified', message: 'We could not confirm this card in our records. It may be forged or damaged — please contact the association.' };
+      outcome = { tone: 'bad', heading: 'Card could not be verified', message: 'We could not confirm this card in our records. It may be forged or damaged — please contact the Mr Truth team.' };
     } else {
       member = found;
       const computed = computeMembershipStatus(found);
       if (computed === 'ACTIVE') {
-        outcome = { tone: 'ok', heading: 'Valid membership', message: 'This card belongs to an active GACODA member in good standing.' };
+        outcome = { tone: 'ok', heading: 'Valid membership', message: 'This card belongs to an active Mr Truth Fan Club member in good standing.' };
       } else if (computed === 'DUE') {
         outcome = found.membershipEndDate
           ? { tone: 'warn', heading: 'Renewal due', message: 'The member is recognised, but annual dues are due for renewal.' }
@@ -51,7 +51,7 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
       } else if (computed === 'OVERDUE') {
         outcome = { tone: 'warn', heading: 'Membership expired', message: 'This member is recognised, but their membership has expired.' };
       } else {
-        outcome = { tone: 'bad', heading: 'Card not active', message: 'This membership is not currently active. Please contact the association for details.' };
+        outcome = { tone: 'bad', heading: 'Card not active', message: 'This membership is not currently active. Please contact the Mr Truth team for details.' };
       }
     }
   }
@@ -69,7 +69,7 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
           <div className="container">
             <p className="kicker">VERIFICATION</p>
             <h1>Membership Card Check</h1>
-            <p>Confirm that a GACODA membership card is genuine and currently valid.</p>
+            <p>Confirm that a Mr Truth Fan Club membership card is genuine and currently valid.</p>
           </div>
         </section>
         <section className="container page-body">
@@ -103,7 +103,7 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
             </p>
           </div>
           <p style={{ textAlign: 'center', marginTop: 18 }}>
-            <Link href="/" className="admin-link">← BACK TO GACODA.ORG</Link>
+            <Link href="/" className="admin-link">← BACK TO MRTRUTHAGENCY.COM</Link>
           </p>
         </section>
       </main>

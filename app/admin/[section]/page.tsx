@@ -5,7 +5,7 @@ import ResourceManager from '@/components/ResourceManager';
 import MembersManager from '@/components/MembersManager';
 import { APPLICATION_FILTER } from '@/lib/membership';
 
-const supportedSections = new Set(['applications', 'members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team']);
+const supportedSections = new Set(['applications', 'members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team', 'services', 'vehicles', 'rentals', 'products', 'recruitment']);
 
 const memberSelect = {
   id: true, firstName: true, lastName: true, email: true, phone: true, platform: true,
@@ -32,6 +32,11 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   if (section === 'gallery') records = await db.galleryItem.findMany({ orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }] });
   if (section === 'resources') records = await db.resource.findMany({ orderBy: { updatedAt: 'desc' } });
   if (section === 'team') records = await db.teamMember.findMany({ orderBy: { displayOrder: 'asc' } });
+  if (section === 'services') records = await db.service.findMany({ orderBy: { displayOrder: 'asc' } });
+  if (section === 'vehicles') records = await db.vehicle.findMany({ orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }] });
+  if (section === 'rentals') records = await db.rentalInquiry.findMany({ orderBy: { createdAt: 'desc' } });
+  if (section === 'products') records = await db.product.findMany({ orderBy: { createdAt: 'desc' } });
+  if (section === 'recruitment') records = await db.driverApplication.findMany({ orderBy: { createdAt: 'desc' } });
 
   const title = section.charAt(0).toUpperCase() + section.slice(1);
   // The members area has a dedicated manager (search, dues filters, manual
@@ -54,7 +59,7 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   return (
     <main>
       <div className="admin-page-head">
-        <div><p className="kicker" style={{ color: 'var(--blue)' }}>CMS MANAGEMENT</p><h1>{title}</h1></div>
+        <div><p className="kicker" style={{ color: 'var(--blue)' }}>AGENCY OPERATIONS</p><h1>{title}</h1></div>
       </div>
       {section === 'gallery' && <GalleryManager items={records as never} />}
       {section === 'resources' && <ResourceManager items={records as never} />}

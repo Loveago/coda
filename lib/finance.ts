@@ -48,7 +48,7 @@ export type FinanceAnalytics = {
 
 /**
  * Aggregates the full payment ledger into analytics. Amounts are pesewas
- * (GHS * 100), matching the Payment model. The ledger is small (association
+ * (GHS * 100), matching the Payment model. The ledger is small (membership
  * fees), so grouping happens in JS to stay dialect-agnostic.
  */
 export async function getFinanceAnalytics(monthsBack = 12): Promise<FinanceAnalytics> {

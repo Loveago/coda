@@ -24,7 +24,7 @@ export default function MemberCard(props: MemberCardProps) {
   const qrSize = props.qr.length;
 
   async function share() {
-    const payload = { title: 'GACODA Membership Card', text: `${props.fullName} · ${props.memberNumber}`, url: props.verifyUrl };
+    const payload = { title: 'Mr Truth Fan Club Membership Card', text: `${props.fullName} · ${props.memberNumber}`, url: props.verifyUrl };
     try {
       if (navigator.share) await navigator.share(payload);
       else throw new Error('no-share');
@@ -61,8 +61,8 @@ export default function MemberCard(props: MemberCardProps) {
             <div className="idcard-head">
               <img src="/logo-mark.png" alt="" className="idcard-logo" width={34} height={34} />
               <div>
-                <strong>GACODA</strong>
-                <small>GREATER ACCRA CONCERNED ONLINE DRIVERS ASSOCIATION</small>
+                <strong>MR TRUTH</strong>
+                <small>FAN CLUB · MEMBER COMMUNITY</small>
               </div>
               <span className="idcard-valid-tag">MEMBER CARD</span>
             </div>
@@ -96,7 +96,7 @@ export default function MemberCard(props: MemberCardProps) {
                   <rect width={qrSize} height={qrSize} fill="#ffffff" />
                   {props.qr.flatMap((row, y) =>
                     row.map((dark, x) =>
-                      dark ? <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill="#061b49" /> : null
+                      dark ? <rect key={`${x}-${y}`} x={x} y={y} width={1} height={1} fill="#1A1A1A" /> : null
                     )
                   )}
                 </svg>
@@ -108,7 +108,7 @@ export default function MemberCard(props: MemberCardProps) {
             </div>
             <div className="idcard-back-foot">
               <span>MEMBER SINCE {props.memberSince}</span>
-              <span>GACODA · GHANA</span>
+              <span>MR TRUTH · GHANA</span>
             </div>
           </div>
         </div>

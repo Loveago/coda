@@ -21,7 +21,12 @@ const labels: Record<string, string> = {
   settings: 'Site settings',
   gallery: 'Gallery items',
   resources: 'Resources',
-  team: 'Team members'
+  team: 'Team members',
+  services: 'Agency services',
+  vehicles: 'Vehicle inventory',
+  rentals: 'Rental enquiries',
+  products: 'Automotive goods',
+  recruitment: 'Driver applications'
 };
 
 function dateValue(value: unknown) {
@@ -31,7 +36,11 @@ function dateValue(value: unknown) {
 }
 
 const exportable = new Set(['applications', 'members', 'subscribers', 'messages']);
-const deletable = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team']);
+const deletable = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products']);
+
+const rentalStatuses = ['NEW', 'CONTACTED', 'CONFIRMED', 'DECLINED'] as const;
+const driverStatuses = ['NEW', 'REVIEWING', 'HIRED', 'DECLINED'] as const;
+const vehicleAvailability = ['AVAILABLE', 'RESERVED', 'RENTED', 'SOLD'] as const;
 
 export default function AdminManagementTable({ resource, records: initialRecords }: Props) {
   const [records, setRecords] = useState(initialRecords);
@@ -100,6 +109,11 @@ export default function AdminManagementTable({ resource, records: initialRecords
             {resource === 'gallery' && <><th>Title</th><th>Category</th><th>Featured</th><th>Image URL</th></>}
             {resource === 'resources' && <><th>Title</th><th>Category</th><th>Published</th><th>File</th></>}
             {resource === 'team' && <><th>Name</th><th>Position</th><th>Order</th><th>State</th></>}
+            {resource === 'services' && <><th>Service</th><th>Category</th><th>Slug</th><th>State</th><th>Action</th></>}
+            {resource === 'vehicles' && <><th>Vehicle</th><th>Category</th><th>Price / Rate</th><th>Availability</th><th>Action</th></>}
+            {resource === 'rentals' && <><th>Requester</th><th>Vehicle</th><th>Dates</th><th>Status</th><th>Action</th></>}
+            {resource === 'products' && <><th>Product</th><th>SKU</th><th>Stock</th><th>State</th><th>Action</th></>}
+            {resource === 'recruitment' && <><th>Applicant</th><th>Contact</th><th>Experience</th><th>Status</th><th>Action</th></>}
           </tr></thead>
           <tbody>{records.map((record) => {
             const id = record.id;
@@ -112,6 +126,11 @@ export default function AdminManagementTable({ resource, records: initialRecords
             if (resource === 'settings') return <tr key={id}><td data-label="Key">{String(record.key)}</td><td data-label="Value">{String(record.value)}</td><td data-label="Updated">{dateValue(record.updatedAt)}</td><td data-label="Action"><button className="admin-action" onClick={() => { const value = window.prompt(`Value for ${String(record.key)}`, String(record.value)); if (value !== null) update(id, { key: record.key, value }); }}>EDIT</button></td></tr>;
             if (resource === 'gallery') return <tr key={id}><td data-label="Title">{String(record.title)}</td><td data-label="Category">{String(record.category || '—')}</td><td data-label="Featured">{record.featured ? 'Yes' : 'No'}</td><td data-label="Image"><a href={String(record.imageUrl)} target="_blank" rel="noreferrer" className="admin-link">OPEN</a></td></tr>;
             if (resource === 'resources') return <tr key={id}><td data-label="Title">{String(record.title)}</td><td data-label="Category">{String(record.category)}</td><td data-label="Published">{record.published ? 'Yes' : 'No'}</td><td data-label="File"><a href={String(record.fileUrl)} target="_blank" rel="noreferrer" className="admin-link">OPEN</a></td></tr>;
+            if (resource === 'services') return <tr key={id}><td data-label="Service"><strong>{String(record.name)}</strong><br /><small>{String(record.description || '').slice(0, 90)}</small></td><td data-label="Category">{String(record.category || '—')}</td><td data-label="Slug">{String(record.slug)}</td><td data-label="State"><span className={`badge ${record.enabled ? 'badge-active' : 'badge-INACTIVE'}`}>{record.enabled ? 'LIVE' : 'HIDDEN'}</span></td><td data-label="Action"><button className="admin-action" disabled={busy === id} onClick={() => update(id, { enabled: !record.enabled })}>{record.enabled ? 'DISABLE' : 'ENABLE'}</button>{deleteButton}</td></tr>;
+            if (resource === 'vehicles') return <tr key={id}><td data-label="Vehicle"><strong>{String(record.year)} {String(record.make)} {String(record.model)}</strong>{record.featured ? ' ★' : ''}</td><td data-label="Category">{String(record.category)}</td><td data-label="Price">{record.price ? `GHS ${Number(record.price).toLocaleString()}` : '—'}{record.dailyRate ? ` / GHS ${Number(record.dailyRate).toLocaleString()} day` : ''}</td><td data-label="Availability"><span className={`badge ${record.availability === 'AVAILABLE' ? 'badge-active' : 'badge-PENDING'}`}>{String(record.availability)}</span></td><td data-label="Action">{vehicleAvailability.filter((state) => state !== record.availability).map((state) => <button className="admin-action" key={state} disabled={busy === id} onClick={() => update(id, { availability: state })}>{state}</button>)}<button className="admin-action" disabled={busy === id} onClick={() => update(id, { featured: !record.featured })}>{record.featured ? 'UNFEATURE' : 'FEATURE'}</button>{deleteButton}</td></tr>;
+            if (resource === 'rentals') return <tr key={id}><td data-label="Requester"><strong>{String(record.name)}</strong><br />{String(record.email)}{record.phone ? ` · ${String(record.phone)}` : ''}</td><td data-label="Vehicle">{record.vehicle ? `${String((record.vehicle as any).make)} ${String((record.vehicle as any).model)}` : 'Any vehicle'}</td><td data-label="Dates">{dateValue(record.startDate)} → {dateValue(record.endDate)}</td><td data-label="Status"><span className={`badge ${record.status === 'CONFIRMED' ? 'badge-active' : record.status === 'DECLINED' ? 'badge-REJECTED' : 'badge-PENDING'}`}>{String(record.status)}</span></td><td data-label="Action">{rentalStatuses.filter((state) => state !== record.status).map((state) => <button className="admin-action" key={state} disabled={busy === id} onClick={() => update(id, { status: state })}>{state}</button>)}{deleteButton}</td></tr>;
+            if (resource === 'products') return <tr key={id}><td data-label="Product"><strong>{String(record.name)}</strong>{record.brand ? <><br /><small>{String(record.brand)}</small></> : null}</td><td data-label="SKU">{String(record.sku)}</td><td data-label="Stock">{String(record.stock)}</td><td data-label="State"><span className={`badge ${record.available ? 'badge-active' : 'badge-INACTIVE'}`}>{record.available ? 'LISTED' : 'HIDDEN'}</span></td><td data-label="Action"><button className="admin-action" disabled={busy === id} onClick={() => update(id, { available: !record.available })}>{record.available ? 'DELIST' : 'LIST'}</button>{deleteButton}</td></tr>;
+            if (resource === 'recruitment') return <tr key={id}><td data-label="Applicant"><strong>{String(record.fullName)}</strong></td><td data-label="Contact">{String(record.email)}<br />{String(record.phone)}</td><td data-label="Experience">{String(record.experience || '—')}</td><td data-label="Status"><span className={`badge ${record.status === 'HIRED' ? 'badge-active' : record.status === 'DECLINED' ? 'badge-REJECTED' : 'badge-PENDING'}`}>{String(record.status)}</span></td><td data-label="Action">{driverStatuses.filter((state) => state !== record.status).map((state) => <button className="admin-action" key={state} disabled={busy === id} onClick={() => update(id, { status: state })}>{state}</button>)}</td></tr>;
             return <tr key={id}><td data-label="Name">{String(record.name)}</td><td data-label="Position">{String(record.position)}</td><td data-label="Order">{String(record.displayOrder)}</td><td data-label="State">{record.active ? 'Active' : 'Hidden'}</td></tr>;
           })}</tbody>
         </table>

@@ -57,7 +57,7 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
       />
       <main className="container" style={{ padding: '60px 0 70px', maxWidth: 900 }}>
         <Reveal>
-          <p className="kicker">{article.category?.name || 'ASSOCIATION NEWS'}</p>
+          <p className="kicker">{article.category?.name || 'MR TRUTH NEWS'}</p>
           <h1 style={{ fontSize: 54, lineHeight: 0.95, margin: '6px 0 14px' }}>{article.title}</h1>
           <p style={{ color: 'var(--muted)', fontSize: 13 }}>
             Published {new Intl.DateTimeFormat('en-GB', { dateStyle: 'long' }).format(article.publishedAt || article.createdAt)} by {article.author.name}
@@ -67,7 +67,7 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
           <div style={{ height: 340, borderRadius: 18, margin: '26px 0', background: `url('${article.coverImage || 'https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=1200&q=80'}') center/cover`, boxShadow: 'var(--shadow-md)' }} />
         </Reveal>
         <Reveal delay={150}>
-          <article style={{ lineHeight: 1.85, color: '#33456b', whiteSpace: 'pre-wrap', fontSize: 15 }}>{article.content}</article>
+          <article style={{ lineHeight: 1.85, color: '#3a3a3a', whiteSpace: 'pre-wrap', fontSize: 15 }}>{article.content}</article>
         </Reveal>
         <Reveal delay={200}>
           <div style={{ marginTop: 34, paddingTop: 20, borderTop: '1px solid var(--line)', display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
@@ -86,7 +86,7 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
                   <article className="news-card">
                     <div className="news-img" style={{ backgroundImage: `url(${item.coverImage || 'https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=700&q=80'})` }} />
                     <div className="news-body">
-                      <span className="news-date">{item.category?.name || 'GACODA NEWS'}</span>
+                      <span className="news-date">{item.category?.name || 'MR TRUTH NEWS'}</span>
                       <h3>{item.title}</h3>
                       <Link className="read" href={`/news/${item.slug}`}>READ MORE <ArrowRight size={12} /></Link>
                     </div>

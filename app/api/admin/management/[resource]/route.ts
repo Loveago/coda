@@ -4,9 +4,14 @@ import { requireAdmin } from '@/lib/auth';
 import { z } from 'zod';
 import { APPLICATION_FILTER } from '@/lib/membership';
 
-const resourceSchema = z.enum(['applications', 'members', 'messages', 'subscribers', 'statistics', 'settings', 'gallery', 'resources', 'team']);
+const resourceSchema = z.enum([
+  'applications', 'members', 'messages', 'subscribers', 'statistics', 'settings',
+  'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products', 'recruitment'
+]);
 const applicationStatusSchema = z.enum(['APPROVED', 'REJECTED']);
 const memberStatusSchema = z.enum(['APPROVED', 'SUSPENDED']);
+const rentalStatusSchema = z.enum(['NEW', 'CONTACTED', 'CONFIRMED', 'DECLINED']);
+const driverApplicationStatusSchema = z.enum(['NEW', 'REVIEWING', 'HIRED', 'DECLINED']);
 
 const memberSelect = {
   id: true, firstName: true, lastName: true, email: true, phone: true, platform: true,
@@ -35,6 +40,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
   if (resource === 'settings') return NextResponse.json(await db.siteSetting.findMany({ where: { key: { not: { startsWith: 'paystack_' } } }, orderBy: { key: 'asc' } }));
   if (resource === 'gallery') return NextResponse.json(await db.galleryItem.findMany({ orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }] }));
   if (resource === 'resources') return NextResponse.json(await db.resource.findMany({ orderBy: { updatedAt: 'desc' } }));
+  if (resource === 'services') return NextResponse.json(await db.service.findMany({ orderBy: { displayOrder: 'asc' } }));
+  if (resource === 'vehicles') return NextResponse.json(await db.vehicle.findMany({ orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }] }));
+  if (resource === 'rentals') return NextResponse.json(await db.rentalInquiry.findMany({ include: { vehicle: { select: { make: true, model: true, year: true } } }, orderBy: { createdAt: 'desc' } }));
+  if (resource === 'products') return NextResponse.json(await db.product.findMany({ orderBy: { createdAt: 'desc' } }));
+  if (resource === 'recruitment') return NextResponse.json(await db.driverApplication.findMany({ orderBy: { createdAt: 'desc' } }));
   return NextResponse.json(await db.teamMember.findMany({ orderBy: { displayOrder: 'asc' } }));
 }
 
@@ -87,6 +97,61 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
     result = await db.galleryItem.update({ where: { id: id.data }, data: { title: body.title === undefined ? undefined : String(body.title), caption: body.caption === undefined ? undefined : String(body.caption), altText: body.altText === undefined ? undefined : String(body.altText), category: body.category === undefined ? undefined : String(body.category), featured: body.featured === undefined ? undefined : Boolean(body.featured), displayOrder: body.displayOrder === undefined ? undefined : Number(body.displayOrder) } });
   } else if (resource === 'resources') {
     result = await db.resource.update({ where: { id: id.data }, data: { title: body.title === undefined ? undefined : String(body.title), description: body.description === undefined ? undefined : String(body.description), category: body.category === undefined ? undefined : String(body.category), fileUrl: body.fileUrl === undefined ? undefined : String(body.fileUrl), thumbnailUrl: body.thumbnailUrl === undefined ? undefined : String(body.thumbnailUrl), published: body.published === undefined ? undefined : Boolean(body.published) } });
+  } else if (resource === 'services') {
+    result = await db.service.update({
+      where: { id: id.data },
+      data: {
+        name: body.name === undefined ? undefined : String(body.name),
+        slug: body.slug === undefined ? undefined : String(body.slug),
+        description: body.description === undefined ? undefined : String(body.description),
+        category: body.category === undefined ? undefined : String(body.category),
+        imageUrl: body.imageUrl === undefined ? undefined : String(body.imageUrl),
+        ctaLabel: body.ctaLabel === undefined ? undefined : String(body.ctaLabel),
+        ctaHref: body.ctaHref === undefined ? undefined : String(body.ctaHref),
+        displayOrder: body.displayOrder === undefined ? undefined : Number(body.displayOrder),
+        enabled: body.enabled === undefined ? undefined : Boolean(body.enabled)
+      }
+    });
+  } else if (resource === 'vehicles') {
+    result = await db.vehicle.update({
+      where: { id: id.data },
+      data: {
+        make: body.make === undefined ? undefined : String(body.make),
+        model: body.model === undefined ? undefined : String(body.model),
+        year: body.year === undefined ? undefined : Number(body.year),
+        category: body.category === undefined ? undefined : String(body.category),
+        transmission: body.transmission === undefined ? undefined : String(body.transmission),
+        fuelType: body.fuelType === undefined ? undefined : String(body.fuelType),
+        seats: body.seats === undefined ? undefined : Number(body.seats),
+        description: body.description === undefined ? undefined : String(body.description),
+        price: body.price === undefined ? undefined : Number(body.price),
+        dailyRate: body.dailyRate === undefined ? undefined : Number(body.dailyRate),
+        availability: body.availability === undefined ? undefined : String(body.availability),
+        featured: body.featured === undefined ? undefined : Boolean(body.featured)
+      }
+    });
+  } else if (resource === 'rentals') {
+    const status = rentalStatusSchema.safeParse(body.status);
+    if (!status.success) return NextResponse.json({ error: 'Rental enquiries can be NEW, CONTACTED, CONFIRMED or DECLINED.' }, { status: 400 });
+    result = await db.rentalInquiry.update({ where: { id: id.data }, data: { status: status.data, notes: body.notes === undefined ? undefined : String(body.notes) } });
+  } else if (resource === 'products') {
+    result = await db.product.update({
+      where: { id: id.data },
+      data: {
+        name: body.name === undefined ? undefined : String(body.name),
+        sku: body.sku === undefined ? undefined : String(body.sku),
+        description: body.description === undefined ? undefined : String(body.description),
+        imageUrl: body.imageUrl === undefined ? undefined : String(body.imageUrl),
+        price: body.price === undefined ? undefined : Number(body.price),
+        stock: body.stock === undefined ? undefined : Number(body.stock),
+        brand: body.brand === undefined ? undefined : String(body.brand),
+        available: body.available === undefined ? undefined : Boolean(body.available)
+      }
+    });
+  } else if (resource === 'recruitment') {
+    const status = driverApplicationStatusSchema.safeParse(body.status);
+    if (!status.success) return NextResponse.json({ error: 'Driver applications can be NEW, REVIEWING, HIRED or DECLINED.' }, { status: 400 });
+    result = await db.driverApplication.update({ where: { id: id.data }, data: { status: status.data, internalNotes: body.internalNotes === undefined ? undefined : String(body.internalNotes) } });
   } else {
     result = await db.teamMember.update({ where: { id: id.data }, data: { name: body.name === undefined ? undefined : String(body.name), position: body.position === undefined ? undefined : String(body.position), biography: body.biography === undefined ? undefined : String(body.biography), imageUrl: body.imageUrl === undefined ? undefined : String(body.imageUrl), displayOrder: body.displayOrder === undefined ? undefined : Number(body.displayOrder), active: body.active === undefined ? undefined : Boolean(body.active) } });
   }
@@ -94,6 +159,44 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
   await db.auditLog.create({ data: { userId: user.id, action: 'UPDATE', entity: resource, entityId: id.data } });
   return NextResponse.json(result);
 }
+
+const serviceCreateSchema = z.object({
+  name: z.string().trim().min(2).max(120),
+  slug: z.string().trim().min(2).max(140),
+  description: z.string().trim().min(2).max(4000),
+  category: z.string().trim().min(2).max(80),
+  imageUrl: z.string().trim().max(500).optional(),
+  ctaLabel: z.string().trim().max(60).optional(),
+  ctaHref: z.string().trim().max(200).optional(),
+  displayOrder: z.coerce.number().int().default(0),
+  enabled: z.coerce.boolean().default(true)
+});
+
+const vehicleCreateSchema = z.object({
+  make: z.string().trim().min(1).max(80),
+  model: z.string().trim().min(1).max(80),
+  year: z.coerce.number().int().min(1950).max(2100),
+  category: z.string().trim().min(2).max(80),
+  transmission: z.string().trim().max(40).optional(),
+  fuelType: z.string().trim().max(40).optional(),
+  seats: z.coerce.number().int().min(1).max(60).optional(),
+  description: z.string().trim().max(4000).optional(),
+  price: z.coerce.number().int().min(0).optional(),
+  dailyRate: z.coerce.number().int().min(0).optional(),
+  availability: z.enum(['AVAILABLE', 'RESERVED', 'RENTED', 'SOLD']).default('AVAILABLE'),
+  featured: z.coerce.boolean().default(false)
+});
+
+const productCreateSchema = z.object({
+  name: z.string().trim().min(2).max(160),
+  sku: z.string().trim().min(2).max(80),
+  description: z.string().trim().max(4000).optional(),
+  imageUrl: z.string().trim().max(500).optional(),
+  price: z.coerce.number().int().min(0).optional(),
+  stock: z.coerce.number().int().min(0).default(0),
+  brand: z.string().trim().max(80).optional(),
+  available: z.coerce.boolean().default(true)
+});
 
 export async function POST(request: Request, { params }: { params: Promise<{ resource: string }> }) {
   const auth = await authenticatedResource(params);
@@ -128,6 +231,18 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
     created = await db.resource.create({
       data: { title, description, category, fileUrl, published: Boolean(body.published) }
     });
+  } else if (resource === 'services') {
+    const parsed = serviceCreateSchema.safeParse(body);
+    if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid service data.' }, { status: 400 });
+    created = await db.service.create({ data: parsed.data });
+  } else if (resource === 'vehicles') {
+    const parsed = vehicleCreateSchema.safeParse(body);
+    if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid vehicle data.' }, { status: 400 });
+    created = await db.vehicle.create({ data: parsed.data });
+  } else if (resource === 'products') {
+    const parsed = productCreateSchema.safeParse(body);
+    if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid product data.' }, { status: 400 });
+    created = await db.product.create({ data: parsed.data });
   } else {
     return NextResponse.json({ error: 'Creation is not available for this resource yet.' }, { status: 400 });
   }
@@ -136,7 +251,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
   return NextResponse.json(created, { status: 201 });
 }
 
-const deletableResources = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team']);
+const deletableResources = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products']);
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ resource: string }> }) {
   const auth = await authenticatedResource(params);
@@ -154,6 +269,10 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ r
   else if (resource === 'statistics') await db.statistic.delete({ where: { id: id.data } });
   else if (resource === 'gallery') await db.galleryItem.delete({ where: { id: id.data } });
   else if (resource === 'resources') await db.resource.delete({ where: { id: id.data } });
+  else if (resource === 'services') await db.service.delete({ where: { id: id.data } });
+  else if (resource === 'vehicles') await db.vehicle.delete({ where: { id: id.data } });
+  else if (resource === 'rentals') await db.rentalInquiry.delete({ where: { id: id.data } });
+  else if (resource === 'products') await db.product.delete({ where: { id: id.data } });
   else await db.teamMember.delete({ where: { id: id.data } });
 
   await db.auditLog.create({ data: { userId: user.id, action: 'DELETE', entity: resource, entityId: id.data } });

@@ -44,7 +44,7 @@ export default async function MemberProfile() {
       {portal.status === 'REJECTED' && (
         <div className="admin-panel" style={{ marginBottom: 22, borderLeft: '4px solid #c0392b' }}>
           <h2 style={{ marginTop: 0 }}>Application not approved</h2>
-          <p style={{ fontSize: 13, color: 'var(--muted)' }}>Unfortunately your application was not approved at this time. Please <Link href="/contact" style={{ color: 'var(--blue)', fontWeight: 700 }}>contact the association</Link> for details.</p>
+          <p style={{ fontSize: 13, color: 'var(--muted)' }}>Unfortunately your application was not approved at this time. Please <Link href="/contact" style={{ color: 'var(--blue)', fontWeight: 700 }}>contact the Mr Truth team</Link> for details.</p>
         </div>
       )}
 
