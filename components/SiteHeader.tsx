@@ -3,25 +3,32 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ArrowRight, LogIn, Mail, MapPin, Megaphone, Menu, Phone, X } from 'lucide-react';
+import { ArrowRight, Car, CarFront, ChevronDown, LogIn, Mail, MapPin, Megaphone, Menu, Phone, UserPlus, Wrench, X } from 'lucide-react';
 import SocialIcon from '@/components/SocialIcon';
 import type { SocialLink } from '@/lib/settings';
 
 const links = [
   ['Home', '/'],
-  ['About Us', '/about'],
-  ['Services', '/services'],
-  ['Vehicles', '/vehicles'],
-  ['Rentals', '/rentals'],
+  ['About Us', '/about']
+];
+
+const serviceLinks = [
+  ['All Services', '/services', ArrowRight],
+  ['Driver Recruitment', '/services/driver-recruitment', UserPlus],
+  ['Fleet Management', '/services/fleet-management', Car],
+  ['Vehicles', '/vehicles', CarFront],
+  ['Car Rentals', '/rentals', CarFront],
+  ['Automotive Goods', '/automotive', Wrench]
+] as const;
+
+const tailLinks = [
   ['Fan Club', '/membership'],
-  ['News & Updates', '/news'],
-  ['Resources', '/resources'],
-  ['Gallery', '/gallery'],
+  ['News', '/news'],
   ['Contact Us', '/contact']
 ];
 
 export default function SiteHeader({
-  phone = '+233 24 123 4567',
+  phone = '+233 234 123 4567',
   email = 'info@mrtruthagency.com',
   announcement,
   socials = []
@@ -34,6 +41,7 @@ export default function SiteHeader({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const [bannerDismissed, setBannerDismissed] = useState(true);
 
   useEffect(() => {
@@ -59,9 +67,10 @@ export default function SiteHeader({
     };
   }, [open]);
 
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => { setOpen(false); setServicesOpen(false); }, [pathname]);
 
   const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
+  const servicesActive = pathname.startsWith('/services') || pathname === '/vehicles' || pathname === '/rentals' || pathname === '/automotive';
 
   function dismiss() {
     if (announcement) window.localStorage.setItem(`mrtruth-announcement-${announcement.key}`, 'dismissed');
@@ -73,20 +82,18 @@ export default function SiteHeader({
       <div className="topbar">
         <div className="container topbar-inner">
           <div className="top-meta">
-            <span><Phone size={12} /> {phone}</span>
             <span><Mail size={12} /> {email}</span>
+            <span><Phone size={12} /> {phone}</span>
             <span className="hide-sm"><MapPin size={12} /> Accra, Ghana</span>
           </div>
-          {socials.length > 0 && (
-            <div className="socials">
-              <span className="hide-sm">Follow Mr Truth Agency</span>
-              {socials.map((social) => (
-                <a key={social.key} href={social.url} target="_blank" rel="noreferrer me" aria-label={social.label}>
-                  <SocialIcon platform={social.key} />
-                </a>
-              ))}
-            </div>
-          )}
+          <div className="socials">
+            <Link href="/login" className="hide-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontWeight: 700, letterSpacing: '.4px' }}><LogIn size={12} /> SIGN IN</Link>
+            {socials.map((social) => (
+              <a key={social.key} href={social.url} target="_blank" rel="noreferrer me" aria-label={social.label}>
+                <SocialIcon platform={social.key} />
+              </a>
+            ))}
+          </div>
         </div>
       </div>
       {announcement && !bannerDismissed && (
@@ -101,20 +108,33 @@ export default function SiteHeader({
       <nav className={`nav${scrolled ? ' nav-scrolled' : ''}`} aria-label="Main navigation">
         <div className="container nav-inner">
           <Link href="/" className="brand">
-            <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={51} height={51} />
+            <img src="/logo-mark.png" alt="Mr Truth Agency logo" className="brand-logo" width={46} height={46} />
             <div>
               <div className="brand-name">MR TRUTH</div>
-              <small className="brand-sub">AGENCY · AUTOMOTIVE & MOBILITY</small>
+              <small className="brand-sub">AGENCY</small>
             </div>
           </Link>
           <div className="nav-links">
             {links.map(([label, href]) => (
-              <Link key={href} href={href} className={isActive(href) ? 'active' : ''}>{label.toUpperCase()}</Link>
+              <Link key={href} href={href} className={isActive(href) ? 'active' : ''}>{label}</Link>
+            ))}
+            <div className="nav-drop">
+              <Link href="/services" className={servicesActive ? 'active' : ''} aria-expanded={servicesOpen} onFocus={() => setServicesOpen(true)} onBlur={() => setServicesOpen(false)}>
+                Services <ChevronDown size={13} />
+              </Link>
+              <div className="nav-drop-menu">
+                {serviceLinks.map(([label, href, Icon]) => (
+                  <Link key={href} href={href}><Icon size={14} /> {label}</Link>
+                ))}
+              </div>
+            </div>
+            <Link href="/vehicles" className={isActive('/vehicles') ? 'active' : ''}>Vehicles</Link>
+            {tailLinks.map(([label, href]) => (
+              <Link key={href} href={href} className={isActive(href) ? 'active' : ''}>{label}</Link>
             ))}
           </div>
           <div className="nav-cta nav-actions">
-            <Link className="btn btn-ghost nav-signin" href="/login"><LogIn size={14} /> SIGN IN</Link>
-            <Link className="btn btn-primary" href="/membership">JOIN FAN CLUB <ArrowRight size={15} /></Link>
+            <Link className="btn btn-primary" href="/fan-club/join">JOIN FAN CLUB</Link>
           </div>
           <button
             type="button"
@@ -137,12 +157,12 @@ export default function SiteHeader({
       <aside className={`drawer${open ? ' open' : ''}`} aria-hidden={!open} aria-label="Mobile navigation">
         <p className="drawer-title">NAVIGATION</p>
         <nav className="drawer-links">
-          {links.map(([label, href], index) => (
+          {[...links, ...serviceLinks.map(([label, href]) => [label, href] as const), ...tailLinks].map(([label, href], index) => (
             <Link
-              key={href}
+              key={`${href}-${label}`}
               href={href}
               className={isActive(href) ? 'active' : ''}
-              style={{ transitionDelay: open ? `${80 + index * 40}ms` : '0ms' }}
+              style={{ transitionDelay: open ? `${80 + index * 30}ms` : '0ms' }}
               tabIndex={open ? 0 : -1}
             >
               {label}
@@ -152,7 +172,7 @@ export default function SiteHeader({
         </nav>
         <div className="drawer-cta drawer-actions">
           <Link href="/login" className="btn btn-ghost" tabIndex={open ? 0 : -1}><LogIn size={14} /> SIGN IN</Link>
-          <Link href="/membership" className="btn btn-primary" tabIndex={open ? 0 : -1}>
+          <Link href="/fan-club/join" className="btn btn-primary" tabIndex={open ? 0 : -1}>
             JOIN FAN CLUB <ArrowRight size={15} />
           </Link>
         </div>

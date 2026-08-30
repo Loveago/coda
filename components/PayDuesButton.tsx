@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { CreditCard, Loader2 } from 'lucide-react';
 
-export default function PayDuesButton({ type, label }: { type: 'REGISTRATION_FEE' | 'ANNUAL_DUES'; label: string }) {
+export default function PayDuesButton({ type, label, asTile, sub }: { type: 'REGISTRATION_FEE' | 'ANNUAL_DUES'; label: string; asTile?: boolean; sub?: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,6 +23,16 @@ export default function PayDuesButton({ type, label }: { type: 'REGISTRATION_FEE
       setError(err instanceof Error ? err.message : 'Unable to start payment.');
       setBusy(false);
     }
+  }
+
+  if (asTile) {
+    return <>
+      <button className="mqa" onClick={pay} disabled={busy} type="button" style={{ border: 0, cursor: 'pointer', textAlign: 'left', font: 'inherit' }}>
+        {busy ? <Loader2 size={20} className="spin" /> : <CreditCard size={20} />}
+        <span>{busy ? 'Redirecting...' : label}{sub && <small>{sub}</small>}</span>
+      </button>
+      {error && <p role="alert" className="status-err" style={{ fontSize: 12.5 }}>{error}</p>}
+    </>;
   }
 
   return <>

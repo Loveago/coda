@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CreditCard, IdCard, LayoutDashboard, LogOut, UserRound } from 'lucide-react';
+import { Bell, CalendarDays, CreditCard, Gift, Headphones, IdCard, LayoutDashboard, LogOut, Search, Settings, Sparkles, UserRound } from 'lucide-react';
 
 type NavMember = {
   firstName: string;
@@ -12,10 +12,23 @@ type NavMember = {
 };
 
 const links = [
+  { href: '/member/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+  { href: '/member/profile', label: 'My Profile', Icon: UserRound },
+  { href: '/membership', label: 'Membership', Icon: Sparkles },
+  { href: '/member/payments', label: 'Payments', Icon: CreditCard },
+  { href: '/member/id-card', label: 'My Benefits', Icon: IdCard },
+  { href: '/news', label: 'Events', Icon: CalendarDays },
+  { href: '/automotive', label: 'Offers', Icon: Gift },
+  { href: '/member/profile', label: 'Settings', Icon: Settings },
+  { href: '/contact', label: 'Support', Icon: Headphones }
+] as const;
+
+const tabLinks = [
   { href: '/member/dashboard', label: 'Home', Icon: LayoutDashboard },
+  { href: '/membership', label: 'Membership', Icon: Sparkles },
   { href: '/member/payments', label: 'Payments', Icon: CreditCard },
   { href: '/member/id-card', label: 'ID Card', Icon: IdCard },
-  { href: '/member/profile', label: 'Profile', Icon: UserRound }
+  { href: '/member/profile', label: 'More', Icon: UserRound }
 ] as const;
 
 export default function MemberNav({ member }: { member: NavMember }) {
@@ -34,18 +47,17 @@ export default function MemberNav({ member }: { member: NavMember }) {
       {/* ===== Desktop sidebar ===== */}
       <aside className="msidebar">
         <Link href="/" className="admin-brand">
-          <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={42} height={42} />
+          <img src="/logo-mark.png" alt="Mr Truth Fan Club logo" className="brand-logo" width={42} height={42} />
           <div>
             <div className="brand-name">MR TRUTH</div>
-            <small className="brand-sub" style={{ color: '#8fb0e0' }}>MEMBER PORTAL</small>
+            <small className="brand-sub" style={{ color: '#FFD2B3' }}>FAN CLUB</small>
           </div>
         </Link>
         <div className="admin-nav-group">
-          <p className="admin-nav-label">My Membership</p>
           <nav className="admin-nav" aria-label="Member navigation">
             {links.map(({ href, label, Icon }) => (
-              <Link key={href} href={href} className={isActive(href) ? 'active' : ''}>
-                <Icon size={16} /> {label === 'Home' ? 'Dashboard' : label}
+              <Link key={label} href={href} className={isActive(href) && label !== 'Settings' ? 'active' : ''}>
+                <Icon size={16} /> {label}
               </Link>
             ))}
           </nav>
@@ -67,6 +79,27 @@ export default function MemberNav({ member }: { member: NavMember }) {
         <Link href="/" className="msidebar-public">← PUBLIC SITE</Link>
       </aside>
 
+      {/* ===== Desktop top bar ===== */}
+      <header className="mdashbar">
+        <form className="msearch" action="/news" method="get" role="search">
+          <Search size={15} />
+          <input type="search" name="q" placeholder="Search anything..." aria-label="Search news and updates" />
+        </form>
+        <div className="mdashbar-actions">
+          <Link href="/news" className="mdashbar-bell" aria-label="Notifications">
+            <Bell size={17} />
+            <i>3</i>
+          </Link>
+          <Link href="/member/profile" className="mdashbar-user">
+            {member.photoUrl ? <img src={member.photoUrl} alt="" /> : <span className="mdashbar-avatar">{initials}</span>}
+            <div>
+              <strong>{member.firstName} {member.lastName}</strong>
+              <small>Member</small>
+            </div>
+          </Link>
+        </div>
+      </header>
+
       {/* ===== Mobile top bar ===== */}
       <header className="mtopbar">
         <Link href="/member/dashboard" className="mtop-brand" aria-label="Mr Truth member home">
@@ -83,8 +116,8 @@ export default function MemberNav({ member }: { member: NavMember }) {
 
       {/* ===== Mobile bottom tabs ===== */}
       <nav className="mtabs" aria-label="Member navigation">
-        {links.map(({ href, label, Icon }) => (
-          <Link key={href} href={href} className={`mtab${isActive(href) ? ' active' : ''}`}>
+        {tabLinks.map(({ href, label, Icon }) => (
+          <Link key={label} href={href} className={`mtab${isActive(href) ? ' active' : ''}`}>
             <span className="mtab-ico"><Icon size={19} /></span>
             <span className="mtab-label">{label}</span>
           </Link>

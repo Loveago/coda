@@ -11,48 +11,52 @@ import {
 const groups: { label: string; items: [string, string, typeof LayoutDashboard][] }[] = [
   {
     label: 'Overview',
-    items: [['Dashboard', '/admin', LayoutDashboard]]
+    items: [
+      ['Dashboard', '/admin', LayoutDashboard],
+      ['Analytics', '/admin/finance', ChartPie]
+    ]
   },
   {
     label: 'Content',
     items: [
+      ['Services', '/admin/services', LayoutDashboard],
+      ['Pages', '/admin/resources', FileText],
       ['News', '/admin/news', Newspaper],
-      ['Gallery', '/admin/gallery', ImageIcon],
-      ['Resources', '/admin/resources', FileText],
+      ['Media', '/admin/gallery', ImageIcon],
       ['Statistics', '/admin/statistics', BarChart3]
     ]
   },
   {
-    label: 'Community',
+    label: 'Business',
     items: [
-      ['Applications', '/admin/applications', Inbox],
-      ['Members', '/admin/members', Users],
-      ['Messages', '/admin/messages', Mail],
-      ['Subscribers', '/admin/subscribers', Mail]
-    ]
-  },
-  {
-    label: 'Finance',
-    items: [
-      ['Financial Analytics', '/admin/finance', ChartPie],
-      ['Payments', '/admin/payments', CreditCard],
-      ['Fee Settings', '/admin/settings/fees', BarChart3],
-      ['Paystack Keys', '/admin/settings/paystack', KeyRound]
-    ]
-  },
-  {
-    label: 'Agency Operations',
-    items: [
-      ['Services', '/admin/services', LayoutDashboard],
       ['Vehicles', '/admin/vehicles', CarFront],
-      ['Rental enquiries', '/admin/rentals', Inbox],
-      ['Automotive goods', '/admin/products', Package],
+      ['Rentals', '/admin/rentals', Inbox],
+      ['Automotive Goods', '/admin/products', Package],
       ['Recruitment', '/admin/recruitment', Users]
     ]
   },
   {
-    label: 'Site',
+    label: 'Membership',
     items: [
+      ['Members', '/admin/members', Users],
+      ['Applications', '/admin/applications', Inbox],
+      ['Fan Club', '/membership', Users],
+      ['Payments', '/admin/payments', CreditCard],
+      ['Fee Settings', '/admin/settings/fees', BarChart3]
+    ]
+  },
+  {
+    label: 'Communication',
+    items: [
+      ['Messages', '/admin/messages', Mail],
+      ['Newsletter', '/admin/subscribers', Mail],
+      ['Notifications', '/admin/settings/paystack', KeyRound]
+    ]
+  },
+  {
+    label: 'Management',
+    items: [
+      ['Team', '/admin/team', Users],
       ['Settings', '/admin/settings', Settings],
       ['Social Links', '/admin/settings/social', Share2]
     ]

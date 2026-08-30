@@ -81,8 +81,28 @@ async function main() {
   const category = await prisma.newsCategory.upsert({ where: { slug: 'agency-news' }, update: {}, create: { name: 'Agency News', slug: 'agency-news' } });
   await prisma.newsArticle.upsert({ where: { slug: 'mr-truth-mobility-community-update' }, update: {}, create: { title: 'Mr Truth Mobility Community Update', slug: 'mr-truth-mobility-community-update', excerpt: 'A demo article seeded for the public news experience.', content: 'This is demo content for the Mr Truth Agency news system. Replace it with approved agency communications.', coverImage: 'https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=1200&q=80', status: ArticleStatus.PUBLISHED, publishedAt: new Date(), authorId: admin.id, categoryId: category.id } });
 
-  for (const item of [{ label: 'Members', value: '5,000+', description: 'Strong and growing community' }, { label: 'Voice', value: '1', description: 'Uniting drivers' }, { label: 'Partners', value: '20+', description: 'Working together for progress' }, { label: 'Region', value: 'Greater Accra', description: 'Serving drivers across the region' }]) {
-    await prisma.statistic.upsert({ where: { label: item.label }, update: item, create: item });
+  await prisma.statistic.deleteMany({ where: { label: { in: ['Members', 'Voice', 'Partners', 'Region'] } } });
+  const stats = [
+    { label: 'Happy Clients', value: '10K+', description: 'Trusted across Ghana and beyond' },
+    { label: 'Vehicles Managed', value: '500+', description: 'City cars to heavy fleet' },
+    { label: 'Partner Companies', value: '250+', description: 'Mobility ecosystem partners' },
+    { label: 'Reliable Support', value: '24/7', description: 'Always on the move with you' }
+  ];
+  for (const [index, item] of stats.entries()) {
+    await prisma.statistic.upsert({ where: { label: item.label }, update: { ...item, displayOrder: index }, create: { ...item, displayOrder: index } });
+  }
+
+  const demoVehicles: Array<{ make: string; model: string; year: number; category: string; transmission: string; fuelType: string; seats: number; price: number; dailyRate: number; description: string; featured: boolean; image: string }> = [
+    { make: 'Toyota', model: 'Hilux', year: 2022, category: 'Pickup', transmission: 'Automatic', fuelType: 'Diesel', seats: 5, price: 220000, dailyRate: 450, description: 'Rugged double-cab pickup, ideal for field operations and corporate mobility.', featured: true, image: 'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=1200&q=80' },
+    { make: 'Hyundai', model: 'Elantra', year: 2023, category: 'Sedan', transmission: 'Automatic', fuelType: 'Petrol', seats: 5, price: 145000, dailyRate: 300, description: 'Comfortable, fuel-efficient sedan perfect for ride-hailing and executive hire.', featured: true, image: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?auto=format&fit=crop&w=1200&q=80' },
+    { make: 'Kia', model: 'Sportage', year: 2021, category: 'SUV', transmission: 'Automatic', fuelType: 'Petrol', seats: 5, price: 168000, dailyRate: 350, description: 'Versatile compact SUV with modern tech and confident road presence.', featured: true, image: 'https://images.unsplash.com/photo-1519641481525-4f777bea0e59?auto=format&fit=crop&w=1200&q=80' },
+    { make: 'Toyota', model: 'Hiace', year: 2020, category: 'Van', transmission: 'Manual', fuelType: 'Diesel', seats: 15, price: 195000, dailyRate: 550, description: 'High-capacity crew van built for staff transport and event shuttles.', featured: true, image: 'https://images.unsplash.com/photo-1600661653561-629509216228?auto=format&fit=crop&w=1200&q=80' }
+  ];
+  for (const { image, ...vehicleFields } of demoVehicles) {
+    const existing = await prisma.vehicle.findFirst({ where: { make: vehicleFields.make, model: vehicleFields.model, year: vehicleFields.year } });
+    if (existing) continue;
+    const created = await prisma.vehicle.create({ data: { ...vehicleFields, availability: 'AVAILABLE' } });
+    await prisma.vehicleImage.create({ data: { vehicleId: created.id, url: image, altText: `${vehicleFields.make} ${vehicleFields.model} (${vehicleFields.year})`, position: 0 } });
   }
 
   const defaultSettings: Record<string, string> = {

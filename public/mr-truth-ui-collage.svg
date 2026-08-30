@@ -1,39 +1,430 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
-  <title id="title">Mr Truth Agency UI collage</title>
-  <desc id="desc">A visual collage showing the new charcoal, warm white and electric orange public, fan club and operations interfaces.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1240" viewBox="0 0 1680 1240" font-family="Arial, Helvetica, sans-serif">
   <defs>
-    <linearGradient id="hero" x1="0" x2="1"><stop stop-color="#090909"/><stop offset="1" stop-color="#4a4a4a"/></linearGradient>
-    <filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-opacity=".25"/></filter>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0D0D0D"/>
+      <stop offset="1" stop-color="#161616"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF8A3D"/>
+      <stop offset="1" stop-color="#FF6B00"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#212121"/>
+      <stop offset="1" stop-color="#161616"/>
+    </linearGradient>
+    <linearGradient id="heroImg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3A2A18"/>
+      <stop offset="1" stop-color="#1A1A1A"/>
+    </linearGradient>
   </defs>
-  <rect width="1600" height="1000" fill="#e9e9e7"/>
-  <rect x="0" y="0" width="1600" height="60" fill="#1a1a1a"/>
-  <text x="48" y="39" fill="#fff" font-family="Arial" font-weight="700" font-size="22" letter-spacing="3">MR TRUTH AGENCY</text>
-  <text x="1370" y="38" fill="#ff6b00" font-family="Arial" font-size="14" text-anchor="end">TRUTH IN MOTION</text>
-  <g filter="url(#shadow)">
-    <rect x="44" y="100" width="920" height="430" rx="8" fill="url(#hero)"/>
-    <text x="92" y="155" fill="#ff8a3d" font-family="Arial" font-size="14" font-weight="700" letter-spacing="3">AUTOMOTIVE & MOBILITY</text>
-    <text x="92" y="235" fill="#fff" font-family="Arial" font-weight="900" font-size="62">MOVE PEOPLE.</text>
-    <text x="92" y="302" fill="#ff6b00" font-family="Arial" font-weight="900" font-size="62">MOVE BUSINESS.</text>
-    <text x="92" y="369" fill="#fff" font-family="Arial" font-weight="900" font-size="62">MOVE FORWARD.</text>
-    <rect x="92" y="420" width="190" height="43" rx="4" fill="#ff6b00"/><text x="187" y="448" fill="#fff" font-family="Arial" font-size="12" text-anchor="middle" font-weight="700">EXPLORE SERVICES →</text>
-    <circle cx="802" cy="330" r="108" fill="#292929" stroke="#ff6b00" stroke-width="5"/><text x="802" y="316" fill="#fff" font-family="Arial" font-size="24" text-anchor="middle" font-weight="700">TRUTH</text><text x="802" y="348" fill="#ff6b00" font-family="Arial" font-size="24" text-anchor="middle" font-weight="700">IN MOTION</text>
+
+  <rect width="1680" height="1240" fill="url(#bg)"/>
+  <text x="840" y="42" text-anchor="middle" fill="#FFFFFF" font-size="26" font-weight="bold" letter-spacing="4">MR TRUTH AGENCY — UI V2 REDESIGN</text>
+  <text x="840" y="64" text-anchor="middle" fill="#FF8A3D" font-size="13" letter-spacing="6">MOVING AFRICA FORWARD</text>
+
+  <!-- ============ ROW 1 LABELS ============ -->
+  <text x="40" y="98" fill="#9A9A9A" font-size="12" letter-spacing="2">01 · PUBLIC WEBSITE — DESKTOP</text>
+  <text x="1360" y="98" fill="#9A9A9A" font-size="12" letter-spacing="2">02 · WEBSITE — MOBILE</text>
+
+  <!-- ============ PANEL 1: WEBSITE DESKTOP ============ -->
+  <g transform="translate(40,108)">
+    <rect width="1280" height="330" rx="10" fill="#FFFFFF" stroke="#2A2A2A"/>
+    <!-- browser chrome -->
+    <rect width="1280" height="22" rx="10" fill="#E9EAED"/>
+    <circle cx="16" cy="11" r="4" fill="#FF5F57"/><circle cx="30" cy="11" r="4" fill="#FEBC2E"/><circle cx="44" cy="11" r="4" fill="#28C840"/>
+    <rect x="60" y="5" width="220" height="12" rx="6" fill="#FFFFFF"/>
+    <text x="68" y="14" fill="#8A8F98" font-size="8">mrtruthagency.com</text>
+
+    <g transform="translate(0,22)">
+      <!-- utility bar -->
+      <rect width="1280" height="16" fill="#0F0F0F"/>
+      <text x="24" y="11" fill="#8A8A8A" font-size="7">info@mrtruthagency.com   ·   +233 234 123 4567   ·   Accra, Ghana</text>
+      <text x="1180" y="11" fill="#8A8A8A" font-size="7">SIGN IN</text>
+      <circle cx="1236" cy="8" r="4" fill="#333"/><circle cx="1250" cy="8" r="4" fill="#333"/><circle cx="1264" cy="8" r="4" fill="#333"/>
+
+      <!-- nav -->
+      <rect y="16" width="1280" height="30" fill="#141414"/>
+      <text x="24" y="35" fill="#FFFFFF" font-size="11" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">AGENCY</tspan></text>
+      <text x="330" y="35" fill="#FF8A3D" font-size="8">HOME</text>
+      <text x="380" y="35" fill="#C9C9C9" font-size="8">ABOUT US</text>
+      <text x="448" y="35" fill="#C9C9C9" font-size="8">SERVICES ▾</text>
+      <text x="518" y="35" fill="#C9C9C9" font-size="8">VEHICLES</text>
+      <text x="578" y="35" fill="#C9C9C9" font-size="8">FAN CLUB</text>
+      <text x="640" y="35" fill="#C9C9C9" font-size="8">NEWS</text>
+      <text x="684" y="35" fill="#C9C9C9" font-size="8">CONTACT US</text>
+      <rect x="1150" y="22" width="106" height="18" rx="9" fill="url(#orange)"/>
+      <text x="1203" y="34" text-anchor="middle" fill="#0F0F0F" font-size="8" font-weight="bold">JOIN FAN CLUB</text>
+
+      <!-- hero -->
+      <rect y="46" width="1280" height="120" fill="#1A1A1A"/>
+      <text x="24" y="66" fill="#FF8A3D" font-size="7" letter-spacing="2">WE MOVE PEOPLE. WE MOVE BUSINESS.</text>
+      <text x="24" y="92" fill="#FFFFFF" font-size="24" font-weight="bold">MOVING AFRICA</text>
+      <text x="24" y="116" fill="#FF6B00" font-size="24" font-weight="bold">FORWARD</text>
+      <text x="24" y="132" fill="#9A9A9A" font-size="7">Fleet management, driver recruitment, rentals and automotive</text>
+      <text x="24" y="141" fill="#9A9A9A" font-size="7">solutions for people and businesses that keep moving.</text>
+      <rect x="24" y="148" width="86" height="14" rx="7" fill="url(#orange)"/>
+      <text x="67" y="158" text-anchor="middle" fill="#0F0F0F" font-size="7" font-weight="bold">EXPLORE SERVICES</text>
+      <rect x="118" y="148" width="76" height="14" rx="7" fill="none" stroke="#555"/>
+      <text x="156" y="158" text-anchor="middle" fill="#FFFFFF" font-size="7">JOIN FAN CLUB</text>
+      <!-- hero visual -->
+      <polygon points="700,46 1280,46 1280,166 820,166" fill="url(#heroImg)"/>
+      <g transform="translate(940,86)">
+        <path d="M0 34 q6 -18 30 -20 q20 -14 52 -12 q34 -12 66 6 q26 2 34 18 l10 8 v14 h-20 a14 14 0 0 0 -28 0 h-96 a14 14 0 0 0 -28 0 h-14 v-16 z" fill="#FF6B00" opacity="0.9"/>
+        <circle cx="66" cy="48" r="10" fill="#0F0F0F" stroke="#444" stroke-width="3"/>
+        <circle cx="176" cy="48" r="10" fill="#0F0F0F" stroke="#444" stroke-width="3"/>
+        <path d="M52 12 q22 -10 48 -6 l14 12 h-64 z" fill="#1A1A1A" opacity="0.7"/>
+      </g>
+
+      <!-- stats strip -->
+      <g transform="translate(24,150)">
+        <rect width="1232" height="44" rx="8" fill="#232323" stroke="#333"/>
+        <g font-size="7">
+          <circle cx="34" cy="22" r="10" fill="#FF6B00" opacity="0.18"/><circle cx="34" cy="22" r="4" fill="#FF8A3D"/>
+          <text x="54" y="19" fill="#FFFFFF" font-size="12" font-weight="bold">10K+</text><text x="54" y="31" fill="#9A9A9A">HAPPY CLIENTS</text>
+          <circle cx="334" cy="22" r="10" fill="#FF6B00" opacity="0.18"/><circle cx="334" cy="22" r="4" fill="#FF8A3D"/>
+          <text x="354" y="19" fill="#FFFFFF" font-size="12" font-weight="bold">500+</text><text x="354" y="31" fill="#9A9A9A">VEHICLES MANAGED</text>
+          <circle cx="654" cy="22" r="10" fill="#FF6B00" opacity="0.18"/><circle cx="654" cy="22" r="4" fill="#FF8A3D"/>
+          <text x="674" y="19" fill="#FFFFFF" font-size="12" font-weight="bold">250+</text><text x="674" y="31" fill="#9A9A9A">PARTNER COMPANIES</text>
+          <circle cx="954" cy="22" r="10" fill="#FF6B00" opacity="0.18"/><circle cx="954" cy="22" r="4" fill="#FF8A3D"/>
+          <text x="974" y="19" fill="#FFFFFF" font-size="12" font-weight="bold">24/7</text><text x="974" y="31" fill="#9A9A9A">RELIABLE SUPPORT</text>
+        </g>
+      </g>
+
+      <!-- services -->
+      <text x="24" y="216" fill="#FF6B00" font-size="7" letter-spacing="2">WHAT WE DO</text>
+      <text x="24" y="230" fill="#1A1A1A" font-size="12" font-weight="bold">Our Services</text>
+      <g transform="translate(24,238)">
+        <g id="svc">
+          <rect width="148" height="52" rx="6" fill="url(#card)"/>
+          <rect x="10" y="10" width="16" height="16" rx="4" fill="url(#orange)"/>
+          <text x="10" y="38" fill="#FFFFFF" font-size="8" font-weight="bold">Driver Recruitment</text>
+          <text x="10" y="47" fill="#8A8A8A" font-size="6">Verified, trained drivers</text>
+        </g>
+        <use href="#svc" x="162"/><use href="#svc" x="324"/><use href="#svc" x="486"/>
+        <g transform="translate(648,0)">
+          <rect width="148" height="52" rx="6" fill="url(#card)"/>
+          <rect x="10" y="10" width="16" height="16" rx="4" fill="url(#orange)"/>
+          <text x="10" y="38" fill="#FFFFFF" font-size="8" font-weight="bold">Car Rentals</text>
+          <text x="10" y="47" fill="#8A8A8A" font-size="6">Daily and monthly hire</text>
+        </g>
+        <use href="#svc" x="810" transform="translate(0,0)"/>
+        <g transform="translate(810,0)"><rect width="148" height="52" rx="6" fill="url(#card)"/><rect x="10" y="10" width="16" height="16" rx="4" fill="url(#orange)"/><text x="10" y="38" fill="#FFFFFF" font-size="8" font-weight="bold">Vehicle Sales</text><text x="10" y="47" fill="#8A8A8A" font-size="6">Sourced and inspected</text></g>
+        <g transform="translate(972,0)"><rect width="148" height="52" rx="6" fill="url(#card)"/><rect x="10" y="10" width="16" height="16" rx="4" fill="url(#orange)"/><text x="10" y="38" fill="#FFFFFF" font-size="8" font-weight="bold">Spare Parts</text><text x="10" y="47" fill="#8A8A8A" font-size="6">Genuine components</text></g>
+        <g transform="translate(1134,0)"><rect width="94" height="52" rx="6" fill="url(#card)"/><rect x="10" y="10" width="16" height="16" rx="4" fill="url(#orange)"/><text x="10" y="38" fill="#FFFFFF" font-size="8" font-weight="bold">Services</text><text x="10" y="47" fill="#8A8A8A" font-size="6">Workshop care</text></g>
+      </g>
+
+      <!-- footer strip -->
+      <rect y="300" width="1280" height="30" fill="#0F0F0F"/>
+      <text x="24" y="318" fill="#FFFFFF" font-size="8" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">AGENCY</tspan></text>
+      <text x="420" y="318" fill="#8A8A8A" font-size="7">Quick Links   ·   Our Services   ·   Contact Us</text>
+      <rect x="1080" y="308" width="120" height="14" rx="7" fill="#1E1E1E" stroke="#333"/>
+      <text x="1090" y="318" fill="#666" font-size="7">Email address</text>
+      <rect x="1206" y="308" width="52" height="14" rx="7" fill="url(#orange)"/>
+      <text x="1232" y="318" text-anchor="middle" fill="#0F0F0F" font-size="7" font-weight="bold">SUBSCRIBE</text>
+    </g>
   </g>
-  <g filter="url(#shadow)">
-    <rect x="1000" y="100" width="556" height="430" rx="8" fill="#fff"/>
-    <rect x="1000" y="100" width="132" height="430" rx="8" fill="#1a1a1a"/>
-    <text x="1030" y="145" fill="#ff6b00" font-family="Arial" font-size="14" font-weight="700">MR TRUTH</text>
-    <text x="1030" y="168" fill="#999" font-family="Arial" font-size="9">FAN CLUB</text>
-    <text x="1168" y="150" fill="#1a1a1a" font-family="Arial" font-size="22" font-weight="700">Welcome back,</text>
-    <text x="1168" y="184" fill="#1a1a1a" font-family="Arial" font-size="28" font-weight="900">John Mensah</text>
-    <rect x="1168" y="220" width="108" height="78" rx="5" fill="#f5f5f3"/><text x="1182" y="242" fill="#777" font-family="Arial" font-size="10">MEMBERSHIP</text><text x="1182" y="274" fill="#149447" font-family="Arial" font-size="17" font-weight="700">ACTIVE</text>
-    <rect x="1292" y="220" width="108" height="78" rx="5" fill="#f5f5f3"/><text x="1306" y="242" fill="#777" font-family="Arial" font-size="10">ANNUAL DUES</text><text x="1306" y="274" fill="#1a1a1a" font-family="Arial" font-size="17" font-weight="700">GHS 200</text>
-    <rect x="1416" y="220" width="108" height="78" rx="5" fill="#f5f5f3"/><text x="1430" y="242" fill="#777" font-family="Arial" font-size="10">STATUS</text><text x="1430" y="274" fill="#149447" font-family="Arial" font-size="17" font-weight="700">PAID</text>
-    <rect x="1168" y="324" width="356" height="144" rx="5" fill="#1a1a1a"/><text x="1190" y="355" fill="#fff" font-family="Arial" font-size="16" font-weight="700">Membership overview</text><path d="M1192 407H1492" stroke="#ff6b00" stroke-width="3"/><circle cx="1220" cy="407" r="9" fill="#ff6b00"/><circle cx="1320" cy="407" r="9" fill="#ff6b00"/><circle cx="1420" cy="407" r="9" fill="#ff6b00"/>
+
+  <!-- ============ PANEL 2: WEBSITE MOBILE ============ -->
+  <g transform="translate(1360,108)">
+    <rect width="280" height="330" rx="26" fill="#0F0F0F" stroke="#333" stroke-width="2"/>
+    <rect x="10" y="10" width="260" height="310" rx="18" fill="#1A1A1A"/>
+    <rect x="115" y="14" width="50" height="6" rx="3" fill="#000"/>
+    <!-- nav -->
+    <text x="22" y="40" fill="#FFFFFF" font-size="8" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">AGENCY</tspan></text>
+    <g stroke="#FFF" stroke-width="1.6"><line x1="238" y1="34" x2="252" y2="34"/><line x1="238" y1="39" x2="252" y2="39"/><line x1="238" y1="44" x2="252" y2="44"/></g>
+    <!-- hero -->
+    <text x="22" y="62" fill="#FF8A3D" font-size="5.5" letter-spacing="1">WE MOVE PEOPLE. WE MOVE BUSINESS.</text>
+    <text x="22" y="80" fill="#FFFFFF" font-size="15" font-weight="bold">MOVING</text>
+    <text x="22" y="96" fill="#FFFFFF" font-size="15" font-weight="bold">AFRICA</text>
+    <text x="22" y="112" fill="#FF6B00" font-size="15" font-weight="bold">FORWARD</text>
+    <rect x="22" y="122" width="80" height="14" rx="7" fill="url(#orange)"/>
+    <text x="62" y="132" text-anchor="middle" fill="#0F0F0F" font-size="6.5" font-weight="bold">EXPLORE SERVICES</text>
+    <polygon points="150,140 270,140 270,196 178,196" fill="url(#heroImg)"/>
+    <path d="M170 178 q4 -10 16 -11 q12 -8 30 -6 q18 -6 34 4 l10 6 v8 h-8 a7 7 0 0 0 -14 0 h-52 a7 7 0 0 0 -14 0 h-8 z" fill="#FF6B00" opacity="0.9"/>
+    <!-- stats mini -->
+    <rect x="18" y="186" width="244" height="30" rx="6" fill="#232323"/>
+    <text x="30" y="200" fill="#FFF" font-size="9" font-weight="bold">10K+</text><text x="30" y="209" fill="#8A8A8A" font-size="5">CLIENTS</text>
+    <text x="92" y="200" fill="#FFF" font-size="9" font-weight="bold">500+</text><text x="92" y="209" fill="#8A8A8A" font-size="5">VEHICLES</text>
+    <text x="152" y="200" fill="#FFF" font-size="9" font-weight="bold">250+</text><text x="152" y="209" fill="#8A8A8A" font-size="5">PARTNERS</text>
+    <text x="212" y="200" fill="#FFF" font-size="9" font-weight="bold">24/7</text><text x="212" y="209" fill="#8A8A8A" font-size="5">SUPPORT</text>
+    <!-- service cards -->
+    <text x="22" y="232" fill="#FF8A3D" font-size="5.5" letter-spacing="1">WHAT WE DO</text>
+    <rect x="18" y="238" width="118" height="34" rx="5" fill="url(#card)"/><rect x="26" y="245" width="10" height="10" rx="3" fill="url(#orange)"/><text x="26" y="266" fill="#FFF" font-size="6">Driver Recruitment</text>
+    <rect x="144" y="238" width="118" height="34" rx="5" fill="url(#card)"/><rect x="152" y="245" width="10" height="10" rx="3" fill="url(#orange)"/><text x="152" y="266" fill="#FFF" font-size="6">Fleet Management</text>
+    <rect x="18" y="278" width="118" height="34" rx="5" fill="url(#card)"/><rect x="26" y="285" width="10" height="10" rx="3" fill="url(#orange)"/><text x="26" y="306" fill="#FFF" font-size="6">Car Rentals</text>
+    <rect x="144" y="278" width="118" height="34" rx="5" fill="url(#card)"/><rect x="152" y="285" width="10" height="10" rx="3" fill="url(#orange)"/><text x="152" y="306" fill="#FFF" font-size="6">Vehicle Sales</text>
   </g>
-  <g filter="url(#shadow)">
-    <rect x="44" y="590" width="700" height="360" rx="8" fill="#fff"/><text x="78" y="638" fill="#ff6b00" font-family="Arial" font-size="13" font-weight="700" letter-spacing="2">OUR SERVICES</text><text x="78" y="680" fill="#1a1a1a" font-family="Arial" font-size="31" font-weight="900">Built for a moving Africa.</text>
-    <g fill="#1a1a1a"><rect x="78" y="715" width="190" height="86" rx="5"/><rect x="286" y="715" width="190" height="86" rx="5"/><rect x="494" y="715" width="190" height="86" rx="5"/></g><g fill="#ff6b00" font-family="Arial" font-size="13" font-weight="700"><text x="96" y="750">01 · DRIVER RECRUITMENT</text><text x="304" y="750">02 · FLEET MANAGEMENT</text><text x="512" y="750">03 · CAR RENTALS</text></g><g fill="#d1d5db" font-family="Arial" font-size="10"><text x="96" y="773">People in motion</text><text x="304" y="773">Operations simplified</text><text x="512" y="773">Move on your terms</text></g><rect x="78" y="832" width="606" height="68" rx="5" fill="#ff6b00"/><text x="381" y="873" fill="#fff" font-family="Arial" font-size="19" font-weight="700" text-anchor="middle">MR TRUTH FAN CLUB · JOIN THE MOVEMENT →</text></g>
-  <g filter="url(#shadow)">
-    <rect x="780" y="590" width="776" height="360" rx="8" fill="#1a1a1a"/><rect x="780" y="590" width="176" height="360" rx="8" fill="#0b0b0b"/><text x="812" y="638" fill="#ff6b00" font-family="Arial" font-size="14" font-weight="700">MR TRUTH</text><text x="812" y="660" fill="#888" font-family="Arial" font-size="9">OPERATIONS</text><g fill="#aaa" font-family="Arial" font-size="11"><text x="812" y="714">OVERVIEW</text><text x="812" y="746">BUSINESS</text><text x="812" y="778">MEMBERSHIP</text><text x="812" y="810">COMMUNICATION</text><text x="812" y="842">MANAGEMENT</text></g><text x="990" y="645" fill="#fff" font-family="Arial" font-size="25" font-weight="900">Dashboard</text><text x="990" y="672" fill="#999" font-family="Arial" font-size="11">A live view of your platform.</text><g fill="#292929"><rect x="990" y="705" width="160" height="72" rx="5"/><rect x="1168" y="705" width="160" height="72" rx="5"/><rect x="1346" y="705" width="160" height="72" rx="5"/></g><g fill="#fff" font-family="Arial" font-size="11"><text x="1010" y="731">TOTAL MEMBERS</text><text x="1010" y="756" font-size="22" font-weight="700">2,458</text><text x="1188" y="731">PENDING APPS</text><text x="1188" y="756" font-size="22" font-weight="700">84</text><text x="1366" y="731">REVENUE</text><text x="1366" y="756" font-size="22" font-weight="700">GHS 46,820</text></g><rect x="990" y="805" width="516" height="112" rx="5" fill="#f5f5f3"/><path d="M1020 885L1080 850 1140 870 1200 825 1260 860 1320 830 1380 850 1450 810" fill="none" stroke="#ff6b00" stroke-width="4"/><text x="1018" y="830" fill="#1a1a1a" font-family="Arial" font-size="13" font-weight="700">Revenue overview</text>
+
+  <!-- ============ ROW 2 LABELS ============ -->
+  <text x="40" y="468" fill="#9A9A9A" font-size="12" letter-spacing="2">03 · FAN CLUB MEMBER DASHBOARD — DESKTOP</text>
+  <text x="1360" y="468" fill="#9A9A9A" font-size="12" letter-spacing="2">04 · MEMBER — MOBILE</text>
+
+  <!-- ============ PANEL 3: MEMBER DESKTOP ============ -->
+  <g transform="translate(40,478)">
+    <rect width="1280" height="330" rx="10" fill="#F5F6F8" stroke="#2A2A2A"/>
+    <!-- sidebar -->
+    <rect width="170" height="330" rx="10" fill="#141414"/>
+    <rect width="170" height="330" fill="#141414"/>
+    <text x="16" y="28" fill="#FFFFFF" font-size="9" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">FAN CLUB</tspan></text>
+    <line x1="12" y1="38" x2="158" y2="38" stroke="#2A2A2A"/>
+    <g font-size="7.5">
+      <rect x="8" y="48" width="154" height="18" rx="5" fill="#FF6B00" opacity="0.16"/>
+      <rect x="8" y="48" width="3" height="18" rx="1.5" fill="#FF6B00"/>
+      <text x="20" y="60" fill="#FF8A3D" font-weight="bold">Dashboard</text>
+      <text x="20" y="80" fill="#B5B5B5">My Profile</text>
+      <text x="20" y="98" fill="#B5B5B5">Membership</text>
+      <text x="20" y="116" fill="#B5B5B5">Payments</text>
+      <text x="20" y="134" fill="#B5B5B5">My Benefits</text>
+      <text x="20" y="152" fill="#B5B5B5">Events</text>
+      <text x="20" y="170" fill="#B5B5B5">Offers</text>
+      <text x="20" y="188" fill="#B5B5B5">Notifications</text>
+      <text x="20" y="206" fill="#B5B5B5">Settings</text>
+      <text x="20" y="224" fill="#B5B5B5">Support</text>
+      <text x="20" y="312" fill="#FF6B00">Logout</text>
+    </g>
+    <g fill="#3A3A3A"><circle cx="14" cy="57" r="0"/><rect x="12" y="76" width="4" height="4" rx="1"/><rect x="12" y="94" width="4" height="4" rx="1"/><rect x="12" y="112" width="4" height="4" rx="1"/><rect x="12" y="130" width="4" height="4" rx="1"/><rect x="12" y="148" width="4" height="4" rx="1"/><rect x="12" y="166" width="4" height="4" rx="1"/><rect x="12" y="184" width="4" height="4" rx="1"/><rect x="12" y="202" width="4" height="4" rx="1"/><rect x="12" y="220" width="4" height="4" rx="1"/></g>
+
+    <!-- topbar -->
+    <rect x="170" width="1110" height="34" fill="#FFFFFF"/>
+    <line x1="170" y1="34" x2="1280" y2="34" stroke="#E4E6EA"/>
+    <rect x="194" y="9" width="240" height="17" rx="8.5" fill="#F0F1F4"/>
+    <text x="206" y="20" fill="#9AA0A8" font-size="7">Search news, offers, events…</text>
+    <circle cx="1160" cy="17" r="9" fill="#F0F1F4"/><text x="1157" y="20" fill="#666" font-size="8">🔔</text><circle cx="1166" cy="11" r="3.5" fill="#FF6B00"/><text x="1164.5" y="13.5" fill="#FFF" font-size="4.5">3</text>
+    <circle cx="1200" cy="17" r="9" fill="url(#orange)"/><text x="1197" y="20" fill="#FFF" font-size="7" font-weight="bold">JM</text>
+    <text x="1214" y="15" fill="#1A1A1A" font-size="7.5" font-weight="bold">John Mensah</text><text x="1214" y="24" fill="#8A8F98" font-size="6">Member</text>
+
+    <!-- welcome + ID card -->
+    <g transform="translate(194,48)">
+      <text y="12" fill="#1A1A1A" font-size="13" font-weight="bold">Welcome back, John Mensah 👋</text>
+      <text y="26" fill="#8A8F98" font-size="7">Member ID <tspan fill="#FF6B00" font-weight="bold">MRTF-000123</tspan> · Accra · Member since 2024</text>
+      <g transform="translate(880,-6)">
+        <rect width="180" height="108" rx="10" fill="url(#card)" stroke="#333"/>
+        <text x="12" y="20" fill="#FFFFFF" font-size="8" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">FAN CLUB</tspan></text>
+        <circle cx="160" cy="16" r="8" fill="url(#orange)"/><text x="156.5" y="19" fill="#FFF" font-size="6" font-weight="bold">JM</text>
+        <text x="12" y="40" fill="#B5B5B5" font-size="6">MEMBER</text>
+        <text x="12" y="52" fill="#FFFFFF" font-size="9" font-weight="bold">JOHN MENSAH</text>
+        <text x="12" y="72" fill="#FF8A3D" font-size="8" letter-spacing="1">MRTF 000123</text>
+        <text x="12" y="86" fill="#8A8A8A" font-size="5.5">VALID THRU 31/08/2026</text>
+        <rect x="128" y="76" width="40" height="12" rx="6" fill="#22A06B" opacity="0.2"/><text x="138" y="84" fill="#3CCB87" font-size="6" font-weight="bold">ACTIVE</text>
+        <text x="12" y="100" fill="#555" font-size="5">MTFC · 2024</text>
+      </g>
+    </g>
+
+    <!-- stat tiles -->
+    <g transform="translate(194,168)">
+      <g id="mtile">
+        <rect width="252" height="56" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/>
+        <rect x="12" y="12" width="22" height="22" rx="6" fill="#EAF2FF"/>
+        <text x="44" y="22" fill="#8A8F98" font-size="6.5">MEMBERSHIP STATUS</text>
+        <text x="44" y="38" fill="#22A06B" font-size="12" font-weight="bold">ACTIVE</text>
+      </g>
+      <g transform="translate(268,0)"><rect width="252" height="56" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><rect x="12" y="12" width="22" height="22" rx="6" fill="#FFF1E8"/><text x="44" y="22" fill="#8A8F98" font-size="6.5">ANNUAL DUES</text><text x="44" y="38" fill="#1A1A1A" font-size="12" font-weight="bold">GHS 200</text></g>
+      <g transform="translate(536,0)"><rect width="252" height="56" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><rect x="12" y="12" width="22" height="22" rx="6" fill="#E9F9F1"/><text x="44" y="22" fill="#8A8F98" font-size="6.5">REGISTRATION FEE</text><text x="44" y="38" fill="#22A06B" font-size="12" font-weight="bold">PAID</text></g>
+      <g transform="translate(804,0)"><rect width="252" height="56" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><rect x="12" y="12" width="22" height="22" rx="6" fill="#FDECEC"/><text x="44" y="22" fill="#8A8F98" font-size="6.5">TOTAL PAID</text><text x="44" y="38" fill="#1A1A1A" font-size="12" font-weight="bold">GHS 220</text></g>
+    </g>
+
+    <!-- timeline -->
+    <g transform="translate(194,238)">
+      <rect width="520" height="80" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/>
+      <text x="14" y="20" fill="#1A1A1A" font-size="8.5" font-weight="bold">Membership Overview</text>
+      <line x1="34" y1="46" x2="486" y2="46" stroke="#E4E6EA" stroke-width="2"/>
+      <line x1="34" y1="46" x2="338" y2="46" stroke="#22A06B" stroke-width="2"/>
+      <g font-size="5.5" text-anchor="middle">
+        <circle cx="34" cy="46" r="8" fill="#22A06B"/><text x="31.5" y="49" fill="#FFF" font-size="7">✓</text><text x="34" y="64" fill="#666">Register</text>
+        <circle cx="137" cy="46" r="8" fill="#22A06B"/><text x="134.5" y="49" fill="#FFF" font-size="7">✓</text><text x="137" y="64" fill="#666">Verify Email</text>
+        <circle cx="240" cy="46" r="8" fill="#22A06B"/><text x="237.5" y="49" fill="#FFF" font-size="7">✓</text><text x="240" y="64" fill="#666">Pay Fee</text>
+        <circle cx="343" cy="46" r="8" fill="#22A06B"/><text x="340.5" y="49" fill="#FFF" font-size="7">✓</text><text x="343" y="64" fill="#666">Pay Dues</text>
+        <circle cx="446" cy="46" r="8" fill="#FFF" stroke="#FF6B00" stroke-width="2.5"/><circle cx="446" cy="46" r="3" fill="#FF6B00"/><text x="446" y="64" fill="#FF6B00" font-weight="bold">Active</text>
+      </g>
+    </g>
+
+    <!-- quick actions -->
+    <g transform="translate(730,238)">
+      <rect width="526" height="80" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/>
+      <text x="14" y="20" fill="#1A1A1A" font-size="8.5" font-weight="bold">Quick Actions</text>
+      <g font-size="6">
+        <rect x="14" y="30" width="118" height="38" rx="6" fill="#FFF7F1" stroke="#FFD2B3"/><rect x="22" y="38" width="12" height="12" rx="3" fill="url(#orange)"/><text x="40" y="46" fill="#1A1A1A" font-weight="bold">Pay Annual</text><text x="40" y="55" fill="#8A8F98">Dues</text>
+        <rect x="142" y="30" width="118" height="38" rx="6" fill="#F7F8FA" stroke="#E4E6EA"/><rect x="150" y="38" width="12" height="12" rx="3" fill="#141414"/><text x="168" y="46" fill="#1A1A1A" font-weight="bold">Download</text><text x="168" y="55" fill="#8A8F98">ID Card</text>
+        <rect x="270" y="30" width="118" height="38" rx="6" fill="#F7F8FA" stroke="#E4E6EA"/><rect x="278" y="38" width="12" height="12" rx="3" fill="#141414"/><text x="296" y="46" fill="#1A1A1A" font-weight="bold">View</text><text x="296" y="55" fill="#8A8F98">Receipts</text>
+        <rect x="398" y="30" width="114" height="38" rx="6" fill="#F7F8FA" stroke="#E4E6EA"/><rect x="406" y="38" width="12" height="12" rx="3" fill="#141414"/><text x="424" y="46" fill="#1A1A1A" font-weight="bold">Update</text><text x="424" y="55" fill="#8A8F98">Profile</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- ============ PANEL 4: MEMBER MOBILE ============ -->
+  <g transform="translate(1360,478)">
+    <rect width="280" height="330" rx="26" fill="#0F0F0F" stroke="#333" stroke-width="2"/>
+    <rect x="10" y="10" width="260" height="310" rx="18" fill="#F5F6F8"/>
+    <rect x="115" y="14" width="50" height="6" rx="3" fill="#000"/>
+    <!-- topbar -->
+    <rect x="10" y="24" width="260" height="26" fill="#FFFFFF"/>
+    <text x="22" y="40" fill="#1A1A1A" font-size="8" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">FAN CLUB</tspan></text>
+    <circle cx="252" cy="37" r="7" fill="#F0F1F4"/><text x="249" y="40" font-size="6">🔔</text><circle cx="257" cy="32" r="2.5" fill="#FF6B00"/>
+    <!-- welcome -->
+    <text x="22" y="66" fill="#1A1A1A" font-size="9.5" font-weight="bold">Welcome back,</text>
+    <text x="22" y="78" fill="#1A1A1A" font-size="9.5" font-weight="bold">John Mensah 👋</text>
+    <text x="22" y="89" fill="#8A8F98" font-size="5.5">Member ID <tspan fill="#FF6B00" font-weight="bold">MRTF-000123</tspan></text>
+    <!-- id card -->
+    <rect x="150" y="58" width="112" height="66" rx="8" fill="url(#card)"/>
+    <text x="158" y="70" fill="#FFF" font-size="5.5" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">FAN CLUB</tspan></text>
+    <text x="158" y="86" fill="#FFF" font-size="6.5" font-weight="bold">JOHN MENSAH</text>
+    <text x="158" y="100" fill="#FF8A3D" font-size="5.5">MRTF 000123</text>
+    <rect x="222" y="104" width="32" height="9" rx="4.5" fill="#22A06B" opacity="0.25"/><text x="228" y="110.5" fill="#3CCB87" font-size="4.5" font-weight="bold">ACTIVE</text>
+    <!-- tiles -->
+    <g transform="translate(18,132)">
+      <rect width="116" height="34" rx="6" fill="#FFF" stroke="#E4E6EA"/><text x="8" y="13" fill="#8A8F98" font-size="4.5">STATUS</text><text x="8" y="25" fill="#22A06B" font-size="8" font-weight="bold">ACTIVE</text>
+      <rect x="124" width="116" height="34" rx="6" fill="#FFF" stroke="#E4E6EA"/><text x="132" y="13" fill="#8A8F98" font-size="4.5">ANNUAL DUES</text><text x="132" y="25" fill="#1A1A1A" font-size="8" font-weight="bold">GHS 200</text>
+      <rect y="42" width="116" height="34" rx="6" fill="#FFF" stroke="#E4E6EA"/><text x="8" y="55" fill="#8A8F98" font-size="4.5">REGISTRATION</text><text x="8" y="67" fill="#22A06B" font-size="8" font-weight="bold">PAID</text>
+      <rect x="124" y="42" width="116" height="34" rx="6" fill="#FFF" stroke="#E4E6EA"/><text x="132" y="55" fill="#8A8F98" font-size="4.5">TOTAL PAID</text><text x="132" y="67" fill="#1A1A1A" font-size="8" font-weight="bold">GHS 220</text>
+    </g>
+    <!-- quick action -->
+    <rect x="18" y="216" width="240" height="26" rx="6" fill="url(#orange)"/>
+    <text x="138" y="232" text-anchor="middle" fill="#0F0F0F" font-size="7.5" font-weight="bold">PAY ANNUAL DUES</text>
+    <rect x="18" y="250" width="240" height="26" rx="6" fill="#141414"/>
+    <text x="138" y="266" text-anchor="middle" fill="#FFFFFF" font-size="7.5">DOWNLOAD ID CARD</text>
+    <!-- bottom tabs -->
+    <rect x="10" y="290" width="260" height="30" rx="0" fill="#141414"/>
+    <g font-size="5" text-anchor="middle">
+      <text x="48" y="309" fill="#FF8A3D" font-weight="bold">Home</text>
+      <text x="100" y="309" fill="#8A8A8A">Membership</text>
+      <text x="152" y="309" fill="#8A8A8A">Payments</text>
+      <text x="204" y="309" fill="#8A8A8A">ID Card</text>
+      <text x="248" y="309" fill="#8A8A8A">More</text>
+    </g>
+  </g>
+
+  <!-- ============ ROW 3 LABELS ============ -->
+  <text x="40" y="838" fill="#9A9A9A" font-size="12" letter-spacing="2">05 · ADMIN DASHBOARD — DESKTOP</text>
+  <text x="1360" y="838" fill="#9A9A9A" font-size="12" letter-spacing="2">06 · ADMIN — MOBILE</text>
+
+  <!-- ============ PANEL 5: ADMIN DESKTOP ============ -->
+  <g transform="translate(40,848)">
+    <rect width="1280" height="330" rx="10" fill="#F5F6F8" stroke="#2A2A2A"/>
+    <!-- sidebar -->
+    <rect width="170" height="330" rx="10" fill="#141414"/><rect x="10" width="160" height="330" fill="#141414"/>
+    <text x="16" y="26" fill="#FFFFFF" font-size="9" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">ADMIN</tspan></text>
+    <g font-size="6.5">
+      <text x="16" y="46" fill="#5A5A5A" letter-spacing="1">OVERVIEW</text>
+      <rect x="8" y="52" width="154" height="15" rx="4" fill="#FF6B00" opacity="0.16"/><text x="20" y="62" fill="#FF8A3D" font-weight="bold">Dashboard</text>
+      <text x="20" y="77" fill="#B5B5B5">Analytics</text>
+      <text x="16" y="95" fill="#5A5A5A" letter-spacing="1">CONTENT</text>
+      <text x="20" y="108" fill="#B5B5B5">Services · Pages · News · Media · Stats</text>
+      <text x="16" y="126" fill="#5A5A5A" letter-spacing="1">BUSINESS</text>
+      <text x="20" y="139" fill="#B5B5B5">Vehicles · Rentals · Goods · Recruitment</text>
+      <text x="16" y="157" fill="#5A5A5A" letter-spacing="1">MEMBERSHIP</text>
+      <text x="20" y="170" fill="#B5B5B5">Members · Applications · Payments</text>
+      <text x="16" y="188" fill="#5A5A5A" letter-spacing="1">COMMUNICATION</text>
+      <text x="20" y="201" fill="#B5B5B5">Messages · Newsletter</text>
+      <text x="16" y="219" fill="#5A5A5A" letter-spacing="1">MANAGEMENT</text>
+      <text x="20" y="232" fill="#B5B5B5">Team · Settings · Social Links</text>
+    </g>
+
+    <!-- topbar -->
+    <rect x="170" width="1110" height="34" fill="#FFFFFF"/><line x1="170" y1="34" x2="1280" y2="34" stroke="#E4E6EA"/>
+    <rect x="194" y="9" width="240" height="17" rx="8.5" fill="#F0F1F4"/><text x="206" y="20" fill="#9AA0A8" font-size="7">Search members, payments…</text>
+    <circle cx="1160" cy="17" r="9" fill="#F0F1F4"/><text x="1157" y="20" font-size="8">🔔</text><circle cx="1166" cy="11" r="3.5" fill="#FF6B00"/><text x="1164.5" y="13.5" fill="#FFF" font-size="4.5">5</text>
+    <circle cx="1200" cy="17" r="9" fill="#141414"/><text x="1197" y="20" fill="#FFF" font-size="7" font-weight="bold">AD</text>
+    <text x="1214" y="15" fill="#1A1A1A" font-size="7.5" font-weight="bold">Admin</text><text x="1214" y="24" fill="#8A8F98" font-size="6">Super Admin</text>
+
+    <!-- head -->
+    <text x="194" y="56" fill="#1A1A1A" font-size="12" font-weight="bold">Dashboard</text>
+    <text x="194" y="68" fill="#8A8F98" font-size="6.5">Welcome back! Here's what's happening across Mr Truth Agency.</text>
+    <rect x="1130" y="44" width="126" height="18" rx="5" fill="#FFFFFF" stroke="#E4E6EA"/><text x="1140" y="56" fill="#1A1A1A" font-size="7">This Month ▾</text>
+
+    <!-- stat cards -->
+    <g transform="translate(194,78)">
+      <g id="atile"><rect width="252" height="52" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><rect x="10" y="10" width="20" height="20" rx="6" fill="#EAF2FF"/><text x="38" y="20" fill="#8A8F98" font-size="6">TOTAL MEMBERS</text><text x="38" y="36" fill="#1A1A1A" font-size="13" font-weight="bold">1,284</text><rect x="196" y="12" width="44" height="13" rx="6.5" fill="#E9F9F1"/><text x="204" y="21" fill="#22A06B" font-size="6" font-weight="bold">▲ 12%</text></g>
+      <g transform="translate(268,0)"><rect width="252" height="52" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><rect x="10" y="10" width="20" height="20" rx="6" fill="#FFF1E8"/><text x="38" y="20" fill="#8A8F98" font-size="6">PENDING APPLICATIONS</text><text x="38" y="36" fill="#1A1A1A" font-size="13" font-weight="bold">36</text><rect x="196" y="12" width="44" height="13" rx="6.5" fill="#E9F9F1"/><text x="204" y="21" fill="#22A06B" font-size="6" font-weight="bold">▲ 15%</text></g>
+      <g transform="translate(536,0)"><rect width="252" height="52" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><rect x="10" y="10" width="20" height="20" rx="6" fill="#E9F9F1"/><text x="38" y="20" fill="#8A8F98" font-size="6">MONTHLY REVENUE</text><text x="38" y="36" fill="#1A1A1A" font-size="13" font-weight="bold">GHS 46,820</text><rect x="196" y="12" width="44" height="13" rx="6.5" fill="#E9F9F1"/><text x="204" y="21" fill="#22A06B" font-size="6" font-weight="bold">▲ 18%</text></g>
+      <g transform="translate(804,0)"><rect width="252" height="52" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><rect x="10" y="10" width="20" height="20" rx="6" fill="#FDECEC"/><text x="38" y="20" fill="#8A8F98" font-size="6">TOTAL VEHICLES</text><text x="38" y="36" fill="#1A1A1A" font-size="13" font-weight="bold">512</text><rect x="196" y="12" width="44" height="13" rx="6.5" fill="#E9F9F1"/><text x="204" y="21" fill="#22A06B" font-size="6" font-weight="bold">▲ 8%</text></g>
+    </g>
+
+    <!-- line chart -->
+    <g transform="translate(194,142)">
+      <rect width="700" height="120" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/>
+      <text x="14" y="20" fill="#1A1A1A" font-size="8.5" font-weight="bold">Revenue Overview</text>
+      <rect x="590" y="8" width="96" height="16" rx="8" fill="#FFF1E8"/><text x="602" y="19" fill="#FF6B00" font-size="7" font-weight="bold">GHS 46,820</text>
+      <g stroke="#F0F1F4"><line x1="14" y1="44" x2="686" y2="44"/><line x1="14" y1="66" x2="686" y2="66"/><line x1="14" y1="88" x2="686" y2="88"/></g>
+      <path d="M40 96 L150 80 L260 86 L370 60 L480 68 L590 40 L660 34 L660 104 L40 104 Z" fill="url(#orange)" opacity="0.12"/>
+      <path d="M40 96 L150 80 L260 86 L370 60 L480 68 L590 40 L660 34" fill="none" stroke="#FF6B00" stroke-width="2.5" stroke-linecap="round"/>
+      <g fill="#FFFFFF" stroke="#FF6B00" stroke-width="2"><circle cx="40" cy="96" r="3"/><circle cx="150" cy="80" r="3"/><circle cx="260" cy="86" r="3"/><circle cx="370" cy="60" r="3"/><circle cx="480" cy="68" r="3"/><circle cx="590" cy="40" r="3"/><circle cx="660" cy="34" r="3.5"/></g>
+      <g font-size="6" fill="#8A8F98" text-anchor="middle"><text x="40" y="114">Mar</text><text x="150" y="114">Apr</text><text x="260" y="114">May</text><text x="370" y="114">Jun</text><text x="480" y="114">Jul</text><text x="590" y="114">Aug</text><text x="660" y="114">Sep</text></g>
+    </g>
+
+    <!-- donut -->
+    <g transform="translate(910,142)">
+      <rect width="336" height="120" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/>
+      <text x="14" y="20" fill="#1A1A1A" font-size="8.5" font-weight="bold">Revenue by Type</text>
+      <g transform="translate(70,68)">
+        <circle r="34" fill="none" stroke="#F0F1F4" stroke-width="12"/>
+        <circle r="34" fill="none" stroke="#FF6B00" stroke-width="12" stroke-dasharray="128 214" transform="rotate(-90)"/>
+        <circle r="34" fill="none" stroke="#141414" stroke-width="12" stroke-dasharray="58 214" stroke-dashoffset="-128" transform="rotate(-90)"/>
+        <circle r="34" fill="none" stroke="#FFD2B3" stroke-width="12" stroke-dasharray="28 214" stroke-dashoffset="-186" transform="rotate(-90)"/>
+        <text y="-1" text-anchor="middle" fill="#1A1A1A" font-size="9" font-weight="bold">GHS 46.8K</text>
+        <text y="9" text-anchor="middle" fill="#8A8F98" font-size="5">TOTAL</text>
+      </g>
+      <g font-size="6.5">
+        <rect x="130" y="42" width="8" height="8" rx="2" fill="#FF6B00"/><text x="144" y="49" fill="#555">Annual Dues</text><text x="290" y="49" fill="#1A1A1A" text-anchor="end" font-weight="bold">60%</text>
+        <rect x="130" y="60" width="8" height="8" rx="2" fill="#141414"/><text x="144" y="67" fill="#555">Registration</text><text x="290" y="67" fill="#1A1A1A" text-anchor="end" font-weight="bold">27%</text>
+        <rect x="130" y="78" width="8" height="8" rx="2" fill="#FFD2B3"/><text x="144" y="85" fill="#555">Other</text><text x="290" y="85" fill="#1A1A1A" text-anchor="end" font-weight="bold">13%</text>
+      </g>
+    </g>
+
+    <!-- recent panels -->
+    <g transform="translate(194,272)">
+      <g id="rpanel">
+        <rect width="340" height="48" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/>
+        <text x="12" y="16" fill="#1A1A1A" font-size="7.5" font-weight="bold">Recent Applications</text>
+        <circle cx="20" cy="30" r="7" fill="#FFF1E8"/><text x="16.5" y="32.5" fill="#FF6B00" font-size="5.5" font-weight="bold">AK</text>
+        <text x="32" y="29" fill="#1A1A1A" font-size="6.5">Kwame Adjei</text><text x="32" y="37" fill="#8A8F98" font-size="5">Driver application · 2h ago</text>
+        <rect x="272" y="24" width="54" height="12" rx="6" fill="#FFF1E8"/><text x="281" y="32" fill="#B25E1A" font-size="5.5" font-weight="bold">PENDING</text>
+      </g>
+      <g transform="translate(356,0)"><rect width="340" height="48" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><text x="12" y="16" fill="#1A1A1A" font-size="7.5" font-weight="bold">Recent Payments</text><circle cx="20" cy="30" r="7" fill="#E9F9F1"/><text x="16.5" y="32.5" fill="#22A06B" font-size="5.5" font-weight="bold">GM</text><text x="32" y="29" fill="#1A1A1A" font-size="6.5">Gifty Mensah</text><text x="32" y="37" fill="#8A8F98" font-size="5">Paid · Annual dues GHS 200</text><text x="328" y="32" fill="#22A06B" font-size="6.5" font-weight="bold" text-anchor="end">+GHS 200</text></g>
+      <g transform="translate(712,0)"><rect width="340" height="48" rx="8" fill="#FFFFFF" stroke="#E4E6EA"/><text x="12" y="16" fill="#1A1A1A" font-size="7.5" font-weight="bold">Latest Messages</text><circle cx="20" cy="30" r="7" fill="#EAF2FF"/><text x="16.5" y="32.5" fill="#3B82F6" font-size="5.5" font-weight="bold">YT</text><text x="32" y="29" fill="#1A1A1A" font-size="6.5">Yaa Antwi</text><text x="32" y="37" fill="#8A8F98" font-size="5">Rental inquiry — Kia Sportage</text><text x="328" y="32" fill="#8A8F98" font-size="5.5" text-anchor="end">5h ago</text></g>
+    </g>
+  </g>
+
+  <!-- ============ PANEL 6: ADMIN MOBILE ============ -->
+  <g transform="translate(1360,848)">
+    <rect width="280" height="330" rx="26" fill="#0F0F0F" stroke="#333" stroke-width="2"/>
+    <rect x="10" y="10" width="260" height="310" rx="18" fill="#F5F6F8"/>
+    <rect x="115" y="14" width="50" height="6" rx="3" fill="#000"/>
+    <!-- topbar -->
+    <rect x="10" y="24" width="260" height="26" fill="#FFFFFF"/>
+    <text x="22" y="40" fill="#1A1A1A" font-size="8" font-weight="bold">MR TRUTH <tspan fill="#FF6B00">ADMIN</tspan></text>
+    <circle cx="252" cy="37" r="7" fill="#F0F1F4"/><text x="249" y="40" font-size="6">🔔</text><circle cx="257" cy="32" r="2.5" fill="#FF6B00"/>
+    <!-- head -->
+    <text x="22" y="66" fill="#1A1A1A" font-size="10" font-weight="bold">Dashboard</text>
+    <text x="22" y="77" fill="#8A8F98" font-size="5.5">Here's what's happening today.</text>
+    <!-- stat cards 2x2 -->
+    <g transform="translate(18,86)">
+      <rect width="116" height="40" rx="6" fill="#FFF" stroke="#E4E6EA"/><text x="8" y="13" fill="#8A8F98" font-size="4.5">MEMBERS</text><text x="8" y="27" fill="#1A1A1A" font-size="10" font-weight="bold">1,284</text><text x="80" y="27" fill="#22A06B" font-size="5.5" font-weight="bold">▲12%</text>
+      <rect x="124" width="116" height="40" rx="6" fill="#FFF" stroke="#E4E6EA"/><text x="132" y="13" fill="#8A8F98" font-size="4.5">PENDING</text><text x="132" y="27" fill="#1A1A1A" font-size="10" font-weight="bold">36</text><text x="204" y="27" fill="#22A06B" font-size="5.5" font-weight="bold">▲15%</text>
+      <rect y="48" width="116" height="40" rx="6" fill="#FFF" stroke="#E4E6EA"/><text x="8" y="61" fill="#8A8F98" font-size="4.5">REVENUE</text><text x="8" y="75" fill="#1A1A1A" font-size="9" font-weight="bold">GHS 46.8K</text><text x="84" y="75" fill="#22A06B" font-size="5.5" font-weight="bold">▲18%</text>
+      <rect x="124" y="48" width="116" height="40" rx="6" fill="#FFF" stroke="#E4E6EA"/><text x="132" y="61" fill="#8A8F98" font-size="4.5">VEHICLES</text><text x="132" y="75" fill="#1A1A1A" font-size="10" font-weight="bold">512</text><text x="204" y="75" fill="#22A06B" font-size="5.5" font-weight="bold">▲8%</text>
+    </g>
+    <!-- mini chart -->
+    <g transform="translate(18,186)">
+      <rect width="240" height="66" rx="6" fill="#FFF" stroke="#E4E6EA"/>
+      <text x="8" y="14" fill="#1A1A1A" font-size="6.5" font-weight="bold">Revenue Overview</text>
+      <path d="M14 52 L52 44 L90 47 L128 34 L166 38 L204 22 L228 18" fill="none" stroke="#FF6B00" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="228" cy="18" r="2.5" fill="#FF6B00"/>
+    </g>
+    <!-- recent list -->
+    <g transform="translate(18,260)">
+      <rect width="240" height="22" rx="5" fill="#FFF" stroke="#E4E6EA"/>
+      <circle cx="14" cy="11" r="6" fill="#FFF1E8"/><text x="11" y="13" fill="#FF6B00" font-size="4.5" font-weight="bold">AK</text>
+      <text x="26" y="10" fill="#1A1A1A" font-size="5.5" font-weight="bold">Kwame Adjei applied</text><text x="26" y="17" fill="#8A8F98" font-size="4.5">Driver application · 2h ago</text>
+      <rect x="196" y="5" width="36" height="10" rx="5" fill="#FFF1E8"/><text x="203" y="12" fill="#B25E1A" font-size="4.5" font-weight="bold">PENDING</text>
+    </g>
+    <!-- bottom tabs -->
+    <rect x="10" y="290" width="260" height="30" fill="#141414"/>
+    <g font-size="5" text-anchor="middle">
+      <text x="48" y="309" fill="#FF8A3D" font-weight="bold">Home</text>
+      <text x="100" y="309" fill="#8A8A8A">Members</text>
+      <text x="152" y="309" fill="#8A8A8A">Payments</text>
+      <text x="204" y="309" fill="#8A8A8A">Inbox</text>
+      <text x="248" y="309" fill="#8A8A8A">More</text>
+    </g>
   </g>
 </svg>

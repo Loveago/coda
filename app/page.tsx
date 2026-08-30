@@ -1,54 +1,58 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Link from 'next/link';
-import { ArrowRight, Bell, Building2, Handshake, HeartHandshake, Megaphone, Award, ShieldCheck, Users } from 'lucide-react';
+import { ArrowRight, BadgeCheck, Building2, Car, CarFront, Gauge, Handshake, Headphones, ShieldCheck, Sparkles, TicketCheck, Truck, UserPlus, Users, Wrench } from 'lucide-react';
 import { db } from '@/lib/db';
 import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
+import { formatGhs } from '@/lib/fees';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import Reveal from '@/components/Reveal';
 import StatsCounter from '@/components/StatsCounter';
-import NewsletterForm from '@/components/NewsletterForm';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Mr Truth Agency | Automotive & Mobility', description: 'Automotive and mobility solutions for people, drivers and businesses.' };
 
-const values = [
-  ['Driver Recruitment', 'Connect with opportunities built around professional drivers.', Users],
-  ['Fleet Management', 'Keep vehicles, drivers and operations moving efficiently.', Building2],
-  ['Car Rentals', 'Flexible vehicle access for individuals and businesses.', ShieldCheck],
-  ['Vehicle Sales', 'Source the right vehicle with confidence and clarity.', Award],
-  ['Automotive Goods', 'Access practical parts, products and equipment.', Handshake],
-  ['Corporate Mobility', 'Mobility solutions designed for growing businesses.', Megaphone]
+const services = [
+  ['Driver Recruitment', 'We connect skilled and reliable drivers with the right opportunities.', UserPlus, '/services/driver-recruitment'],
+  ['Fleet Management', 'End-to-end fleet solutions that maximize performance and efficiency.', Truck, '/services/fleet-management'],
+  ['Car Rentals', 'Quality vehicles for rent for business, leisure and everyday needs.', Car, '/rentals'],
+  ['Vehicle Sales', 'Buy and sell quality new and used vehicles with confidence.', CarFront, '/vehicles'],
+  ['Spare Parts', 'Genuine spare parts for all vehicle makes and models.', Wrench, '/automotive'],
+  ['Automotive Goods', 'Wide range of automotive products and accessories you can trust.', Handshake, '/automotive'],
+  ['Automotive Services', 'Professional maintenance, repairs and diagnostics you can rely on.', ShieldCheck, '/contact'],
+  ['Corporate Mobility', 'Smart mobility solutions designed for businesses and organizations.', Building2, '/services']
 ] as const;
+
+const perks = ['Exclusive Discounts', 'Priority Support', 'Community Access', 'Special Events'] as const;
 
 function Hero() {
   return (
     <section className="hero">
       <div className="container hero-grid">
         <div className="hero-copy">
-          <p className="kicker">MR TRUTH AGENCY · AUTOMOTIVE & MOBILITY</p>
-          <h1>MOVE PEOPLE.<br /><em>MOVE BUSINESS.</em><br />MOVE FORWARD.</h1>
-          <p>Automotive, driver and mobility solutions built for the way Africa moves. From fleet operations to vehicle sourcing, we help people and businesses keep moving.</p>
+          <p className="hero-tag">WE MOVE PEOPLE. WE MOVE BUSINESS.</p>
+          <h1>MOVING AFRICA<br /><em>FORWARD</em></h1>
+          <p>Your trusted partner for automotive, mobility, and smart transportation solutions. From fleet operations to vehicle sourcing, we help people and businesses keep moving.</p>
           <div className="hero-actions">
-            <Link href="#services" className="btn btn-primary">EXPLORE SERVICES <ArrowRight size={15} /></Link>
-            <Link href="/membership" className="btn btn-outline">JOIN FAN CLUB</Link>
+            <Link href="/services" className="btn btn-primary">EXPLORE SERVICES <ArrowRight size={15} /></Link>
+            <Link href="/fan-club/join" className="btn btn-outline">JOIN FAN CLUB</Link>
           </div>
         </div>
-        <div className="hero-visual">
-          <div className="hero-orb">TRUTH<br />IN<br /><span>MOTION</span></div>
-        </div>
+        <div className="hero-visual" aria-hidden />
       </div>
     </section>
   );
 }
 
 export default async function Home() {
-  const [stats, articles, settings] = await Promise.all([
+  const [stats, featuredVehicles, settings] = await Promise.all([
     db.statistic.findMany({ where: { active: true }, orderBy: { displayOrder: 'asc' }, take: 4 }),
-    db.newsArticle.findMany({ where: { status: 'PUBLISHED', publishedAt: { lte: new Date() } }, orderBy: { publishedAt: 'desc' }, take: 3 }),
+    db.vehicle.findMany({ where: { availability: { not: 'SOLD' } }, include: { images: { orderBy: { position: 'asc' }, take: 1 } }, orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }], take: 4 }),
     getSiteSettings()
   ]);
+
+  const statIcons = [Users, CarFront, Building2, Headphones];
 
   return (
     <>
@@ -60,71 +64,130 @@ export default async function Home() {
       />
       <main>
         <Hero />
-        <section className="container values" id="services">
-          {values.map(([title, text, Icon], index) => (
-            <Reveal key={title} delay={index * 70} className="value">
-              <div className="value-icon"><Icon size={23} /></div>
-              <h3>{title.toUpperCase()}</h3>
-              <p>{text}</p>
-            </Reveal>
-          ))}
-        </section>
-        <section className="container services-grid" aria-label="Mr Truth Agency services">
-          {values.map(([title, text, Icon]) => (
-            <Reveal key={`service-${title}`} className="service-card">
-              <Icon size={22} color="var(--accent)" />
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </Reveal>
-          ))}
-        </section>
-        <section className="container split">
-          <Reveal className="about-card">
-            <p className="kicker">WHAT WE DO</p>
-            <h2>Mobility, without the friction.</h2>
-            <p>Mr Truth Agency is an automotive and mobility company connecting drivers, vehicles and businesses to practical solutions. Explore vehicle sourcing, fleet support, rentals, automotive goods and the people who keep movement alive.</p>
-            <Link href="/about" className="btn btn-primary">DISCOVER THE AGENCY <ArrowRight size={14} /></Link>
-          </Reveal>
-          <Reveal delay={120} className="stats">
-            {stats.map((stat) => (
-              <div className="stat" key={stat.id}>
-                <Building2 size={24} />
-                <StatsCounter value={stat.value} />
-                <span>{stat.label}</span>
-              </div>
-            ))}
-          </Reveal>
-        </section>
-        <section className="container news-section">
-          <Reveal>
-            <div className="section-head">
-              <h2>INSIDE THE AGENCY</h2>
-              <Link href="/news">VIEW ALL NEWS <ArrowRight size={14} /></Link>
-            </div>
-          </Reveal>
-          <div className="news-grid">
-            {articles.map((item, index) => (
-              <Reveal as="article" delay={index * 90} key={item.id}>
-                <article className="news-card">
-                  <div className="news-img" style={{ backgroundImage: `url(${item.coverImage || 'https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=700&q=80'})` }} />
-                  <div className="news-body">
-                    <span className="news-date">{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' }).format(item.publishedAt || item.createdAt)}</span>
-                    <h3>{item.title}</h3>
-                    <p>{item.excerpt}</p>
-                    <Link className="read" href={`/news/${item.slug}`}>READ MORE <ArrowRight size={12} /></Link>
+        <div className="container">
+          <Reveal as="section" className="stats-strip" aria-label="Mr Truth Agency impact">
+            {stats.map((stat, index) => {
+              const Icon = statIcons[index % statIcons.length];
+              return (
+                <div className="stat" key={stat.id}>
+                  <span className="stat-icon"><Icon size={21} /></span>
+                  <div>
+                    <strong><StatsCounter value={stat.value} /></strong>
+                    <span>{stat.label}</span>
                   </div>
-                </article>
+                </div>
+              );
+            })}
+          </Reveal>
+        </div>
+
+        <section className="container home-section" id="services">
+          <Reveal className="home-head">
+            <p className="kicker">WHAT WE DO</p>
+            <h2>Our Services</h2>
+            <p>Comprehensive automotive and mobility solutions tailored for individuals and businesses.</p>
+          </Reveal>
+          <div className="services-grid">
+            {services.map(([title, text, Icon, href], index) => (
+              <Reveal key={title} delay={index * 60} className="service-card">
+                <span className="service-icon"><Icon size={21} /></span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+                <Link href={href} aria-label={`${title} — learn more`} className="service-link" />
               </Reveal>
             ))}
-            <Reveal as="div" delay={270}>
-              <div className="newsletter">
-                <Bell size={27} />
-                <h3>Stay informed.<br />Stay ahead.</h3>
-                <p>Get the latest news, updates and important announcements.</p>
-                <NewsletterForm />
-              </div>
-            </Reveal>
           </div>
+        </section>
+
+        <section className="container home-section">
+          <Reveal as="div" className="fanclub-banner">
+            <div className="fanclub-card">
+              <div className="idcard-face idcard-front" aria-hidden>
+                <span className="idcard-band" />
+                <div className="idcard-head">
+                  <img src="/logo-mark.png" alt="" className="idcard-logo" width={34} height={34} />
+                  <div>
+                    <strong>MR TRUTH</strong>
+                    <small>FAN CLUB</small>
+                  </div>
+                  <span className="idcard-valid-tag">MEMBER</span>
+                </div>
+                <div className="idcard-mid">
+                  <div>
+                    <p className="idcard-number" style={{ margin: 0 }}>MTFC 0001 2024</p>
+                    <span className="idcard-platform"><Sparkles size={9} /> EXCLUSIVE ACCESS</span>
+                  </div>
+                </div>
+                <div className="idcard-bottom">
+                  <div className="idcard-thru"><small>VALID THRU</small><strong>31/08/2026</strong></div>
+                  <span className="idcard-status-pill good">ACTIVE</span>
+                </div>
+              </div>
+            </div>
+            <div className="fanclub-copy">
+              <p className="kicker">JOIN THE COMMUNITY</p>
+              <h2>JOIN THE<br /><em>MR TRUTH FAN CLUB</em></h2>
+              <p>Become part of our exclusive community and enjoy amazing benefits, offers and opportunities — built for drivers, riders and mobility lovers across Africa.</p>
+              <div className="fanclub-perks">
+                {perks.map((perk) => (
+                  <span key={perk}><BadgeCheck size={16} /> {perk}</span>
+                ))}
+              </div>
+              <Link href="/fan-club/join" className="btn btn-primary">JOIN THE FAN CLUB <ArrowRight size={15} /></Link>
+            </div>
+          </Reveal>
+        </section>
+
+        <section className="container home-section">
+          <Reveal className="featured-head">
+            <div>
+              <p className="kicker" style={{ marginBottom: 0 }}>FEATURED</p>
+              <h2>Featured Vehicles</h2>
+              <p>Explore our handpicked quality vehicles</p>
+            </div>
+            <Link href="/vehicles" className="btn btn-ghost">VIEW ALL VEHICLES <ArrowRight size={14} /></Link>
+          </Reveal>
+          <div className="vehicle-grid">
+            {featuredVehicles.length ? (
+              featuredVehicles.map((vehicle, index) => (
+                <Reveal as="article" key={vehicle.id} delay={index * 70} className="vehicle-card">
+                  {vehicle.images[0] ? (
+                    <img src={vehicle.images[0].url} alt={`${vehicle.make} ${vehicle.model}`} />
+                  ) : (
+                    <div className="vehicle-placeholder">MR TRUTH</div>
+                  )}
+                  <div className="vehicle-card-body">
+                    <span className="vehicle-category">{vehicle.category}</span>
+                    <h2>{vehicle.make} {vehicle.year}</h2>
+                    <div className="vehicle-meta">
+                      <span><Gauge size={13} /> {vehicle.transmission || '—'}</span>
+                      <span><Car size={13} /> {vehicle.fuelType || '—'}</span>
+                      <span><Users size={13} /> {vehicle.seats || '—'} seats</span>
+                    </div>
+                    <div className="vehicle-price">
+                      <strong>{vehicle.price ? formatGhs(vehicle.price) : 'PRICE ON REQUEST'}</strong>
+                      <Link href={`/contact?vehicle=${encodeURIComponent(`${vehicle.make} ${vehicle.model}`)}`} aria-label={`Request details about ${vehicle.make} ${vehicle.model}`}><ArrowRight size={15} /></Link>
+                    </div>
+                  </div>
+                </Reveal>
+              ))
+            ) : (
+              <div className="empty-state" style={{ gridColumn: '1 / -1' }}>
+                <h2>Vehicle listings are being prepared.</h2>
+                <p>Contact Mr Truth Agency for sourcing support and upcoming availability.</p>
+                <Link href="/contact" className="btn btn-primary" style={{ marginTop: 16 }}>CONTACT THE AGENCY <ArrowRight size={14} /></Link>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section className="container home-section" style={{ paddingTop: 0 }}>
+          <Reveal className="home-head">
+            <p className="kicker">STAY CONNECTED</p>
+            <h2>Agency Updates</h2>
+            <p>News, announcements and stories from the Mr Truth Agency community.</p>
+          </Reveal>
+          <Link href="/news" className="btn btn-ghost" style={{ display: 'inline-flex', margin: '0 auto' }}><TicketCheck size={14} /> BROWSE ALL NEWS <ArrowRight size={14} /></Link>
         </section>
       </main>
       <SiteFooter phone={settings.contact_phone} email={settings.contact_email} whatsapp={settings.whatsapp_number} socials={socialLinks(settings)} />
