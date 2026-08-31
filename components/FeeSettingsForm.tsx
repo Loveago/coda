@@ -5,7 +5,7 @@ import { FormEvent, useEffect, useState } from 'react';
 const field = { padding: '12px 14px', border: '1px solid var(--line)', borderRadius: 10, background: '#fff', fontSize: 13 };
 const label = { fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', display: 'block', marginBottom: 5 };
 
-type Fees = { registrationFeeAmount: number; registrationFeeEnabled: boolean; annualDuesAmount: number };
+type Fees = { registrationFeeAmount: number; registrationFeeEnabled: boolean; annualDuesAmount: number; workApplicationFeeAmount: number; workApplicationFeeEnabled: boolean };
 type HistoryRow = { id: string; feeKey: string; previousAmount: number | null; newAmount: number; enabled: boolean; changedBy: string; createdAt: string };
 
 export default function FeeSettingsForm() {
@@ -30,6 +30,8 @@ export default function FeeSettingsForm() {
       registrationFeeAmount: Math.round(Number(form.get('registrationFeeAmount')) * 100),
       registrationFeeEnabled: form.get('registrationFeeEnabled') === 'on',
       annualDuesAmount: Math.round(Number(form.get('annualDuesAmount')) * 100),
+      workApplicationFeeAmount: Math.round(Number(form.get('workApplicationFeeAmount')) * 100),
+      workApplicationFeeEnabled: form.get('workApplicationFeeEnabled') === 'on',
       note: String(form.get('note') || '')
     };
     if (!window.confirm('Changing these fees will affect future transactions but will not change historical payments. Continue?')) return;
@@ -55,7 +57,7 @@ export default function FeeSettingsForm() {
   return (
     <div style={{ display: 'grid', gap: 22 }}>
       <form onSubmit={save} className="admin-panel" style={{ display: 'grid', gap: 16, maxWidth: 640 }}>
-        <h2 style={{ margin: 0 }}>Membership fees</h2>
+        <h2 style={{ margin: 0 }}>Membership & service fees</h2>
         <div className="form-grid">
           <div>
             <label style={label}>REGISTRATION FEE (GHS)</label>
@@ -65,10 +67,18 @@ export default function FeeSettingsForm() {
             <label style={label}>ANNUAL MEMBERSHIP DUES (GHS)</label>
             <input name="annualDuesAmount" type="number" step="0.01" min={0} defaultValue={(fees.annualDuesAmount / 100).toFixed(2)} required className="field" />
           </div>
+          <div>
+            <label style={label}>WORK APPLICATION FEE (GHS)</label>
+            <input name="workApplicationFeeAmount" type="number" step="0.01" min={0} defaultValue={(fees.workApplicationFeeAmount / 100).toFixed(2)} required className="field" />
+          </div>
         </div>
         <label style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 9 }}>
           <input type="checkbox" name="registrationFeeEnabled" defaultChecked={fees.registrationFeeEnabled} />
           Registration fee enabled — new applicants must pay before approval
+        </label>
+        <label style={{ fontSize: 13, display: 'flex', alignItems: 'center', gap: 9 }}>
+          <input type="checkbox" name="workApplicationFeeEnabled" defaultChecked={fees.workApplicationFeeEnabled} />
+          Work application fee enabled — members pay before their job application reaches recruiters
         </label>
         <div>
           <label style={label}>NOTE (OPTIONAL)</label>
@@ -89,7 +99,7 @@ export default function FeeSettingsForm() {
               {history.map((row) => (
                 <tr key={row.id}>
                   <td>{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(row.createdAt))}</td>
-                  <td>{row.feeKey === 'registration_fee' ? 'Registration fee' : 'Annual dues'}</td>
+                  <td>{row.feeKey === 'registration_fee' ? 'Registration fee' : row.feeKey === 'work_application_fee' ? 'Work application fee' : 'Annual dues'}</td>
                   <td>{row.previousAmount === null ? '—' : `GHS ${(row.previousAmount / 100).toFixed(2)}`}</td>
                   <td><strong>GHS {(row.newAmount / 100).toFixed(2)}</strong></td>
                   <td>{row.enabled ? 'ON' : 'OFF'}</td>

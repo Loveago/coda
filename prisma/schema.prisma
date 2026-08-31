@@ -346,6 +346,7 @@ enum RegistrationPaymentState {
 enum PaymentType {
   REGISTRATION_FEE
   ANNUAL_DUES
+  WORK_APPLICATION_FEE
 }
 
 enum PaymentStatus {
@@ -393,14 +394,55 @@ model Member {
   updatedAt             DateTime                 @updatedAt
   payments              Payment[]
   tokens                MemberToken[]
+  workApplications      WorkApplication[]
 
   @@index([status])
+}
+
+enum WorkApplicationStatus {
+  NEW
+  REVIEWING
+  INTERVIEW
+  HIRED
+  REJECTED
+}
+
+// A member's job application. Submission is gated on the (optional)
+// work application fee, mirroring the membership application flow.
+model WorkApplication {
+  id              String                @id @default(uuid())
+  memberId        String
+  member          Member                @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  position        String
+  employmentType  String                @default("FULL_TIME")
+  region          String?
+  licenceClass    String?
+  licenceNumber   String?
+  licenceExpiry   DateTime?
+  experienceYears Int?
+  platforms       String?
+  cvUrl           String?
+  coverNote       String?
+  consent         Boolean               @default(false)
+  paymentState    RegistrationPaymentState @default(PENDING)
+  status          WorkApplicationStatus @default(NEW)
+  internalNotes   String?
+  reviewedAt      DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  payments        Payment[]
+
+  @@index([status])
+  @@index([memberId])
+  @@index([createdAt])
 }
 
 model Payment {
   id                    String        @id @default(uuid())
   memberId              String
   member                Member        @relation(fields: [memberId], references: [id])
+  workApplicationId     String?
+  workApplication       WorkApplication? @relation(fields: [workApplicationId], references: [id], onDelete: SetNull)
   type                  PaymentType
   amount                Int
   currency              String        @default("GHS")

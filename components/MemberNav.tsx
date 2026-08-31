@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bell, CalendarDays, CreditCard, Gift, Headphones, IdCard, LayoutDashboard, LogOut, Search, Settings, Sparkles, UserRound } from 'lucide-react';
+import { Bell, Briefcase, CalendarDays, CreditCard, Gift, Headphones, IdCard, LayoutDashboard, LogOut, Search, Settings, Sparkles, UserRound } from 'lucide-react';
 
 type NavMember = {
   firstName: string;
@@ -15,6 +15,7 @@ const links = [
   { href: '/member/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
   { href: '/member/profile', label: 'My Profile', Icon: UserRound },
   { href: '/membership', label: 'Membership', Icon: Sparkles },
+  { href: '/member/work', label: 'Work & Pay', Icon: Briefcase },
   { href: '/member/payments', label: 'Payments', Icon: CreditCard },
   { href: '/member/id-card', label: 'My Benefits', Icon: IdCard },
   { href: '/news', label: 'Events', Icon: CalendarDays },
@@ -25,7 +26,7 @@ const links = [
 
 const tabLinks = [
   { href: '/member/dashboard', label: 'Home', Icon: LayoutDashboard },
-  { href: '/membership', label: 'Membership', Icon: Sparkles },
+  { href: '/member/work', label: 'Work', Icon: Briefcase },
   { href: '/member/payments', label: 'Payments', Icon: CreditCard },
   { href: '/member/id-card', label: 'ID Card', Icon: IdCard },
   { href: '/member/profile', label: 'More', Icon: UserRound }

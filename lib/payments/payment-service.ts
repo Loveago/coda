@@ -74,16 +74,28 @@ export async function verifyWebhookSignature(rawBody: string, signature: string 
 /**
  * Creates a payment intent for a member. The server always determines the
  * amount from the database (fee snapshot) — never from the browser.
+ *
+ * `workApplicationId` is required for WORK_APPLICATION_FEE payments and is
+ * validated against the member's own pending applications.
  */
-export async function createPaymentIntent(memberId: string, type: PaymentType, origin: string): Promise<InitResult> {
+export async function createPaymentIntent(memberId: string, type: PaymentType, origin: string, workApplicationId?: string): Promise<InitResult> {
   const member = await db.member.findUnique({ where: { id: memberId } });
   if (!member) throw new Error('Member not found.');
   const fees = await getFees();
 
   let amount: number;
+  let linkedApplicationId: string | undefined;
   if (type === 'REGISTRATION_FEE') {
     if (!fees.registrationFeeEnabled) throw new Error('Registration fee is currently disabled.');
     amount = fees.registrationFeeAmount;
+  } else if (type === 'WORK_APPLICATION_FEE') {
+    if (!fees.workApplicationFeeEnabled) throw new Error('Work application fee is currently disabled.');
+    if (!workApplicationId) throw new Error('A work application reference is required.');
+    const application = await db.workApplication.findFirst({ where: { id: workApplicationId, memberId } });
+    if (!application) throw new Error('Work application not found.');
+    if (application.paymentState !== 'PENDING') throw new Error('This application fee has already been settled.');
+    amount = fees.workApplicationFeeAmount;
+    linkedApplicationId = application.id;
   } else {
     amount = fees.annualDuesAmount;
   }
@@ -93,6 +105,7 @@ export async function createPaymentIntent(memberId: string, type: PaymentType, o
   await db.payment.create({
     data: {
       memberId,
+      workApplicationId: linkedApplicationId,
       type,
       amount,
       currency: 'GHS',
@@ -102,7 +115,8 @@ export async function createPaymentIntent(memberId: string, type: PaymentType, o
       metadata: {
         memberNumber: member.memberNumber,
         paymentType: type,
-        feeSnapshot: { registrationFeeEnabled: fees.registrationFeeEnabled, annualDuesAmount: fees.annualDuesAmount }
+        workApplicationId: linkedApplicationId ?? null,
+        feeSnapshot: { registrationFeeEnabled: fees.registrationFeeEnabled, annualDuesAmount: fees.annualDuesAmount, workApplicationFeeAmount: fees.workApplicationFeeAmount }
       }
     }
   });
@@ -115,13 +129,14 @@ export async function createPaymentIntent(memberId: string, type: PaymentType, o
   // Paystack redirects the browser back to our own verification endpoint, which
   // re-checks the transaction server-side before sending the user anywhere.
   const callbackUrl = `${origin}/api/payments/callback?reference=${encodeURIComponent(reference)}`;
-  const authorizationUrl = await paystackInit(reference, member.email, amount, { memberId, memberNumber: member.memberNumber, paymentType: type }, callbackUrl);
+  const authorizationUrl = await paystackInit(reference, member.email, amount, { memberId, memberNumber: member.memberNumber, paymentType: type, workApplicationId: linkedApplicationId ?? null }, callbackUrl);
   return { authorizationUrl, reference, simulated: false };
 }
 
 /**
  * Applies a verified successful payment exactly once (idempotent).
- * Extends membership only for ANNUAL_DUES payments.
+ * Extends membership for ANNUAL_DUES, marks registration paid, and settles
+ * work application fees so the application becomes visible to recruiters.
  */
 export async function applySuccessfulPayment(reference: string, providerTransactionId?: string) {
   const payment = await db.payment.findUnique({ where: { reference }, include: { member: true } });
@@ -135,6 +150,10 @@ export async function applySuccessfulPayment(reference: string, providerTransact
 
   if (payment.type === 'REGISTRATION_FEE') {
     await db.member.update({ where: { id: payment.memberId }, data: { registrationPayment: 'PAID' } });
+  } else if (payment.type === 'WORK_APPLICATION_FEE') {
+    if (payment.workApplicationId) {
+      await db.workApplication.update({ where: { id: payment.workApplicationId }, data: { paymentState: 'PAID' } });
+    }
   } else {
     const current = payment.member.membershipEndDate;
     const base = current && current.getTime() > Date.now() ? new Date(current) : new Date();

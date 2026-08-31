@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { CreditCard, Loader2 } from 'lucide-react';
 
-export default function PayDuesButton({ type, label, asTile, sub }: { type: 'REGISTRATION_FEE' | 'ANNUAL_DUES'; label: string; asTile?: boolean; sub?: string }) {
+export default function PayDuesButton({ type, label, asTile, sub, workApplicationId, className }: { type: 'REGISTRATION_FEE' | 'ANNUAL_DUES' | 'WORK_APPLICATION_FEE'; label: string; asTile?: boolean; sub?: string; workApplicationId?: string; className?: string }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
@@ -14,7 +14,7 @@ export default function PayDuesButton({ type, label, asTile, sub }: { type: 'REG
       const response = await fetch('/api/payments/init', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type })
+        body: JSON.stringify({ type, ...(workApplicationId ? { workApplicationId } : {}) })
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || 'Unable to start payment.');
@@ -36,7 +36,7 @@ export default function PayDuesButton({ type, label, asTile, sub }: { type: 'REG
   }
 
   return <>
-    <button className="btn btn-primary" onClick={pay} disabled={busy}>
+    <button className={className || 'btn btn-primary'} onClick={pay} disabled={busy}>
       {busy ? <Loader2 size={15} className="spin" /> : <CreditCard size={15} />} {busy ? 'REDIRECTING...' : label}
     </button>
     {error && <p role="alert" className="status-err" style={{ fontSize: 12.5 }}>{error}</p>}

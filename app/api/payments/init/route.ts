@@ -5,7 +5,10 @@ import { getPortalMember } from '@/lib/members-auth';
 import { createPaymentIntent } from '@/lib/payments/payment-service';
 import { rateLimit } from '@/lib/rate-limit';
 
-const schema = z.object({ type: z.enum(['REGISTRATION_FEE', 'ANNUAL_DUES']) });
+const schema = z.object({
+  type: z.enum(['REGISTRATION_FEE', 'ANNUAL_DUES', 'WORK_APPLICATION_FEE']),
+  workApplicationId: z.string().uuid().optional()
+});
 
 export async function POST(request: Request) {
   const member = await getPortalMember();
@@ -20,10 +23,13 @@ export async function POST(request: Request) {
   if (parsed.data.type === 'ANNUAL_DUES' && member.status !== 'APPROVED') {
     return NextResponse.json({ error: 'Annual dues can only be paid by approved members.' }, { status: 403 });
   }
+  if (parsed.data.type === 'WORK_APPLICATION_FEE' && member.status !== 'APPROVED') {
+    return NextResponse.json({ error: 'Work application fees can only be paid by approved members.' }, { status: 403 });
+  }
 
   try {
     const origin = new URL(request.url).origin;
-    const result = await createPaymentIntent(member.id, parsed.data.type, origin);
+    const result = await createPaymentIntent(member.id, parsed.data.type, origin, parsed.data.workApplicationId);
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json({ error: error instanceof Error ? error.message : 'Unable to start this payment.' }, { status: 400 });

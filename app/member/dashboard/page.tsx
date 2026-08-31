@@ -4,6 +4,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   BadgeCheck,
+  Briefcase,
   CalendarDays,
   CarFront,
   Check,
@@ -21,6 +22,7 @@ import { getPortalMember } from '@/lib/members-auth';
 import { computeMembershipStatus } from '@/lib/membership';
 import { formatGhs, getFees } from '@/lib/fees';
 import { applySuccessfulPayment, paystackConfigured, verifyWithPaystack } from '@/lib/payments/payment-service';
+import { paymentTypeLabel } from '@/lib/work-applications';
 import PayDuesButton from '@/components/PayDuesButton';
 import Reveal from '@/components/Reveal';
 
@@ -243,6 +245,10 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
           <h2>Quick Actions</h2>
           <div className="mqa-grid">
             <PayDuesButton type="ANNUAL_DUES" label="Pay Annual Dues" asTile />
+            <Link className="mqa" href="/member/work">
+              <Briefcase size={20} />
+              <span>Apply for Work<small>Submit & track applications</small></span>
+            </Link>
             <Link className="mqa" href="/member/id-card">
               <Download size={20} />
               <span>Download ID Card<small>View or download</small></span>
@@ -299,7 +305,7 @@ export default async function MemberDashboard({ searchParams }: { searchParams: 
             {member.payments.map((payment) => (
               <Link className={`pay-item pay-${payment.status.toLowerCase()}`} key={payment.id} href={`/member/payments/${payment.id}`}>
                 <span className="pay-item-main">
-                  <strong>{payment.type === 'ANNUAL_DUES' ? 'Annual membership dues' : 'Registration fee'}</strong>
+                  <strong>{paymentTypeLabel(payment.type)}</strong>
                   <small>Ref {payment.reference.slice(0, 16)}…</small>
                 </span>
                 <span className="pay-item-side">

@@ -16,6 +16,8 @@ const schema = z.object({
   registrationFeeAmount: z.coerce.number().int().min(0).max(100000000),
   registrationFeeEnabled: z.boolean(),
   annualDuesAmount: z.coerce.number().int().min(0).max(100000000),
+  workApplicationFeeAmount: z.coerce.number().int().min(0).max(100000000),
+  workApplicationFeeEnabled: z.boolean(),
   note: z.string().max(300).optional()
 });
 
@@ -29,7 +31,8 @@ export async function PATCH(request: Request) {
 
   await setFee('registration_fee', data.registrationFeeAmount, data.registrationFeeEnabled, user.name, data.note);
   await setFee('annual_dues', data.annualDuesAmount, true, user.name, data.note);
-  await db.auditLog.create({ data: { userId: user.id, action: 'UPDATE', entity: 'fees', metadata: { registrationFeeAmount: data.registrationFeeAmount, registrationFeeEnabled: data.registrationFeeEnabled, annualDuesAmount: data.annualDuesAmount } } });
+  await setFee('work_application_fee', data.workApplicationFeeAmount, data.workApplicationFeeEnabled, user.name, data.note);
+  await db.auditLog.create({ data: { userId: user.id, action: 'UPDATE', entity: 'fees', metadata: { registrationFeeAmount: data.registrationFeeAmount, registrationFeeEnabled: data.registrationFeeEnabled, annualDuesAmount: data.annualDuesAmount, workApplicationFeeAmount: data.workApplicationFeeAmount, workApplicationFeeEnabled: data.workApplicationFeeEnabled } } });
 
   return NextResponse.json({ success: true, fees: await getFees() });
 }

@@ -47,29 +47,37 @@ function Sparkline({ months }: { months: { total: number; label: string }[] }) {
   );
 }
 
-function Donut({ registration, dues }: { registration: number; dues: number }) {
-  const total = registration + dues;
-  const regShare = total > 0 ? registration / total : 0;
+function Donut({ registration, dues, applications }: { registration: number; dues: number; applications: number }) {
+  const total = registration + dues + applications;
   const r = 54;
   const c = 2 * Math.PI * r;
+  const segments = [
+    { label: 'registration', value: registration, color: '#C65300' },
+    { label: 'dues', value: dues, color: '#FF6B00' },
+    { label: 'application fees', value: applications, color: '#1A1A1A' }
+  ];
+  let offset = 0;
+  const lead = segments.reduce((best, segment) => (segment.value > best.value ? segment : best), segments[0]);
   return (
     <div className="fin-donut-wrap">
       <svg viewBox="0 0 140 140" className="fin-donut" role="img" aria-label="Revenue mix">
         <circle cx="70" cy="70" r={r} fill="none" stroke="#eef2f9" strokeWidth="18" />
-        {total > 0 && (
-          <>
-            <circle cx="70" cy="70" r={r} fill="none" stroke="#C65300" strokeWidth="18"
-              strokeDasharray={`${c * regShare} ${c}`} strokeDashoffset={0} transform="rotate(-90 70 70)" strokeLinecap="round" />
-            <circle cx="70" cy="70" r={r} fill="none" stroke="#FF6B00" strokeWidth="18"
-              strokeDasharray={`${c * (1 - regShare)} ${c}`} strokeDashoffset={-c * regShare} transform="rotate(-90 70 70)" strokeLinecap="round" />
-          </>
-        )}
-        <text x="70" y="66" textAnchor="middle" className="fin-donut-total">{total > 0 ? `${Math.round(regShare * 100)}%` : '—'}</text>
-        <text x="70" y="82" textAnchor="middle" className="fin-donut-sub">registration</text>
+        {total > 0 && segments.map((segment) => {
+          const share = segment.value / total;
+          const el = share > 0 ? (
+            <circle key={segment.label} cx="70" cy="70" r={r} fill="none" stroke={segment.color} strokeWidth="18"
+              strokeDasharray={`${c * share} ${c}`} strokeDashoffset={-c * offset} transform="rotate(-90 70 70)" strokeLinecap="round" />
+          ) : null;
+          offset += share;
+          return el;
+        })}
+        <text x="70" y="66" textAnchor="middle" className="fin-donut-total">{total > 0 ? `${Math.round((lead.value / total) * 100)}%` : '—'}</text>
+        <text x="70" y="82" textAnchor="middle" className="fin-donut-sub">{lead.label}</text>
       </svg>
       <div className="fin-legend">
         <span><i style={{ background: '#C65300' }} /> Registration fees <strong>{formatGhs(registration)}</strong></span>
         <span><i style={{ background: '#FF6B00' }} /> Annual dues <strong>{formatGhs(dues)}</strong></span>
+        <span><i style={{ background: '#1A1A1A' }} /> Application fees <strong>{formatGhs(applications)}</strong></span>
       </div>
     </div>
   );
@@ -129,7 +137,7 @@ export default async function AdminFinance() {
 
         <section className="admin-panel">
           <div className="fin-panel-head"><h2>Revenue mix</h2></div>
-          <Donut registration={data.registrationRevenue} dues={data.duesRevenue} />
+          <Donut registration={data.registrationRevenue} dues={data.duesRevenue} applications={data.applicationRevenue} />
           <div className="fin-mix-stats">
             <div><small>Refunded</small><strong>{formatGhs(data.refundedAmount)}</strong></div>
             <div><small>Failed</small><strong>{data.failedCount}</strong></div>
@@ -170,7 +178,7 @@ export default async function AdminFinance() {
                 <div className="activity-item" key={entry.id}>
                   <span className="activity-dot" />
                   <span>
-                    <strong>{entry.feeKey === 'annual_dues' ? 'Annual dues' : 'Registration fee'}</strong>{' '}
+                    <strong>{entry.feeKey === 'annual_dues' ? 'Annual dues' : entry.feeKey === 'work_application_fee' ? 'Work application fee' : 'Registration fee'}</strong>{' '}
                     {entry.previousAmount !== null && entry.previousAmount !== entry.newAmount
                       ? `${formatGhs(entry.previousAmount)} → ${formatGhs(entry.newAmount)}`
                       : `set to ${formatGhs(entry.newAmount)}`}
@@ -197,7 +205,7 @@ export default async function AdminFinance() {
                 <tr key={p.id}>
                   <td data-label="Date">{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(p.date)}</td>
                   <td data-label="Member"><strong>{p.memberName}</strong><br /><small>{p.memberNumber}</small></td>
-                  <td data-label="Type">{p.type === 'ANNUAL_DUES' ? 'Annual dues' : 'Registration fee'}</td>
+                  <td data-label="Type">{p.type === 'ANNUAL_DUES' ? 'Annual dues' : p.type === 'WORK_APPLICATION_FEE' ? 'Application fee' : 'Registration fee'}</td>
                   <td data-label="Amount"><strong>{formatGhs(p.amount)}</strong></td>
                   <td data-label="Status"><span className={`badge badge-${p.status === 'SUCCESSFUL' ? 'PUBLISHED' : p.status === 'PENDING' ? 'PENDING' : p.status === 'REFUNDED' ? 'ARCHIVED' : 'REJECTED'}`}>{p.status}</span></td>
                   <td data-label="Reference"><small>{p.reference}</small></td>

@@ -4,6 +4,7 @@ import { CheckCircle2, Clock3, ReceiptText, Wallet, XCircle } from 'lucide-react
 import { db } from '@/lib/db';
 import { getPortalMember } from '@/lib/members-auth';
 import { formatGhs, getFees } from '@/lib/fees';
+import { paymentTypeLabel } from '@/lib/work-applications';
 
 export const dynamic = 'force-dynamic';
 
@@ -95,7 +96,7 @@ export default async function MemberPayments({ searchParams }: { searchParams: P
               <Link key={payment.id} href={`/member/payments/${payment.id}`} className="payrow">
                 <span className={`payrow-icon ${tone}`}><Icon size={19} /></span>
                 <span className="payrow-main">
-                  <strong>{payment.type === 'ANNUAL_DUES' ? 'Annual membership dues' : 'Registration fee'}</strong>
+                  <strong>{paymentTypeLabel(payment.type)}</strong>
                   <small>Ref {payment.reference}</small>
                 </span>
                 <span className="payrow-side">

@@ -5,6 +5,7 @@ export type MonthPoint = {
   label: string;
   registration: number;
   dues: number;
+  applications: number;
   total: number;
   count: number;
 };
@@ -25,6 +26,7 @@ export type FinanceAnalytics = {
   todayRevenue: number;
   registrationRevenue: number;
   duesRevenue: number;
+  applicationRevenue: number;
   transactionCount: number;
   successRate: number;
   pendingCount: number;
@@ -79,6 +81,7 @@ export async function getFinanceAnalytics(monthsBack = 12): Promise<FinanceAnaly
       label: new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(d),
       registration: 0,
       dues: 0,
+      applications: 0,
       total: 0,
       count: 0
     };
@@ -89,6 +92,7 @@ export async function getFinanceAnalytics(monthsBack = 12): Promise<FinanceAnaly
   let totalRevenue = 0;
   let registrationRevenue = 0;
   let duesRevenue = 0;
+  let applicationRevenue = 0;
   let todayRevenue = 0;
   const payerMap = new Map<string, TopPayer>();
   const todayKey = now.toDateString();
@@ -97,6 +101,7 @@ export async function getFinanceAnalytics(monthsBack = 12): Promise<FinanceAnaly
     const when = effectiveDate(p);
     totalRevenue += p.amount;
     if (p.type === 'REGISTRATION_FEE') registrationRevenue += p.amount;
+    else if (p.type === 'WORK_APPLICATION_FEE') applicationRevenue += p.amount;
     else duesRevenue += p.amount;
     if (when.toDateString() === todayKey) todayRevenue += p.amount;
 
@@ -105,6 +110,7 @@ export async function getFinanceAnalytics(monthsBack = 12): Promise<FinanceAnaly
       point.total += p.amount;
       point.count += 1;
       if (p.type === 'REGISTRATION_FEE') point.registration += p.amount;
+      else if (p.type === 'WORK_APPLICATION_FEE') point.applications += p.amount;
       else point.dues += p.amount;
     }
 
@@ -136,6 +142,7 @@ export async function getFinanceAnalytics(monthsBack = 12): Promise<FinanceAnaly
     todayRevenue,
     registrationRevenue,
     duesRevenue,
+    applicationRevenue,
     transactionCount: successCount,
     successRate: totalCount > 0 ? (successCount / totalCount) * 100 : 0,
     pendingCount: statusRow('PENDING')?._count._all ?? 0,

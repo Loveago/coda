@@ -2,9 +2,10 @@ import Link from 'next/link';
 import '../globals.css';
 import { db } from '@/lib/db';
 import { APPLICATION_FILTER } from '@/lib/membership';
+import { WORK_APPLICATION_FILTER } from '@/lib/work-applications';
 import { formatGhs } from '@/lib/fees';
 import {
-  CarFront, Inbox, Search, TrendingDown, TrendingUp, Users, Wallet
+  Briefcase, CarFront, Inbox, TrendingDown, TrendingUp, Users, Wallet
 } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -42,7 +43,8 @@ export default async function Admin() {
     applications, newAppsThisMonth, newAppsPrevMonth,
     revenueThisMonth, revenuePrevMonth, revenueSeries, revenueByType,
     vehicles, newVehiclesThisMonth, newVehiclesPrevMonth,
-    recentApps, recentPayments, latestMessages
+    workApplications, newWorkAppsThisMonth,
+    recentApps, recentPayments, latestMessages, recentWorkApps
   ] = await Promise.all([
     db.member.count({ where: { status: 'APPROVED' } }),
     db.member.count({ where: { status: 'APPROVED', createdAt: { gte: monthStart } } }),
@@ -60,9 +62,12 @@ export default async function Admin() {
     db.vehicle.count({ where: { availability: { not: 'SOLD' } } }),
     db.vehicle.count({ where: { createdAt: { gte: monthStart } } }),
     db.vehicle.count({ where: { createdAt: { gte: prevMonthStart, lt: monthStart } } }),
+    db.workApplication.count({ where: WORK_APPLICATION_FILTER }),
+    db.workApplication.count({ where: { ...WORK_APPLICATION_FILTER, createdAt: { gte: monthStart } } }),
     db.member.findMany({ where: APPLICATION_FILTER, select: { id: true, firstName: true, lastName: true, platform: true, createdAt: true }, orderBy: { createdAt: 'desc' }, take: 5 }),
     db.payment.findMany({ where: { status: 'SUCCESSFUL' }, select: { id: true, type: true, amount: true, createdAt: true, member: { select: { firstName: true, lastName: true } } }, orderBy: { createdAt: 'desc' }, take: 5 }),
-    db.contactMessage.findMany({ select: { id: true, name: true, subject: true, createdAt: true }, orderBy: { createdAt: 'desc' }, take: 5 })
+    db.contactMessage.findMany({ select: { id: true, name: true, subject: true, createdAt: true }, orderBy: { createdAt: 'desc' }, take: 5 }),
+    db.workApplication.findMany({ where: WORK_APPLICATION_FILTER, select: { id: true, position: true, status: true, createdAt: true, member: { select: { firstName: true, lastName: true } } }, orderBy: { createdAt: 'desc' }, take: 5 })
   ]);
 
   const revThis = revenueThisMonth._sum.amount ?? 0;
@@ -110,7 +115,8 @@ export default async function Admin() {
 
   const cards = [
     { label: 'Total Members', value: members.toLocaleString(), sub: `+${newMembersThisMonth} this month`, Icon: Users, tone: 'blue', trend: pctChange(newMembersThisMonth, newMembersPrevMonth) },
-    { label: 'Pending Applications', value: applications.toLocaleString(), sub: `+${newAppsThisMonth} this week`, Icon: Inbox, tone: 'amber', trend: pctChange(newAppsThisMonth, newAppsPrevMonth) },
+    { label: 'Pending Applications', value: applications.toLocaleString(), sub: `+${newAppsThisMonth} this month`, Icon: Inbox, tone: 'amber', trend: pctChange(newAppsThisMonth, newAppsPrevMonth) },
+    { label: 'Work Applications', value: workApplications.toLocaleString(), sub: `+${newWorkAppsThisMonth} this month`, Icon: Briefcase, tone: 'green', trend: pctChange(newWorkAppsThisMonth, 0) },
     { label: 'Monthly Revenue', value: formatGhs(revThis), sub: 'This month', Icon: Wallet, tone: 'green', trend: pctChange(revThis, revPrev) },
     { label: 'Total Vehicles', value: vehicles.toLocaleString(), sub: `+${newVehiclesThisMonth} this month`, Icon: CarFront, tone: 'red', trend: pctChange(newVehiclesThisMonth, newVehiclesPrevMonth) }
   ] as const;
@@ -129,7 +135,7 @@ export default async function Admin() {
         </select>
       </div>
 
-      <div className="astats">
+      <div className="astats astats-5">
         {cards.map(({ label, value, sub, Icon, tone, trend }) => (
           <div className="astat" key={label}>
             <div className="astat-top">
@@ -238,6 +244,21 @@ export default async function Admin() {
                   <strong>{formatGhs(payment.amount)}</strong>
                   <small>Paid · {timeAgo(payment.createdAt)}</small>
                 </span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="admin-panel">
+          <h2>Recent Work Applications <Link href="/admin/work-applications">View all</Link></h2>
+          <div className="rlist">
+            {recentWorkApps.length === 0 ? <p className="admin-note">No submitted work applications yet.</p> : recentWorkApps.map((app) => (
+              <div className="ritem" key={app.id}>
+                <span className="ravatar tone-green">{initials(`${app.member.firstName} ${app.member.lastName}`)}</span>
+                <span className="rmain">
+                  <strong>{app.position}</strong>
+                  <small>{app.member.firstName} {app.member.lastName}</small>
+                </span>
+                <span className="rside"><span className={`badge ${app.status === 'HIRED' ? 'badge-active' : app.status === 'REJECTED' ? 'badge-REJECTED' : 'badge-PENDING'}`}>{app.status}</span></span>
               </div>
             ))}
           </div>

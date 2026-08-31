@@ -3,9 +3,13 @@ import AdminManagementTable from '@/components/AdminManagementTable';
 import GalleryManager from '@/components/GalleryManager';
 import ResourceManager from '@/components/ResourceManager';
 import MembersManager from '@/components/MembersManager';
+import ProductManager from '@/components/ProductManager';
+import VehicleManager from '@/components/VehicleManager';
+import OpportunityManager from '@/components/OpportunityManager';
 import { APPLICATION_FILTER } from '@/lib/membership';
+import { WORK_APPLICATION_FILTER, workApplicationSelect } from '@/lib/work-applications';
 
-const supportedSections = new Set(['applications', 'members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team', 'services', 'vehicles', 'rentals', 'products', 'recruitment']);
+const supportedSections = new Set(['applications', 'members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team', 'services', 'vehicles', 'rentals', 'products', 'recruitment', 'work-applications', 'opportunities']);
 
 const memberSelect = {
   id: true, firstName: true, lastName: true, email: true, phone: true, platform: true,
@@ -33,12 +37,62 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   if (section === 'resources') records = await db.resource.findMany({ orderBy: { updatedAt: 'desc' } });
   if (section === 'team') records = await db.teamMember.findMany({ orderBy: { displayOrder: 'asc' } });
   if (section === 'services') records = await db.service.findMany({ orderBy: { displayOrder: 'asc' } });
-  if (section === 'vehicles') records = await db.vehicle.findMany({ orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }] });
-  if (section === 'rentals') records = await db.rentalInquiry.findMany({ orderBy: { createdAt: 'desc' } });
+  if (section === 'vehicles') records = await db.vehicle.findMany({ include: { images: { orderBy: { position: 'asc' } } }, orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }] });
+  if (section === 'rentals') records = await db.rentalInquiry.findMany({ include: { vehicle: { select: { make: true, model: true, year: true } } }, orderBy: { createdAt: 'desc' } });
   if (section === 'products') records = await db.product.findMany({ orderBy: { createdAt: 'desc' } });
-  if (section === 'recruitment') records = await db.driverApplication.findMany({ orderBy: { createdAt: 'desc' } });
+  if (section === 'recruitment') records = await db.driverApplication.findMany({ include: { opportunity: { select: { title: true } } }, orderBy: { createdAt: 'desc' } });
+  if (section === 'work-applications') records = await db.workApplication.findMany({ where: WORK_APPLICATION_FILTER, select: workApplicationSelect, orderBy: { createdAt: 'desc' } });
+  if (section === 'opportunities') records = await db.driverOpportunity.findMany({ include: { _count: { select: { applications: true } } }, orderBy: { createdAt: 'desc' } });
 
   const title = section.charAt(0).toUpperCase() + section.slice(1);
+
+  // Vehicles and products have dedicated catalogue managers (image uploads,
+  // inline editing, stock controls) instead of the generic table.
+  if (section === 'vehicles') {
+    return (
+      <main>
+        <div className="admin-page-head">
+          <div>
+            <p className="kicker" style={{ color: 'var(--blue)' }}>BUSINESS</p>
+            <h1>Vehicles</h1>
+          </div>
+          <a className="btn btn-ghost" href="/vehicles" target="_blank" rel="noreferrer">VIEW PUBLIC PAGE</a>
+        </div>
+        <VehicleManager initialVehicles={records as never} />
+      </main>
+    );
+  }
+  if (section === 'products') {
+    const productCategories = await db.productCategory.findMany({ include: { _count: { select: { products: true } } }, orderBy: { name: 'asc' } });
+    return (
+      <main>
+        <div className="admin-page-head">
+          <div>
+            <p className="kicker" style={{ color: 'var(--blue)' }}>BUSINESS</p>
+            <h1>Automotive Goods</h1>
+          </div>
+          <a className="btn btn-ghost" href="/automotive" target="_blank" rel="noreferrer">VIEW PUBLIC PAGE</a>
+        </div>
+        <ProductManager initialProducts={records as never} initialCategories={productCategories as never} />
+      </main>
+    );
+  }
+
+  if (section === 'opportunities') {
+    return (
+      <main>
+        <div className="admin-page-head">
+          <div>
+            <p className="kicker" style={{ color: 'var(--blue)' }}>BUSINESS</p>
+            <h1>Job Postings</h1>
+          </div>
+          <a className="btn btn-ghost" href="/services/driver-recruitment" target="_blank" rel="noreferrer">VIEW PUBLIC PAGE</a>
+        </div>
+        <OpportunityManager initialOpportunities={records as never} />
+      </main>
+    );
+  }
+
   // The members area has a dedicated manager (search, dues filters, manual
   // renewals, deletion) that loads its own data client-side.
   if (section === 'members') {
@@ -56,10 +110,17 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
     );
   }
 
+  const exportLink = section === 'work-applications'
+    ? <a className="btn btn-ghost" href="/api/admin/export/work-applications">EXPORT CSV</a>
+    : section === 'recruitment'
+      ? <a className="btn btn-ghost" href="/api/admin/export/recruitment">EXPORT CSV</a>
+      : null;
+
   return (
     <main>
       <div className="admin-page-head">
         <div><p className="kicker" style={{ color: 'var(--blue)' }}>AGENCY OPERATIONS</p><h1>{title}</h1></div>
+        {exportLink}
       </div>
       {section === 'gallery' && <GalleryManager items={records as never} />}
       {section === 'resources' && <ResourceManager items={records as never} />}

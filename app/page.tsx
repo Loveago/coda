@@ -39,7 +39,9 @@ function Hero() {
             <Link href="/fan-club/join" className="btn btn-outline">JOIN FAN CLUB</Link>
           </div>
         </div>
-        <div className="hero-visual" aria-hidden />
+        <div className="hero-visual" aria-hidden>
+          <div className="hero-orb">TRUTH<br />IN<br /><span>MOTION</span></div>
+        </div>
       </div>
     </section>
   );

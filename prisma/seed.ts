@@ -105,6 +105,62 @@ async function main() {
     await prisma.vehicleImage.create({ data: { vehicleId: created.id, url: image, altText: `${vehicleFields.make} ${vehicleFields.model} (${vehicleFields.year})`, position: 0 } });
   }
 
+  // Product categories + a starter automotive catalogue so the public
+  // /automotive page and the admin goods manager are never empty.
+  const productCategories = ['Spare Parts', 'Tyres & Wheels', 'Oils & Fluids', 'Car Care & Cleaning', 'Interior & Comfort'];
+  const categoryIdBySlug = new Map<string, string>();
+  for (const name of productCategories) {
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const category = await prisma.productCategory.upsert({ where: { slug }, update: {}, create: { name, slug } });
+    categoryIdBySlug.set(slug, category.id);
+  }
+  const demoProducts = [
+    { name: 'Brake Pad Set — Toyota Corolla', slug: 'spare-parts', brand: 'Bosco', price: 45000, stock: 24, description: 'Front ceramic brake pads for 2014+ Corolla. Genuine grade, low dust.' },
+    { name: '215/60 R16 All-Terrain Tyre', slug: 'tyres-wheels', brand: 'Aeolus', price: 38000, stock: 16, description: 'Durable all-terrain tyre suited to Ghanaian roads. Fitted on request.' },
+    { name: 'Fully Synthetic 5W-30 Engine Oil (5L)', slug: 'oils-fluids', brand: 'Total', price: 27500, stock: 40, description: 'Long-drain fully synthetic oil for petrol and diesel engines.' },
+    { name: 'Multi-Choice Vehicle Wash Kit', slug: 'car-care-cleaning', brand: 'Mr Truth', price: 12000, stock: 30, description: 'Shampoo, microfibre towels, wheel brush and tyre shine in one pack.' },
+    { name: 'Universal Phone Mount & Charger', slug: 'interior-comfort', brand: 'Baseus', price: 9500, stock: 50, description: 'Dashboard phone mount with fast USB charging — a ride-hailing essential.' }
+  ];
+  for (const { slug, ...product } of demoProducts) {
+    const existing = await prisma.product.findFirst({ where: { name: product.name } });
+    if (existing) continue;
+    await prisma.product.create({
+      data: {
+        ...product,
+        sku: `MT-${(product.brand || 'GEN').slice(0, 3).toUpperCase()}-${String(product.price).slice(0, 4)}`,
+        categoryId: categoryIdBySlug.get(slug) ?? null
+      }
+    });
+  }
+
+  // Open driver opportunities members can apply for from their dashboard.
+  const demoOpportunities = [
+    {
+      title: 'Fleet Driver — Accra Metro',
+      slug: 'fleet-driver-accra-metro',
+      description: 'Full-time fleet driving across the Accra metropolitan area on a company-managed vehicle, with weekly performance bonuses.',
+      requirements: ['Valid PSV driving licence', 'Minimum 3 years ride-hailing or fleet experience', 'Clean driving record', 'Available for rotating shifts'],
+      benefits: ['Company vehicle and fuel card', 'Weekly performance bonus', 'Annual leave and sick leave', 'Membership registration fee waived']
+    },
+    {
+      title: 'Corporate Shuttle Driver',
+      slug: 'corporate-shuttle-driver',
+      description: 'Staff shuttle routes between Spintex, Airport City and Tema on weekday mornings and evenings. Own transport to the depot provided.',
+      requirements: ['Valid driving licence with PSV endorsement', 'Defensive driving certificate (or willing to obtain)', 'Professional presentation'],
+      benefits: ['Fixed weekday schedule — weekends free', 'Paid training and certification', 'Uniform provided']
+    },
+    {
+      title: 'Rental Delivery Driver (Part-Time)',
+      slug: 'rental-delivery-driver-part-time',
+      description: 'Deliver and collect rental vehicles for customers across Greater Accra. Ideal for existing fan club members with their own car.',
+      requirements: ['Own reliable vehicle', 'Smartphone with data', 'Familiar with Accra routes'],
+      benefits: ['Choose your own hours', 'Paid per delivery', 'Fuel reimbursement']
+    }
+  ];
+  for (const opportunity of demoOpportunities) {
+    await prisma.driverOpportunity.upsert({ where: { slug: opportunity.slug }, update: {}, create: opportunity });
+  }
+
   const defaultSettings: Record<string, string> = {
     contact_phone: '+233 24 123 4567',
     contact_email: 'info@mrtruthagency.com',

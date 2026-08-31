@@ -1,25 +1,28 @@
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { formatGhs } from '@/lib/fees';
+import { paymentTypeLabel } from '@/lib/work-applications';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminPayments() {
-  const [payments, successful, failed, pending, registrationRevenue, duesRevenue] = await Promise.all([
+  const [payments, successful, failed, pending, registrationRevenue, duesRevenue, workRevenue] = await Promise.all([
     db.payment.findMany({ orderBy: { createdAt: 'desc' }, take: 100, include: { member: { select: { firstName: true, lastName: true, memberNumber: true } } } }),
     db.payment.count({ where: { status: 'SUCCESSFUL' } }),
     db.payment.count({ where: { status: 'FAILED' } }),
     db.payment.count({ where: { status: 'PENDING' } }),
     db.payment.aggregate({ where: { status: 'SUCCESSFUL', type: 'REGISTRATION_FEE' }, _sum: { amount: true } }),
-    db.payment.aggregate({ where: { status: 'SUCCESSFUL', type: 'ANNUAL_DUES' }, _sum: { amount: true } })
+    db.payment.aggregate({ where: { status: 'SUCCESSFUL', type: 'ANNUAL_DUES' }, _sum: { amount: true } }),
+    db.payment.aggregate({ where: { status: 'SUCCESSFUL', type: 'WORK_APPLICATION_FEE' }, _sum: { amount: true } })
   ]);
 
-  const total = (registrationRevenue._sum.amount || 0) + (duesRevenue._sum.amount || 0);
+  const total = (registrationRevenue._sum.amount || 0) + (duesRevenue._sum.amount || 0) + (workRevenue._sum.amount || 0);
 
   const cards = [
     ['Total revenue', formatGhs(total)],
     ['Registration fees', formatGhs(registrationRevenue._sum.amount || 0)],
     ['Annual dues', formatGhs(duesRevenue._sum.amount || 0)],
+    ['Application fees', formatGhs(workRevenue._sum.amount || 0)],
     ['Successful', String(successful)],
     ['Failed', String(failed)],
     ['Pending', String(pending)]
@@ -34,7 +37,7 @@ export default async function AdminPayments() {
         </div>
       </div>
 
-      <div className="admin-dashboard-cards cards-6">
+      <div className="admin-dashboard-cards cards-7">
         {cards.map(([label, value]) => (
           <div className="admin-stat-card" key={label}>
             <strong>{value}</strong>
@@ -55,7 +58,7 @@ export default async function AdminPayments() {
                 <tr key={payment.id}>
                   <td data-label="Date">{new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(payment.createdAt)}</td>
                   <td data-label="Member"><strong>{payment.member.firstName} {payment.member.lastName}</strong><br /><small>{payment.member.memberNumber}</small></td>
-                  <td data-label="Type">{payment.type === 'ANNUAL_DUES' ? 'Annual dues' : 'Registration fee'}</td>
+                  <td data-label="Type">{paymentTypeLabel(payment.type)}</td>
                   <td data-label="Amount"><strong>{formatGhs(payment.amount)}</strong></td>
                   <td data-label="Status"><span className={`badge badge-${payment.status === 'SUCCESSFUL' ? 'PUBLISHED' : payment.status === 'PENDING' ? 'PENDING' : 'REJECTED'}`}>{payment.status}</span></td>
                   <td data-label="Reference"><small>{payment.reference}</small></td>

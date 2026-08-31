@@ -20,16 +20,20 @@ export async function GET(request: Request) {
   const origin = url.origin;
 
   // A dashboard return is always the safe destination.
-  const back = (status: string) => NextResponse.redirect(`${origin}/member/dashboard?payment=${status}`);
+  const back = (status: string, target = '/member/dashboard') => NextResponse.redirect(`${origin}${target}?payment=${status}`);
 
   if (!reference) return back('missing');
 
   const payment = await db.payment.findUnique({ where: { reference } });
   if (!payment) return back('missing');
 
+  // Work application fees return to the Work & Pay page so the member sees
+  // their application flip to "submitted" right after checkout.
+  const home = payment.type === 'WORK_APPLICATION_FEE' ? '/member/work' : '/member/dashboard';
+
   // Already settled — nothing to do, just send the member to their portal.
   if (payment.status === 'SUCCESSFUL') {
-    return NextResponse.redirect(`${origin}/member/dashboard?payment=success`);
+    return NextResponse.redirect(`${origin}${home}?payment=success`);
   }
 
   // Simulator payments have no Paystack record to verify against; the
@@ -48,7 +52,7 @@ export async function GET(request: Request) {
         return back('mismatch');
       }
       await applySuccessfulPayment(reference, String(verified.id));
-      return NextResponse.redirect(`${origin}/member/dashboard?payment=success`);
+      return NextResponse.redirect(`${origin}${home}?payment=success`);
     }
 
     if (verified.status === 'failed' || verified.status === 'abandoned' || verified.status === 'invalid') {

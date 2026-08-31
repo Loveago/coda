@@ -3,15 +3,19 @@ import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
 import { z } from 'zod';
 import { APPLICATION_FILTER } from '@/lib/membership';
+import { WORK_APPLICATION_FILTER, workApplicationSelect } from '@/lib/work-applications';
 
 const resourceSchema = z.enum([
   'applications', 'members', 'messages', 'subscribers', 'statistics', 'settings',
-  'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products', 'recruitment'
+  'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products', 'recruitment',
+  'work-applications', 'opportunities', 'product-categories'
 ]);
 const applicationStatusSchema = z.enum(['APPROVED', 'REJECTED']);
 const memberStatusSchema = z.enum(['APPROVED', 'SUSPENDED']);
 const rentalStatusSchema = z.enum(['NEW', 'CONTACTED', 'CONFIRMED', 'DECLINED']);
 const driverApplicationStatusSchema = z.enum(['NEW', 'REVIEWING', 'HIRED', 'DECLINED']);
+const workApplicationStatusSchema = z.enum(['NEW', 'REVIEWING', 'INTERVIEW', 'HIRED', 'REJECTED']);
+const opportunityStatusSchema = z.enum(['OPEN', 'CLOSED', 'ARCHIVED']);
 
 const memberSelect = {
   id: true, firstName: true, lastName: true, email: true, phone: true, platform: true,
@@ -32,6 +36,9 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
   if ('error' in auth) return auth.error;
   const { resource } = auth;
   if (resource === 'applications') return NextResponse.json(await db.member.findMany({ where: APPLICATION_FILTER, select: memberSelect, orderBy: { createdAt: 'desc' } }));
+  if (resource === 'work-applications') return NextResponse.json(await db.workApplication.findMany({ where: WORK_APPLICATION_FILTER, select: workApplicationSelect, orderBy: { createdAt: 'desc' } }));
+  if (resource === 'opportunities') return NextResponse.json(await db.driverOpportunity.findMany({ include: { _count: { select: { applications: true } } }, orderBy: { createdAt: 'desc' } }));
+  if (resource === 'product-categories') return NextResponse.json(await db.productCategory.findMany({ include: { _count: { select: { products: true } } }, orderBy: { name: 'asc' } }));
   if (resource === 'members') return NextResponse.json(await db.member.findMany({ where: { status: { in: ['APPROVED', 'SUSPENDED'] } }, select: memberSelect, orderBy: { createdAt: 'desc' } }));
   if (resource === 'messages') return NextResponse.json(await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } }));
   if (resource === 'subscribers') return NextResponse.json(await db.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' } }));
@@ -41,7 +48,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
   if (resource === 'gallery') return NextResponse.json(await db.galleryItem.findMany({ orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }] }));
   if (resource === 'resources') return NextResponse.json(await db.resource.findMany({ orderBy: { updatedAt: 'desc' } }));
   if (resource === 'services') return NextResponse.json(await db.service.findMany({ orderBy: { displayOrder: 'asc' } }));
-  if (resource === 'vehicles') return NextResponse.json(await db.vehicle.findMany({ orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }] }));
+  if (resource === 'vehicles') return NextResponse.json(await db.vehicle.findMany({ include: { images: { orderBy: { position: 'asc' } } }, orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }] }));
   if (resource === 'rentals') return NextResponse.json(await db.rentalInquiry.findMany({ include: { vehicle: { select: { make: true, model: true, year: true } } }, orderBy: { createdAt: 'desc' } }));
   if (resource === 'products') return NextResponse.json(await db.product.findMany({ orderBy: { createdAt: 'desc' } }));
   if (resource === 'recruitment') return NextResponse.json(await db.driverApplication.findMany({ orderBy: { createdAt: 'desc' } }));
@@ -113,7 +120,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
       }
     });
   } else if (resource === 'vehicles') {
-    result = await db.vehicle.update({
+    const updatedVehicle = await db.vehicle.update({
       where: { id: id.data },
       data: {
         make: body.make === undefined ? undefined : String(body.make),
@@ -124,12 +131,24 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
         fuelType: body.fuelType === undefined ? undefined : String(body.fuelType),
         seats: body.seats === undefined ? undefined : Number(body.seats),
         description: body.description === undefined ? undefined : String(body.description),
-        price: body.price === undefined ? undefined : Number(body.price),
-        dailyRate: body.dailyRate === undefined ? undefined : Number(body.dailyRate),
+        features: body.features === undefined ? undefined : body.features,
+        price: body.price === undefined ? undefined : (body.price === null ? null : Number(body.price)),
+        dailyRate: body.dailyRate === undefined ? undefined : (body.dailyRate === null ? null : Number(body.dailyRate)),
         availability: body.availability === undefined ? undefined : String(body.availability),
         featured: body.featured === undefined ? undefined : Boolean(body.featured)
       }
     });
+    result = updatedVehicle;
+    // Replacing the photo set: wipe and recreate in display order so the
+    // admin edit modal can add/remove images freely.
+    if (Array.isArray(body.images)) {
+      const urls: string[] = (body.images as unknown[]).map((url) => String(url).trim()).filter(Boolean).slice(0, 8);
+      await db.vehicleImage.deleteMany({ where: { vehicleId: id.data } });
+      if (urls.length) {
+        await db.vehicleImage.createMany({ data: urls.map((url, position) => ({ vehicleId: id.data, url, position, altText: `${updatedVehicle.make} ${updatedVehicle.model}` })) });
+      }
+      result = await db.vehicle.findUnique({ where: { id: id.data }, include: { images: { orderBy: { position: 'asc' } } } });
+    }
   } else if (resource === 'rentals') {
     const status = rentalStatusSchema.safeParse(body.status);
     if (!status.success) return NextResponse.json({ error: 'Rental enquiries can be NEW, CONTACTED, CONFIRMED or DECLINED.' }, { status: 400 });
@@ -145,6 +164,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
         price: body.price === undefined ? undefined : Number(body.price),
         stock: body.stock === undefined ? undefined : Number(body.stock),
         brand: body.brand === undefined ? undefined : String(body.brand),
+        categoryId: body.categoryId === undefined ? undefined : (body.categoryId || null),
         available: body.available === undefined ? undefined : Boolean(body.available)
       }
     });
@@ -152,6 +172,43 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
     const status = driverApplicationStatusSchema.safeParse(body.status);
     if (!status.success) return NextResponse.json({ error: 'Driver applications can be NEW, REVIEWING, HIRED or DECLINED.' }, { status: 400 });
     result = await db.driverApplication.update({ where: { id: id.data }, data: { status: status.data, internalNotes: body.internalNotes === undefined ? undefined : String(body.internalNotes) } });
+  } else if (resource === 'work-applications') {
+    const status = workApplicationStatusSchema.safeParse(body.status);
+    if (!status.success) return NextResponse.json({ error: 'Work applications can be NEW, REVIEWING, INTERVIEW, HIRED or REJECTED.' }, { status: 400 });
+    const existing = await db.workApplication.findUnique({ where: { id: id.data }, select: { reviewedAt: true } });
+    if (!existing) return NextResponse.json({ error: 'Work application not found.' }, { status: 404 });
+    result = await db.workApplication.update({
+      where: { id: id.data },
+      data: {
+        status: status.data,
+        internalNotes: body.internalNotes === undefined ? undefined : String(body.internalNotes),
+        // Stamp reviewedAt the first time a recruiter moves the application
+        // forward — gives the pipeline a measurable "time to first review".
+        reviewedAt: existing.reviewedAt ?? (status.data !== 'NEW' ? new Date() : undefined)
+      }
+    });
+  } else if (resource === 'opportunities') {
+    const status = body.status === undefined ? null : opportunityStatusSchema.safeParse(body.status);
+    if (status && !status.success) return NextResponse.json({ error: 'Opportunities can be OPEN, CLOSED or ARCHIVED.' }, { status: 400 });
+    result = await db.driverOpportunity.update({
+      where: { id: id.data },
+      data: {
+        title: body.title === undefined ? undefined : String(body.title),
+        slug: body.slug === undefined ? undefined : String(body.slug),
+        description: body.description === undefined ? undefined : String(body.description),
+        requirements: body.requirements === undefined ? undefined : body.requirements,
+        benefits: body.benefits === undefined ? undefined : body.benefits,
+        status: status?.data
+      }
+    });
+  } else if (resource === 'product-categories') {
+    result = await db.productCategory.update({
+      where: { id: id.data },
+      data: {
+        name: body.name === undefined ? undefined : String(body.name),
+        slug: body.slug === undefined ? undefined : String(body.slug)
+      }
+    });
   } else {
     result = await db.teamMember.update({ where: { id: id.data }, data: { name: body.name === undefined ? undefined : String(body.name), position: body.position === undefined ? undefined : String(body.position), biography: body.biography === undefined ? undefined : String(body.biography), imageUrl: body.imageUrl === undefined ? undefined : String(body.imageUrl), displayOrder: body.displayOrder === undefined ? undefined : Number(body.displayOrder), active: body.active === undefined ? undefined : Boolean(body.active) } });
   }
@@ -195,8 +252,27 @@ const productCreateSchema = z.object({
   price: z.coerce.number().int().min(0).optional(),
   stock: z.coerce.number().int().min(0).default(0),
   brand: z.string().trim().max(80).optional(),
+  categoryId: z.string().trim().max(80).optional().nullable(),
   available: z.coerce.boolean().default(true)
 });
+
+const opportunityCreateSchema = z.object({
+  title: z.string().trim().min(3).max(160),
+  slug: z.string().trim().min(3).max(180),
+  description: z.string().trim().min(2).max(4000),
+  requirements: z.array(z.string().trim().min(1).max(300)).default([]),
+  benefits: z.array(z.string().trim().min(1).max(300)).default([]),
+  status: z.enum(['OPEN', 'CLOSED', 'ARCHIVED']).default('OPEN')
+});
+
+const productCategoryCreateSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  slug: z.string().trim().min(2).max(80)
+});
+
+function slugify(value: string) {
+  return value.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
 
 export async function POST(request: Request, { params }: { params: Promise<{ resource: string }> }) {
   const auth = await authenticatedResource(params);
@@ -238,11 +314,47 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
   } else if (resource === 'vehicles') {
     const parsed = vehicleCreateSchema.safeParse(body);
     if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid vehicle data.' }, { status: 400 });
-    created = await db.vehicle.create({ data: parsed.data });
+    // Optional image URLs (uploaded via /api/admin/upload) become VehicleImage
+    // rows in display order, so the public cards and detail views light up.
+    const images: string[] = Array.isArray(body.images)
+      ? body.images.map((url: unknown) => String(url).trim()).filter(Boolean).slice(0, 8)
+      : [];
+    created = await db.vehicle.create({
+      data: {
+        ...parsed.data,
+        features: body.features === undefined ? undefined : body.features,
+        images: { create: images.map((url, position) => ({ url, position, altText: `${parsed.data.make} ${parsed.data.model}` })) }
+      },
+      include: { images: true }
+    });
   } else if (resource === 'products') {
     const parsed = productCreateSchema.safeParse(body);
     if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid product data.' }, { status: 400 });
-    created = await db.product.create({ data: parsed.data });
+    const { categoryId, ...rest } = parsed.data;
+    // Auto-create the category when the admin typed a new one instead of
+    // picking an existing slug — keeps the catalogue organised effortlessly.
+    let resolvedCategoryId: string | null = null;
+    if (categoryId) {
+      const category = await db.productCategory.upsert({
+        where: { slug: categoryId },
+        update: {},
+        create: { name: categoryId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()), slug: categoryId }
+      });
+      resolvedCategoryId = category.id;
+    }
+    created = await db.product.create({ data: { ...rest, categoryId: resolvedCategoryId }, include: { category: true } });
+  } else if (resource === 'opportunities') {
+    const parsed = opportunityCreateSchema.safeParse(body);
+    if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid opportunity data.' }, { status: 400 });
+    created = await db.driverOpportunity.create({ data: { ...parsed.data, slug: parsed.data.slug || slugify(parsed.data.title) } });
+  } else if (resource === 'product-categories') {
+    const parsed = productCategoryCreateSchema.safeParse(body);
+    if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Invalid category data.' }, { status: 400 });
+    try {
+      created = await db.productCategory.create({ data: parsed.data });
+    } catch {
+      return NextResponse.json({ error: 'A category with that name or slug already exists.' }, { status: 409 });
+    }
   } else {
     return NextResponse.json({ error: 'Creation is not available for this resource yet.' }, { status: 400 });
   }
@@ -251,7 +363,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ res
   return NextResponse.json(created, { status: 201 });
 }
 
-const deletableResources = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products']);
+const deletableResources = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products', 'opportunities', 'product-categories']);
 
 export async function DELETE(request: Request, { params }: { params: Promise<{ resource: string }> }) {
   const auth = await authenticatedResource(params);
@@ -273,6 +385,18 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ r
   else if (resource === 'vehicles') await db.vehicle.delete({ where: { id: id.data } });
   else if (resource === 'rentals') await db.rentalInquiry.delete({ where: { id: id.data } });
   else if (resource === 'products') await db.product.delete({ where: { id: id.data } });
+  else if (resource === 'opportunities') {
+    // Keep applications attached to the opportunity for audit — close it
+    // instead of deleting when candidates have already applied.
+    const applications = await db.driverApplication.count({ where: { opportunityId: id.data } });
+    if (applications > 0) return NextResponse.json({ error: 'This opportunity has applications — set it to CLOSED instead of deleting.' }, { status: 409 });
+    await db.driverOpportunity.delete({ where: { id: id.data } });
+  }
+  else if (resource === 'product-categories') {
+    const products = await db.product.count({ where: { categoryId: id.data } });
+    if (products > 0) return NextResponse.json({ error: `This category still has ${products} product(s) — move them first.` }, { status: 409 });
+    await db.productCategory.delete({ where: { id: id.data } });
+  }
   else await db.teamMember.delete({ where: { id: id.data } });
 
   await db.auditLog.create({ data: { userId: user.id, action: 'DELETE', entity: resource, entityId: id.data } });

@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
-  BarChart3, CarFront, ChartPie, CreditCard, FileText, Home, Image as ImageIcon, Inbox, KeyRound, LayoutDashboard,
-  LogOut, Mail, Menu, Newspaper, Package, Settings, Share2, Users, X
+  BarChart3, Briefcase, CarFront, ChartPie, CreditCard, FileText, Home, Image as ImageIcon, Inbox, KeyRound,
+  LayoutDashboard, LogOut, Mail, Menu, Newspaper, Package, Settings, Share2, Users, X
 } from 'lucide-react';
 
 const groups: { label: string; items: [string, string, typeof LayoutDashboard][] }[] = [
@@ -32,6 +32,7 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
       ['Vehicles', '/admin/vehicles', CarFront],
       ['Rentals', '/admin/rentals', Inbox],
       ['Automotive Goods', '/admin/products', Package],
+      ['Job Postings', '/admin/opportunities', Briefcase],
       ['Recruitment', '/admin/recruitment', Users]
     ]
   },
@@ -40,6 +41,7 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
     items: [
       ['Members', '/admin/members', Users],
       ['Applications', '/admin/applications', Inbox],
+      ['Work Applications', '/admin/work-applications', Briefcase],
       ['Fan Club', '/membership', Users],
       ['Payments', '/admin/payments', CreditCard],
       ['Fee Settings', '/admin/settings/fees', BarChart3]

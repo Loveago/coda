@@ -26,7 +26,9 @@ const labels: Record<string, string> = {
   vehicles: 'Vehicle inventory',
   rentals: 'Rental enquiries',
   products: 'Automotive goods',
-  recruitment: 'Driver applications'
+  recruitment: 'Driver applications',
+  'work-applications': 'Work applications',
+  opportunities: 'Job opportunities'
 };
 
 function dateValue(value: unknown) {
@@ -36,11 +38,13 @@ function dateValue(value: unknown) {
 }
 
 const exportable = new Set(['applications', 'members', 'subscribers', 'messages']);
-const deletable = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products']);
+const deletable = new Set(['messages', 'subscribers', 'statistics', 'gallery', 'resources', 'team', 'services', 'vehicles', 'rentals', 'products', 'opportunities']);
 
 const rentalStatuses = ['NEW', 'CONTACTED', 'CONFIRMED', 'DECLINED'] as const;
 const driverStatuses = ['NEW', 'REVIEWING', 'HIRED', 'DECLINED'] as const;
 const vehicleAvailability = ['AVAILABLE', 'RESERVED', 'RENTED', 'SOLD'] as const;
+const workStatuses = ['NEW', 'REVIEWING', 'INTERVIEW', 'HIRED', 'REJECTED'] as const;
+const opportunityStatuses = ['OPEN', 'CLOSED', 'ARCHIVED'] as const;
 
 export default function AdminManagementTable({ resource, records: initialRecords }: Props) {
   const [records, setRecords] = useState(initialRecords);
@@ -114,6 +118,8 @@ export default function AdminManagementTable({ resource, records: initialRecords
             {resource === 'rentals' && <><th>Requester</th><th>Vehicle</th><th>Dates</th><th>Status</th><th>Action</th></>}
             {resource === 'products' && <><th>Product</th><th>SKU</th><th>Stock</th><th>State</th><th>Action</th></>}
             {resource === 'recruitment' && <><th>Applicant</th><th>Contact</th><th>Experience</th><th>Status</th><th>Action</th></>}
+            {resource === 'work-applications' && <><th>Member</th><th>Position</th><th>Details</th><th>Fee</th><th>Status</th><th>Action</th></>}
+            {resource === 'opportunities' && <><th>Opportunity</th><th>Slug</th><th>Applications</th><th>Status</th><th>Action</th></>}
           </tr></thead>
           <tbody>{records.map((record) => {
             const id = record.id;
@@ -131,6 +137,14 @@ export default function AdminManagementTable({ resource, records: initialRecords
             if (resource === 'rentals') return <tr key={id}><td data-label="Requester"><strong>{String(record.name)}</strong><br />{String(record.email)}{record.phone ? ` · ${String(record.phone)}` : ''}</td><td data-label="Vehicle">{record.vehicle ? `${String((record.vehicle as any).make)} ${String((record.vehicle as any).model)}` : 'Any vehicle'}</td><td data-label="Dates">{dateValue(record.startDate)} → {dateValue(record.endDate)}</td><td data-label="Status"><span className={`badge ${record.status === 'CONFIRMED' ? 'badge-active' : record.status === 'DECLINED' ? 'badge-REJECTED' : 'badge-PENDING'}`}>{String(record.status)}</span></td><td data-label="Action">{rentalStatuses.filter((state) => state !== record.status).map((state) => <button className="admin-action" key={state} disabled={busy === id} onClick={() => update(id, { status: state })}>{state}</button>)}{deleteButton}</td></tr>;
             if (resource === 'products') return <tr key={id}><td data-label="Product"><strong>{String(record.name)}</strong>{record.brand ? <><br /><small>{String(record.brand)}</small></> : null}</td><td data-label="SKU">{String(record.sku)}</td><td data-label="Stock">{String(record.stock)}</td><td data-label="State"><span className={`badge ${record.available ? 'badge-active' : 'badge-INACTIVE'}`}>{record.available ? 'LISTED' : 'HIDDEN'}</span></td><td data-label="Action"><button className="admin-action" disabled={busy === id} onClick={() => update(id, { available: !record.available })}>{record.available ? 'DELIST' : 'LIST'}</button>{deleteButton}</td></tr>;
             if (resource === 'recruitment') return <tr key={id}><td data-label="Applicant"><strong>{String(record.fullName)}</strong></td><td data-label="Contact">{String(record.email)}<br />{String(record.phone)}</td><td data-label="Experience">{String(record.experience || '—')}</td><td data-label="Status"><span className={`badge ${record.status === 'HIRED' ? 'badge-active' : record.status === 'DECLINED' ? 'badge-REJECTED' : 'badge-PENDING'}`}>{String(record.status)}</span></td><td data-label="Action">{driverStatuses.filter((state) => state !== record.status).map((state) => <button className="admin-action" key={state} disabled={busy === id} onClick={() => update(id, { status: state })}>{state}</button>)}</td></tr>;
+            if (resource === 'work-applications') {
+              const member = (record.member || {}) as { firstName?: string; lastName?: string; memberNumber?: string; phone?: string; email?: string };
+              return <tr key={id}><td data-label="Member"><strong>{String(member.firstName || '')} {String(member.lastName || '')}</strong><br /><small>{String(member.memberNumber || '')} · {String(member.phone || '')}</small></td><td data-label="Position"><strong>{String(record.position)}</strong><br /><small>{String(record.employmentType || '').replace('_', ' ')}{record.region ? ` · ${String(record.region)}` : ''}</small></td><td data-label="Details"><small>{record.experienceYears !== null && record.experienceYears !== undefined ? `${String(record.experienceYears)} yrs exp` : '—'}{record.licenceClass ? ` · ${String(record.licenceClass)}` : ''}{record.platforms ? ` · ${String(record.platforms)}` : ''}</small>{record.cvUrl ? <><br /><a href={String(record.cvUrl)} target="_blank" rel="noreferrer" className="admin-link">OPEN CV</a></> : null}</td><td data-label="Fee"><span className={`badge ${record.paymentState === 'PAID' ? 'badge-active' : 'badge-INACTIVE'}`}>{record.paymentState === 'PAID' ? 'FEE PAID' : 'FREE'}</span></td><td data-label="Status"><span className={`badge ${record.status === 'HIRED' ? 'badge-active' : record.status === 'REJECTED' ? 'badge-REJECTED' : record.status === 'INTERVIEW' ? 'badge-PUBLISHED' : 'badge-PENDING'}`}>{String(record.status)}</span></td><td data-label="Action">{workStatuses.filter((state) => state !== record.status).map((state) => <button className="admin-action" key={state} disabled={busy === id} onClick={() => update(id, { status: state })}>{state}</button>)}<button className="admin-action" disabled={busy === id} onClick={() => { const notes = window.prompt('Internal notes for this application', String(record.internalNotes || '')); if (notes !== null) update(id, { status: record.status, internalNotes: notes }); }}>NOTES</button></td></tr>;
+            }
+            if (resource === 'opportunities') {
+              const count = ((record._count || {}) as { applications?: number }).applications ?? 0;
+              return <tr key={id}><td data-label="Opportunity"><strong>{String(record.title)}</strong><br /><small>{String(record.description || '').slice(0, 90)}{String(record.description || '').length > 90 ? '…' : ''}</small></td><td data-label="Slug">{String(record.slug)}</td><td data-label="Applications">{count}</td><td data-label="Status"><span className={`badge ${record.status === 'OPEN' ? 'badge-active' : record.status === 'CLOSED' ? 'badge-PENDING' : 'badge-ARCHIVED'}`}>{String(record.status)}</span></td><td data-label="Action">{opportunityStatuses.filter((state) => state !== record.status).map((state) => <button className="admin-action" key={state} disabled={busy === id} onClick={() => update(id, { status: state })}>{state}</button>)}{deleteButton}</td></tr>;
+            }
             return <tr key={id}><td data-label="Name">{String(record.name)}</td><td data-label="Position">{String(record.position)}</td><td data-label="Order">{String(record.displayOrder)}</td><td data-label="State">{record.active ? 'Active' : 'Hidden'}</td></tr>;
           })}</tbody>
         </table>
