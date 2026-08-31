@@ -1557,8 +1557,21 @@ tr.member-row-open > td { background: #F5F5F5; }
 }
 @media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr; }
-  .stats-strip { grid-template-columns: repeat(2, 1fr); gap: 18px 0; transform: translateY(-30px); }
-  .stats-strip .stat:nth-child(2) { border-right: 0; }
+  /* Stats strip becomes a 2×2 bento of mini tiles on small screens */
+  .stats-strip {
+    grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 14px;
+    transform: translateY(-30px); border-radius: 18px;
+  }
+  .stats-strip .stat {
+    flex-direction: column; justify-content: center; text-align: center; gap: 9px;
+    border: 1px solid rgba(255, 255, 255, .08) !important; border-radius: 13px;
+    background: rgba(255, 255, 255, .035); padding: 18px 10px 16px;
+    transition: transform .25s var(--ease), background .25s var(--ease);
+  }
+  .stats-strip .stat:active { transform: scale(.97); background: rgba(255, 107, 0, .08); }
+  .stats-strip .stat-icon { width: 40px; height: 40px; border-radius: 12px; }
+  .stats-strip strong { font-size: 25px; }
+  .stats-strip span { font-size: 10.5px; letter-spacing: .3px; }
   .fanclub-banner { grid-template-columns: 1fr; padding: 30px 22px; gap: 26px; }
   .fanclub-card { display: flex; justify-content: center; }
   .mduo { grid-template-columns: 1fr; }
@@ -1570,8 +1583,13 @@ tr.member-row-open > td { background: #F5F5F5; }
 }
 @media (max-width: 560px) {
   .services-grid { grid-template-columns: 1fr; }
-  .stats-strip { grid-template-columns: 1fr; }
-  .stats-strip .stat { border-right: 0 !important; }
+  /* Keep the 2×2 bento on phones — tighter tiles instead of a tall stack */
+  .stats-strip { gap: 8px; padding: 10px; border-radius: 15px; }
+  .stats-strip .stat { padding: 14px 8px 13px; gap: 7px; }
+  .stats-strip .stat-icon { width: 34px; height: 34px; border-radius: 10px; }
+  .stats-strip .stat-icon svg { width: 17px; height: 17px; }
+  .stats-strip strong { font-size: 21px; }
+  .stats-strip span { font-size: 9.5px; }
   .astats { grid-template-columns: 1fr; }
   .mstat-tiles { grid-template-columns: 1fr; }
   .mqa-grid { grid-template-columns: 1fr; }
