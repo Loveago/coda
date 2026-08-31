@@ -31,7 +31,7 @@ export default function MemberLogin() {
     <main className="login-wrap">
       <form onSubmit={submit} className="login-card">
         <div className="brand">
-          <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={51} height={51} />
+          <img src="/logo-mark.png" alt="Mr Truth Agency logo" className="brand-logo" width={51} height={51} />
           <div>
             <div className="brand-name">MR TRUTH</div>
             <small className="brand-sub">FAN CLUB · MEMBER PORTAL</small>

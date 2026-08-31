@@ -87,7 +87,7 @@ export default function AdminSidebar({ name, role }: { name: string; role: strin
 
   const brand = (
     <Link href="/admin" className="admin-brand">
-      <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={42} height={42} />
+      <img src="/logo-mark.png" alt="Mr Truth Agency logo" className="brand-logo" width={42} height={42} />
       <div>
         <div className="brand-name">MR TRUTH</div>
         <small className="brand-sub" style={{ color: '#FFD2B3' }}>AGENCY CONTROL</small>

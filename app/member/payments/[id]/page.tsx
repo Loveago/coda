@@ -27,7 +27,7 @@ export default async function Receipt({ params }: { params: Promise<{ id: string
       <div className="receipt" id="receipt">
         <div className="receipt-head">
           <div className="brand brand-invert">
-            <img src="/logo-mark.png" alt="Mr Truth Agency logo placeholder" className="brand-logo" width={51} height={51} />
+            <img src="/logo-mark.png" alt="Mr Truth Agency logo" className="brand-logo" width={51} height={51} />
             <div><div className="brand-name">MR TRUTH</div><small className="brand-sub">FAN CLUB · MEMBER COMMUNITY</small></div>
           </div>
           <span className={`badge badge-${payment.status === 'SUCCESSFUL' ? 'PUBLISHED' : payment.status === 'PENDING' ? 'PENDING' : 'REJECTED'}`}>{payment.status}</span>
