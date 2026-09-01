@@ -43,6 +43,27 @@ const schema = z.object({
   emergency2Relationship: z.string().trim().min(2)
 });
 
+/**
+ * A stored member record only blocks a new signup while it represents a live
+ * account. Rejected applications and abandoned drafts (PENDING with the
+ * registration fee still unpaid) never reach the admin panel — they are
+ * invisible there — so they used to lock an email forever after the applicant
+ * gave up. Such leftovers are reclaimed: the stale record is removed and the
+ * new signup proceeds with a fresh member number.
+ */
+function isReclaimable(member: { status: string; registrationPayment: string }) {
+  if (member.status === 'REJECTED') return true;
+  return member.status === 'PENDING' && member.registrationPayment === 'PENDING';
+}
+
+async function reclaimMember(id: string) {
+  await db.$transaction(async (tx) => {
+    await tx.memberToken.deleteMany({ where: { memberId: id } });
+    await tx.payment.deleteMany({ where: { memberId: id } });
+    await tx.member.delete({ where: { id } });
+  });
+}
+
 export async function POST(request: Request) {
   const limit = rateLimit(`register:${requestAddress(request)}`, 5);
   if (!limit.allowed) return NextResponse.json({ error: 'Too many attempts. Please try again later.' }, { status: 429 });
@@ -69,17 +90,21 @@ export async function POST(request: Request) {
   const email = data.email.toLowerCase();
 
   const existing = await db.member.findUnique({ where: { email } });
-  if (existing) {
+  if (existing && !isReclaimable(existing)) {
     return NextResponse.json({ error: 'This email is already registered. Please log in or reset your password.' }, { status: 409 });
   }
   const cardCollision = await db.member.findUnique({ where: { ghanaCardNumber: data.ghanaCardNumber } });
-  if (cardCollision) {
+  if (cardCollision && !isReclaimable(cardCollision)) {
     return NextResponse.json({ error: 'This Ghana Card number is already registered to another member.' }, { status: 409 });
   }
   const adminCollision = await db.user.findUnique({ where: { email } });
   if (adminCollision) {
     return NextResponse.json({ error: 'This email is already registered. Please log in or reset your password.' }, { status: 409 });
   }
+  // Remove the stale leftovers (and any tokens/payments hanging off them) so
+  // the unique email / Ghana Card constraints are free for the new record.
+  if (existing) await reclaimMember(existing.id);
+  if (cardCollision && cardCollision.id !== existing?.id) await reclaimMember(cardCollision.id);
 
   const fees = await getFees();
   const member = await db.member.create({

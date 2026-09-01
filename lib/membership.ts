@@ -42,6 +42,13 @@ export function generateMemberNumber(sequence: number) {
 }
 
 export async function nextMemberNumber() {
-  const count = await (await import('@/lib/db')).db.member.count();
-  return generateMemberNumber(count + 1);
+  const { db } = await import('@/lib/db');
+  // Derive from the highest existing sequence rather than the row count: after
+  // a member is deleted (or a draft is reclaimed during re-registration) the
+  // count can point back at a number that is still taken, causing a unique
+  // collision. Member numbers are fixed-width, so ordering desc is numeric.
+  const last = await db.member.findFirst({ orderBy: { memberNumber: 'desc' }, select: { memberNumber: true } });
+  const match = last ? /(\d+)\s*$/.exec(last.memberNumber) : null;
+  const sequence = match ? Number(match[1]) + 1 : (await db.member.count()) + 1;
+  return generateMemberNumber(sequence);
 }
