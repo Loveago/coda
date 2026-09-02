@@ -103,7 +103,7 @@ model NewsletterSubscriber {
 model ContactMessage {
   id        String   @id @default(uuid())
   name      String
-  email     String
+  email     String?
   phone     String?
   subject   String
   message   String
@@ -415,6 +415,7 @@ model WorkApplication {
   member          Member                @relation(fields: [memberId], references: [id], onDelete: Cascade)
   position        String
   employmentType  String                @default("FULL_TIME")
+  contactPhone    String?
   region          String?
   licenceClass    String?
   licenceNumber   String?

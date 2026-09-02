@@ -42,6 +42,7 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
       ['Members', '/admin/members', Users],
       ['Applications', '/admin/applications', Inbox],
       ['Work Applications', '/admin/work-applications', Briefcase],
+      ['All Job Applications', '/admin/all-work-applications', FileText],
       ['Fan Club', '/membership', Users],
       ['Payments', '/admin/payments', CreditCard],
       ['Fee Settings', '/admin/settings/fees', BarChart3]

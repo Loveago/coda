@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/services` },
     { url: `${base}/services/driver-recruitment` },
     { url: `${base}/services/fleet-management` },
+    { url: `${base}/services/cleaning` },
     { url: `${base}/vehicles` },
     { url: `${base}/rentals` },
     { url: `${base}/automotive` },

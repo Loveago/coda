@@ -42,12 +42,14 @@ export default function WorkApplicationPortal({
   initialApplications,
   opportunities,
   feeEnabled,
-  feeAmount
+  feeAmount,
+  memberPhone
 }: {
   initialApplications: Application[];
   opportunities: Opportunity[];
   feeEnabled: boolean;
   feeAmount: number;
+  memberPhone?: string;
 }) {
   const [applications, setApplications] = useState(initialApplications);
   const [busy, setBusy] = useState(false);
@@ -110,6 +112,7 @@ export default function WorkApplicationPortal({
         body: JSON.stringify({
           position: raw.position,
           employmentType: raw.employmentType || 'FULL_TIME',
+          contactPhone: raw.contactPhone || undefined,
           region: raw.region || undefined,
           licenceClass: raw.licenceClass || undefined,
           licenceNumber: raw.licenceNumber || undefined,
@@ -214,23 +217,27 @@ export default function WorkApplicationPortal({
         <h2 style={{ display: 'flex', alignItems: 'center', gap: 9 }}><Send size={18} /> Apply for Work</h2>
         {opportunities.length > 0 && (
           <p className="admin-note" style={{ marginBottom: 14 }}>
-            Currently open: {opportunities.map((opportunity) => opportunity.title).join(' · ')} — or propose any other role you qualify for.
+            We are currently recruiting for: <strong>{opportunities.map((opportunity) => opportunity.title).join(' and ')}</strong>. Pick a track below and tell us about yourself.
           </p>
         )}
         <form onSubmit={submit} style={{ display: 'grid', gap: 14 }}>
           <div className="form-grid">
             <div>
-              <label style={label}>POSITION APPLIED FOR *</label>
-              <input name="position" required minLength={2} list="open-positions" placeholder="e.g. Fleet Driver" className="field" />
-              <datalist id="open-positions">
-                {opportunities.map((opportunity) => <option key={opportunity.id} value={opportunity.title} />)}
-              </datalist>
+              <label style={label}>TRACK APPLIED FOR *</label>
+              <select name="position" required className="field" defaultValue={opportunities[0]?.title || ''}>
+                {opportunities.length === 0 && <option value="">No open tracks right now</option>}
+                {opportunities.map((opportunity) => <option key={opportunity.id} value={opportunity.title}>{opportunity.title}</option>)}
+              </select>
             </div>
             <div>
               <label style={label}>EMPLOYMENT TYPE *</label>
               <select name="employmentType" className="field" defaultValue="FULL_TIME">
                 {EMPLOYMENT_TYPES.map((value) => <option key={value} value={value}>{employmentLabels[value]}</option>)}
               </select>
+            </div>
+            <div>
+              <label style={label}>CONTACT PHONE (WHATSAPP) *</label>
+              <input name="contactPhone" required type="tel" minLength={7} placeholder="e.g. 024 123 4567" defaultValue={memberPhone || ''} className="field" />
             </div>
             <div>
               <label style={label}>REGION</label>

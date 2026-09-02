@@ -9,6 +9,7 @@ import { EMPLOYMENT_TYPES } from '@/lib/work-applications';
 const createSchema = z.object({
   position: z.string().trim().min(2).max(120),
   employmentType: z.enum(EMPLOYMENT_TYPES).default('FULL_TIME'),
+  contactPhone: z.string().trim().min(7).max(20).optional(),
   region: z.string().trim().max(80).optional(),
   licenceClass: z.string().trim().max(40).optional(),
   licenceNumber: z.string().trim().max(60).optional(),
@@ -65,6 +66,9 @@ export async function POST(request: Request) {
       memberId: member.id,
       position: data.position,
       employmentType: data.employmentType,
+      // Prefer the phone the member typed on the form; fall back to the
+      // number on their profile so recruiters always have a contact line.
+      contactPhone: data.contactPhone || member.phone,
       region: data.region || null,
       licenceClass: data.licenceClass || null,
       licenceNumber: data.licenceNumber || null,

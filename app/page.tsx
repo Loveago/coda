@@ -21,6 +21,7 @@ const services = [
   ['Spare Parts', 'Genuine spare parts for all vehicle makes and models.', Wrench, '/automotive'],
   ['Automotive Goods', 'Wide range of automotive products and accessories you can trust.', Handshake, '/automotive'],
   ['Automotive Services', 'Professional maintenance, repairs and diagnostics you can rely on.', ShieldCheck, '/contact'],
+  ['Cleaning Services', 'House, office and deep cleaning by vetted crews — spotless, every time.', Sparkles, '/services/cleaning'],
   ['Corporate Mobility', 'Smart mobility solutions designed for businesses and organizations.', Building2, '/services']
 ] as const;
 

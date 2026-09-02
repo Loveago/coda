@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ArrowRight, Car, CarFront, ChevronDown, LogIn, Mail, MapPin, Megaphone, Menu, Phone, UserPlus, Wrench, X } from 'lucide-react';
+import { ArrowRight, Car, CarFront, ChevronDown, LogIn, Mail, MapPin, Megaphone, Menu, Phone, Sparkles, UserPlus, Wrench, X } from 'lucide-react';
 import SocialIcon from '@/components/SocialIcon';
 import type { SocialLink } from '@/lib/settings';
 
@@ -18,7 +18,8 @@ const serviceLinks = [
   ['Fleet Management', '/services/fleet-management', Car],
   ['Vehicles', '/vehicles', CarFront],
   ['Car Rentals', '/rentals', CarFront],
-  ['Automotive Goods', '/automotive', Wrench]
+  ['Automotive Goods', '/automotive', Wrench],
+  ['Cleaning Services', '/services/cleaning', Sparkles]
 ] as const;
 
 const tailLinks = [

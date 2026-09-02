@@ -5,6 +5,7 @@ import { Briefcase, CircleDollarSign } from 'lucide-react';
 import { db } from '@/lib/db';
 import { getPortalMember } from '@/lib/members-auth';
 import { getFees, formatGhs } from '@/lib/fees';
+import { CORE_TRACK_SLUGS } from '@/lib/work-applications';
 import WorkApplicationPortal from '@/components/WorkApplicationPortal';
 import Reveal from '@/components/Reveal';
 
@@ -36,7 +37,8 @@ export default async function MemberWorkPage({ searchParams }: { searchParams: P
       }
     }),
     getFees(),
-    db.driverOpportunity.findMany({ where: { status: 'OPEN' }, select: { id: true, title: true, description: true }, orderBy: { createdAt: 'desc' }, take: 8 })
+    // Only the two active tracks are offered: Work and Pay, and Daily Sales.
+    db.driverOpportunity.findMany({ where: { status: 'OPEN', slug: { in: [...CORE_TRACK_SLUGS] } }, select: { id: true, title: true, description: true }, orderBy: { createdAt: 'asc' }, take: 8 })
   ]);
 
   const serialized = applications.map((application) => ({
@@ -83,6 +85,7 @@ export default async function MemberWorkPage({ searchParams }: { searchParams: P
         opportunities={opportunities}
         feeEnabled={fees.workApplicationFeeEnabled}
         feeAmount={fees.workApplicationFeeAmount}
+        memberPhone={portal.phone}
       />
 
       <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>

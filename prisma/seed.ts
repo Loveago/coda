@@ -133,28 +133,22 @@ async function main() {
     });
   }
 
-  // Open driver opportunities members can apply for from their dashboard.
+  // Open opportunities members can apply for from their dashboard. The agency
+  // currently recruits for two tracks only: Work & Pay and Daily Sales.
   const demoOpportunities = [
     {
-      title: 'Fleet Driver — Accra Metro',
-      slug: 'fleet-driver-accra-metro',
-      description: 'Full-time fleet driving across the Accra metropolitan area on a company-managed vehicle, with weekly performance bonuses.',
-      requirements: ['Valid PSV driving licence', 'Minimum 3 years ride-hailing or fleet experience', 'Clean driving record', 'Available for rotating shifts'],
-      benefits: ['Company vehicle and fuel card', 'Weekly performance bonus', 'Annual leave and sick leave', 'Membership registration fee waived']
+      title: 'Work and Pay',
+      slug: 'work-and-pay',
+      description: 'Work first, get paid on your earnings. Take on driving, delivery or errand jobs through the agency and get paid per task — your effort directly sets your income.',
+      requirements: ['Approved Mr Truth membership', 'Smartphone with data and WhatsApp', 'Reliable, punctual and professional attitude', 'Relevant documentation for the tasks you take on'],
+      benefits: ['Flexible schedule — work when you want', 'Paid per completed task', 'Access to a steady stream of agency jobs', 'Support from a dedicated coordinator']
     },
     {
-      title: 'Corporate Shuttle Driver',
-      slug: 'corporate-shuttle-driver',
-      description: 'Staff shuttle routes between Spintex, Airport City and Tema on weekday mornings and evenings. Own transport to the depot provided.',
-      requirements: ['Valid driving licence with PSV endorsement', 'Defensive driving certificate (or willing to obtain)', 'Professional presentation'],
-      benefits: ['Fixed weekday schedule — weekends free', 'Paid training and certification', 'Uniform provided']
-    },
-    {
-      title: 'Rental Delivery Driver (Part-Time)',
-      slug: 'rental-delivery-driver-part-time',
-      description: 'Deliver and collect rental vehicles for customers across Greater Accra. Ideal for existing fan club members with their own car.',
-      requirements: ['Own reliable vehicle', 'Smartphone with data', 'Familiar with Accra routes'],
-      benefits: ['Choose your own hours', 'Paid per delivery', 'Fuel reimbursement']
+      title: 'Daily Sales',
+      slug: 'daily-sales',
+      description: 'Sell Mr Truth products and services in your area and earn daily commissions. Perfect for natural hustlers who love meeting people and closing deals.',
+      requirements: ['Approved Mr Truth membership', 'Confident communication and people skills', 'Own transport to market is a plus', 'Basic smartphone for order tracking'],
+      benefits: ['Earn commission on every sale — paid daily', 'Free product and sales training', 'Marketing materials provided', 'Top performers earn bonuses and recognition']
     }
   ];
   for (const opportunity of demoOpportunities) {

@@ -14,8 +14,15 @@ export const WORK_APPLICATION_FILTER: Prisma.WorkApplicationWhereInput = {
 export const WORK_APPLICATION_STATUSES = ['NEW', 'REVIEWING', 'INTERVIEW', 'HIRED', 'REJECTED'] as const;
 export const EMPLOYMENT_TYPES = ['FULL_TIME', 'PART_TIME', 'CONTRACT', 'CASUAL'] as const;
 
+/**
+ * The agency currently recruits for two tracks only. Public pages (member
+ * dashboard and driver recruitment) show exactly these postings, whatever
+ * else may exist in the database.
+ */
+export const CORE_TRACK_SLUGS = ['work-and-pay', 'daily-sales'] as const;
+
 export const workApplicationSelect = {
-  id: true, position: true, employmentType: true, region: true, licenceClass: true,
+  id: true, position: true, employmentType: true, contactPhone: true, region: true, licenceClass: true,
   licenceNumber: true, licenceExpiry: true, experienceYears: true, platforms: true,
   cvUrl: true, coverNote: true, paymentState: true, status: true, internalNotes: true,
   reviewedAt: true, createdAt: true,

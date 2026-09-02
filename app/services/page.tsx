@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, BriefcaseBusiness, Car, CircuitBoard, Settings2, UsersRound } from 'lucide-react';
+import { ArrowRight, BriefcaseBusiness, Car, CircuitBoard, Settings2, Sparkles, UsersRound } from 'lucide-react';
 import SiteFooter from '@/components/SiteFooter';
 import SiteHeader from '@/components/SiteHeader';
 
@@ -14,7 +14,8 @@ const services = [
   { title: 'Fleet Management', description: 'Operational support for vehicle allocation, driver management and fleet performance.', href: '/services/fleet-management', icon: Settings2 },
   { title: 'Car Rentals', description: 'Flexible vehicle rental solutions for personal trips and business movement.', href: '/rentals', icon: Car },
   { title: 'Vehicle Sales', description: 'A clear, supported route to sourcing and purchasing vehicles.', href: '/vehicles', icon: BriefcaseBusiness },
-  { title: 'Automotive Goods', description: 'Parts, equipment and automotive products structured for future online ordering.', href: '/automotive', icon: CircuitBoard }
+  { title: 'Automotive Goods', description: 'Parts, equipment and automotive products structured for future online ordering.', href: '/automotive', icon: CircuitBoard },
+  { title: 'Cleaning Services', description: 'Professional house, office and deep cleaning by vetted crews — one-time or recurring plans.', href: '/services/cleaning', icon: Sparkles }
 ];
 
 export default function ServicesPage() {

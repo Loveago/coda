@@ -9,7 +9,7 @@ import OpportunityManager from '@/components/OpportunityManager';
 import { APPLICATION_FILTER } from '@/lib/membership';
 import { WORK_APPLICATION_FILTER, workApplicationSelect } from '@/lib/work-applications';
 
-const supportedSections = new Set(['applications', 'members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team', 'services', 'vehicles', 'rentals', 'products', 'recruitment', 'work-applications', 'opportunities']);
+const supportedSections = new Set(['applications', 'members', 'messages', 'subscribers', 'gallery', 'resources', 'statistics', 'settings', 'team', 'services', 'vehicles', 'rentals', 'products', 'recruitment', 'work-applications', 'all-work-applications', 'opportunities']);
 
 const memberSelect = {
   id: true, firstName: true, lastName: true, email: true, phone: true, platform: true,
@@ -42,6 +42,9 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   if (section === 'products') records = await db.product.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'recruitment') records = await db.driverApplication.findMany({ include: { opportunity: { select: { title: true } } }, orderBy: { createdAt: 'desc' } });
   if (section === 'work-applications') records = await db.workApplication.findMany({ where: WORK_APPLICATION_FILTER, select: workApplicationSelect, orderBy: { createdAt: 'desc' } });
+  // Every application a member has submitted, including ones still awaiting
+  // their application fee — so nothing slips through the cracks.
+  if (section === 'all-work-applications') records = await db.workApplication.findMany({ select: workApplicationSelect, orderBy: [{ paymentState: 'asc' }, { createdAt: 'desc' }] });
   if (section === 'opportunities') records = await db.driverOpportunity.findMany({ include: { _count: { select: { applications: true } } }, orderBy: { createdAt: 'desc' } });
 
   const title = section.charAt(0).toUpperCase() + section.slice(1);
@@ -112,9 +115,32 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
 
   const exportLink = section === 'work-applications'
     ? <a className="btn btn-ghost" href="/api/admin/export/work-applications">EXPORT CSV</a>
-    : section === 'recruitment'
-      ? <a className="btn btn-ghost" href="/api/admin/export/recruitment">EXPORT CSV</a>
-      : null;
+    : section === 'all-work-applications'
+      ? <a className="btn btn-ghost" href="/api/admin/export/all-work-applications">EXPORT CSV</a>
+      : section === 'recruitment'
+        ? <a className="btn btn-ghost" href="/api/admin/export/recruitment">EXPORT CSV</a>
+        : null;
+
+  // The two work-application views share one table; this variant also surfaces
+  // applications whose fee is still outstanding, so admins see every submission.
+  if (section === 'all-work-applications') {
+    const awaiting = records.filter((record) => record.paymentState === 'PENDING').length;
+    return (
+      <main>
+        <div className="admin-page-head">
+          <div>
+            <p className="kicker" style={{ color: 'var(--blue)' }}>MEMBERSHIP</p>
+            <h1>All Job Applications</h1>
+            <p style={{ color: 'var(--muted)', fontSize: 13, margin: '6px 0 0' }}>
+              Every application submitted by members — {records.length} total{awaiting > 0 ? `, ${awaiting} still awaiting their application fee` : ''}.
+            </p>
+          </div>
+          {exportLink}
+        </div>
+        <AdminManagementTable resource="work-applications" records={records} showPaymentState />
+      </main>
+    );
+  }
 
   return (
     <main>

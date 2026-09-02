@@ -4,6 +4,7 @@ import { ArrowRight, Briefcase, CheckCircle2 } from 'lucide-react';
 import SiteFooter from '@/components/SiteFooter';
 import SiteHeader from '@/components/SiteHeader';
 import { db } from '@/lib/db';
+import { CORE_TRACK_SLUGS } from '@/lib/work-applications';
 
 export const metadata: Metadata = {
   title: 'Driver Recruitment',
@@ -15,7 +16,8 @@ const requirements = ['Valid driving licence and required documentation', 'Profe
 const process = ['Join the Mr Truth Fan Club', 'Apply from your member dashboard', 'Our team reviews and contacts you'];
 
 export default async function DriverRecruitmentPage() {
-  const opportunities = await db.driverOpportunity.findMany({ where: { status: 'OPEN' }, orderBy: { createdAt: 'desc' }, take: 6 });
+  // Only the two active tracks are advertised: Work and Pay, and Daily Sales.
+  const opportunities = await db.driverOpportunity.findMany({ where: { status: 'OPEN', slug: { in: [...CORE_TRACK_SLUGS] } }, orderBy: { createdAt: 'asc' }, take: 6 });
   return (
     <>
       <SiteHeader />
@@ -23,8 +25,8 @@ export default async function DriverRecruitmentPage() {
         <section className="page-hero">
           <div className="container">
             <p className="kicker">MR TRUTH AGENCY · PEOPLE IN MOTION</p>
-            <h1>Driver opportunities, built around professionals.</h1>
-            <p>Approved members apply for driving and fleet roles directly from their dashboard — track every application and its status in one place.</p>
+            <h1>Two ways to work with us.</h1>
+            <p>Approved members apply for our <strong>Work and Pay</strong> and <strong>Daily Sales</strong> tracks directly from their dashboard — track every application and its status in one place.</p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 22 }}>
               <Link href="/member/work" className="btn btn-primary">APPLY FROM MY DASHBOARD <ArrowRight size={15} /></Link>
               <Link href="/fan-club/join" className="btn btn-outline">BECOME A MEMBER</Link>
@@ -50,7 +52,7 @@ export default async function DriverRecruitmentPage() {
                 ))}
               </div>
             ) : (
-              <p className="form-note">New roles open regularly. Become a member and we will notify you — members can also apply speculatively for any role they qualify for.</p>
+              <p className="form-note">New opportunities open regularly. Become a member and we will notify you as soon as they do.</p>
             )}
             <p className="form-note" style={{ marginTop: 14 }}><Briefcase size={14} style={{ verticalAlign: -2, marginRight: 7 }} /> Applications are a <strong>member-only benefit</strong> — sign in to your dashboard to submit and track yours.</p>
             <Link href="/member/work" className="btn btn-primary">GO TO MEMBER PORTAL <ArrowRight size={14} /></Link>

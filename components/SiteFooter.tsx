@@ -21,7 +21,8 @@ const serviceLinks = [
   ['Car Rentals', '/rentals'],
   ['Vehicle Sales', '/vehicles'],
   ['Automotive Goods', '/automotive'],
-  ['Automotive Services', '/contact']
+  ['Automotive Services', '/contact'],
+  ['Cleaning Services', '/services/cleaning']
 ];
 
 export default function SiteFooter({

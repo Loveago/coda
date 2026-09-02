@@ -32,31 +32,34 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
   else if (resource === 'members') rows = await db.member.findMany({ where: { status: { in: ['APPROVED', 'SUSPENDED'] } }, select: memberExportSelect, orderBy: { createdAt: 'desc' } });
   else if (resource === 'subscribers') rows = await db.newsletterSubscriber.findMany({ select: { email: true, active: true, createdAt: true }, orderBy: { createdAt: 'desc' } });
   else if (resource === 'messages') rows = await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } });
-  else if (resource === 'work-applications') rows = await db.workApplication.findMany({
-    where: WORK_APPLICATION_FILTER,
-    select: {
-      position: true, employmentType: true, region: true, licenceClass: true, licenceNumber: true,
-      experienceYears: true, platforms: true, status: true, paymentState: true, createdAt: true,
-      member: { select: { memberNumber: true, firstName: true, lastName: true, phone: true, email: true } }
-    },
-    orderBy: { createdAt: 'desc' }
-  }).then((apps) => apps.map((app) => ({
-    memberNumber: app.member.memberNumber,
-    firstName: app.member.firstName,
-    lastName: app.member.lastName,
-    phone: app.member.phone,
-    email: app.member.email,
-    position: app.position,
-    employmentType: app.employmentType,
-    region: app.region ?? '',
-    licenceClass: app.licenceClass ?? '',
-    licenceNumber: app.licenceNumber ?? '',
-    experienceYears: app.experienceYears ?? '',
-    platforms: app.platforms ?? '',
-    status: app.status,
-    paymentState: app.paymentState,
-    submittedAt: app.createdAt.toISOString()
-  })));
+  else if (resource === 'work-applications' || resource === 'all-work-applications') {
+    const includeAll = resource === 'all-work-applications';
+    rows = await db.workApplication.findMany({
+      where: includeAll ? undefined : WORK_APPLICATION_FILTER,
+      select: {
+        position: true, employmentType: true, contactPhone: true, region: true, licenceClass: true, licenceNumber: true,
+        experienceYears: true, platforms: true, status: true, paymentState: true, createdAt: true,
+        member: { select: { memberNumber: true, firstName: true, lastName: true, phone: true, email: true } }
+      },
+      orderBy: includeAll ? [{ paymentState: 'asc' }, { createdAt: 'desc' }] : { createdAt: 'desc' }
+    }).then((apps) => apps.map((app) => ({
+      memberNumber: app.member.memberNumber,
+      firstName: app.member.firstName,
+      lastName: app.member.lastName,
+      phone: app.contactPhone || app.member.phone,
+      email: app.member.email,
+      position: app.position,
+      employmentType: app.employmentType,
+      region: app.region ?? '',
+      licenceClass: app.licenceClass ?? '',
+      licenceNumber: app.licenceNumber ?? '',
+      experienceYears: app.experienceYears ?? '',
+      platforms: app.platforms ?? '',
+      status: app.status,
+      paymentState: app.paymentState,
+      submittedAt: app.createdAt.toISOString()
+    })));
+  }
   else if (resource === 'recruitment') rows = await db.driverApplication.findMany({
     select: { fullName: true, email: true, phone: true, experience: true, status: true, createdAt: true, opportunity: { select: { title: true } } },
     orderBy: { createdAt: 'desc' }
