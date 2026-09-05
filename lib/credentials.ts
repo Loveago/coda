@@ -59,12 +59,9 @@ export async function syncDemoMemberFromEnv() {
   if (!env) return;
   const member = await db.member.findUnique({ where: { email: env.email } });
   if (!member) {
-    const start = new Date();
-    const end = new Date();
-    end.setFullYear(end.getFullYear() + 1);
     await db.member.create({
       data: {
-        memberNumber: `MRTF-${Date.now().toString().slice(-6)}`,
+        memberNumber: `MRTA-${Date.now().toString().slice(-6)}`,
         email: env.email,
         passwordHash: await hashPassword(env.password),
         firstName: env.firstName,
@@ -72,9 +69,7 @@ export async function syncDemoMemberFromEnv() {
         phone: process.env.DEMO_MEMBER_PHONE?.trim() || '+233 24 000 0000',
         status: 'APPROVED',
         emailVerified: true,
-        registrationPayment: 'PAID',
-        membershipStartDate: start,
-        membershipEndDate: end
+        registrationPayment: 'NOT_REQUIRED'
       }
     });
     return;

@@ -34,7 +34,7 @@ export default function MemberLogin() {
           <img src="/logo-mark.png" alt="Mr Truth Agency logo" className="brand-logo" width={51} height={51} />
           <div>
             <div className="brand-name">MR TRUTH</div>
-            <small className="brand-sub">FAN CLUB · MEMBER PORTAL</small>
+            <small className="brand-sub">MR TRUTH AGENCY · MEMBER PORTAL</small>
           </div>
         </div>
         <h1>Member sign in</h1>
@@ -46,7 +46,7 @@ export default function MemberLogin() {
         <p style={{ fontSize: 12, color: 'var(--muted)', margin: 0 }}>
           <Link href="/forgot-password" style={{ color: 'var(--blue)', fontWeight: 700 }}>Forgot password?</Link>
           {' · '}
-          <Link href="/membership" style={{ color: 'var(--blue)', fontWeight: 700 }}>Join the Fan Club</Link>
+          <Link href="/membership" style={{ color: 'var(--blue)', fontWeight: 700 }}>Join free</Link>
         </p>
       </form>
     </main>

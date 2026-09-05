@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { db } from '@/lib/db';
 import { requireApprovedMember } from '@/lib/members-auth';
-import { getFees } from '@/lib/fees';
 import { rateLimit } from '@/lib/rate-limit';
 import { EMPLOYMENT_TYPES } from '@/lib/work-applications';
 
@@ -48,7 +47,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message || 'Please complete all required fields.' }, { status: 400 });
   }
 
-  const fees = await getFees();
   const data = parsed.data;
 
   // Prevent duplicate open applications for the same position.
@@ -78,13 +76,12 @@ export async function POST(request: Request) {
       cvUrl: data.cvUrl || null,
       coverNote: data.coverNote || null,
       consent: true,
-      // The fee gate mirrors membership: PENDING until paid, or NOT_REQUIRED
-      // when the admin has disabled the application fee.
-      paymentState: fees.workApplicationFeeEnabled ? 'PENDING' : 'NOT_REQUIRED'
+      // Applications are free — every submission goes straight to recruiters.
+      paymentState: 'NOT_REQUIRED'
     },
     select: { id: true, position: true, paymentState: true, createdAt: true }
   });
 
   await db.auditLog.create({ data: { action: 'CREATE', entity: 'work_application', entityId: application.id, metadata: { memberId: member.id } } });
-  return NextResponse.json({ application, feeRequired: fees.workApplicationFeeEnabled, feeAmount: fees.workApplicationFeeAmount }, { status: 201 });
+  return NextResponse.json({ application }, { status: 201 });
 }

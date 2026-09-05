@@ -43,8 +43,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
   if (resource === 'messages') return NextResponse.json(await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } }));
   if (resource === 'subscribers') return NextResponse.json(await db.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' } }));
   if (resource === 'statistics') return NextResponse.json(await db.statistic.findMany({ orderBy: { displayOrder: 'asc' } }));
-  // Paystack keys are secrets – excluded from the generic settings table.
-  if (resource === 'settings') return NextResponse.json(await db.siteSetting.findMany({ where: { key: { not: { startsWith: 'paystack_' } } }, orderBy: { key: 'asc' } }));
+  if (resource === 'settings') return NextResponse.json(await db.siteSetting.findMany({ orderBy: { key: 'asc' } }));
   if (resource === 'gallery') return NextResponse.json(await db.galleryItem.findMany({ orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }] }));
   if (resource === 'resources') return NextResponse.json(await db.resource.findMany({ orderBy: { updatedAt: 'desc' } }));
   if (resource === 'services') return NextResponse.json(await db.service.findMany({ orderBy: { displayOrder: 'asc' } }));
@@ -65,10 +64,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
 
   let result: unknown;
   if (resource === 'applications') {
-    // Approving an application promotes the applicant to a full member. It does
-    // NOT grant a free membership year: the annual dues stay unpaid
-    // (membershipStartDate/EndDate remain null) until the member pays them from
-    // their portal. Rejecting keeps the record for audit.
+    // Approving an application promotes the applicant to a full member.
+    // Membership is free, so the member is active immediately. Rejecting keeps
+    // the record for audit.
     const status = applicationStatusSchema.safeParse(body.status);
     if (!status.success) return NextResponse.json({ error: 'Applications can only be approved or rejected.' }, { status: 400 });
     const applicant = await db.member.findUnique({ where: { id: id.data } });
@@ -96,9 +94,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ re
   } else if (resource === 'statistics') {
     result = await db.statistic.update({ where: { id: id.data }, data: { label: String(body.label), value: String(body.value), description: body.description ? String(body.description) : null, displayOrder: Number(body.displayOrder || 0), active: body.active !== false } });
   } else if (resource === 'settings') {
-    if (String(body.key || '').startsWith('paystack_')) {
-      return NextResponse.json({ error: 'Paystack keys are managed on the dedicated Paystack settings page.' }, { status: 400 });
-    }
     result = await db.siteSetting.upsert({ where: { id: id.data }, update: { value: String(body.value) }, create: { id: id.data, key: String(body.key), value: String(body.value) } });
   } else if (resource === 'gallery') {
     result = await db.galleryItem.update({ where: { id: id.data }, data: { title: body.title === undefined ? undefined : String(body.title), caption: body.caption === undefined ? undefined : String(body.caption), altText: body.altText === undefined ? undefined : String(body.altText), category: body.category === undefined ? undefined : String(body.category), featured: body.featured === undefined ? undefined : Boolean(body.featured), displayOrder: body.displayOrder === undefined ? undefined : Number(body.displayOrder) } });

@@ -38,10 +38,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
       where: includeAll ? undefined : WORK_APPLICATION_FILTER,
       select: {
         position: true, employmentType: true, contactPhone: true, region: true, licenceClass: true, licenceNumber: true,
-        experienceYears: true, platforms: true, status: true, paymentState: true, createdAt: true,
+        experienceYears: true, platforms: true, status: true, createdAt: true,
         member: { select: { memberNumber: true, firstName: true, lastName: true, phone: true, email: true } }
       },
-      orderBy: includeAll ? [{ paymentState: 'asc' }, { createdAt: 'desc' }] : { createdAt: 'desc' }
+      orderBy: { createdAt: 'desc' }
     }).then((apps) => apps.map((app) => ({
       memberNumber: app.member.memberNumber,
       firstName: app.member.firstName,
@@ -56,7 +56,6 @@ export async function GET(_request: Request, { params }: { params: Promise<{ res
       experienceYears: app.experienceYears ?? '',
       platforms: app.platforms ?? '',
       status: app.status,
-      paymentState: app.paymentState,
       submittedAt: app.createdAt.toISOString()
     })));
   }

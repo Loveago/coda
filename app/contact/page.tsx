@@ -25,7 +25,7 @@ export default async function Contact() {
           <div className="container">
             <p className="kicker">GET IN TOUCH</p>
             <h1>Contact Mr Truth Agency</h1>
-            <p>For service enquiries, partnership proposals or Fan Club support, reach the agency through the details below.</p>
+            <p>For service enquiries, partnership proposals or membership support, reach the agency through the details below.</p>
           </div>
         </section>
         <section className="container page-body">

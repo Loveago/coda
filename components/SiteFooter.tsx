@@ -9,7 +9,7 @@ const quickLinks = [
   ['About Us', '/about'],
   ['Our Services', '/services'],
   ['Vehicles', '/vehicles'],
-  ['Fan Club', '/membership'],
+  ['Membership', '/membership'],
   ['News & Updates', '/news'],
   ['Spare Parts', '/automotive'],
   ['Contact Us', '/contact']
@@ -17,11 +17,14 @@ const quickLinks = [
 
 const serviceLinks = [
   ['Driver Recruitment', '/services/driver-recruitment'],
+  ['General Recruitment', '/jobs'],
+  ['Property Management', '/services/property-management'],
+  ['Property Rentals', '/services/property-rentals'],
+  ['Airbnb & Short-Let', '/services/airbnb'],
   ['Fleet Management', '/services/fleet-management'],
   ['Car Rentals', '/rentals'],
   ['Vehicle Sales', '/vehicles'],
   ['Automotive Goods', '/automotive'],
-  ['Automotive Services', '/contact'],
   ['Cleaning Services', '/services/cleaning']
 ];
 

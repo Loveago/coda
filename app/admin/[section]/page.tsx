@@ -30,9 +30,8 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   if (section === 'messages') records = await db.contactMessage.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'subscribers') records = await db.newsletterSubscriber.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'statistics') records = await db.statistic.findMany({ orderBy: { displayOrder: 'asc' } });
-  // Paystack keys are secrets and social links have their own editor — both
-  // are managed via their dedicated pages under /admin/settings.
-  if (section === 'settings') records = await db.siteSetting.findMany({ where: { AND: [{ key: { not: { startsWith: 'paystack_' } } }, { key: { not: { startsWith: 'social_' } } }] }, orderBy: { key: 'asc' } });
+  // Social links have their own editor — managed via its dedicated page.
+  if (section === 'settings') records = await db.siteSetting.findMany({ where: { key: { not: { startsWith: 'social_' } } }, orderBy: { key: 'asc' } });
   if (section === 'gallery') records = await db.galleryItem.findMany({ orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }] });
   if (section === 'resources') records = await db.resource.findMany({ orderBy: { updatedAt: 'desc' } });
   if (section === 'team') records = await db.teamMember.findMany({ orderBy: { displayOrder: 'asc' } });
@@ -42,9 +41,8 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
   if (section === 'products') records = await db.product.findMany({ orderBy: { createdAt: 'desc' } });
   if (section === 'recruitment') records = await db.driverApplication.findMany({ include: { opportunity: { select: { title: true } } }, orderBy: { createdAt: 'desc' } });
   if (section === 'work-applications') records = await db.workApplication.findMany({ where: WORK_APPLICATION_FILTER, select: workApplicationSelect, orderBy: { createdAt: 'desc' } });
-  // Every application a member has submitted, including ones still awaiting
-  // their application fee — so nothing slips through the cracks.
-  if (section === 'all-work-applications') records = await db.workApplication.findMany({ select: workApplicationSelect, orderBy: [{ paymentState: 'asc' }, { createdAt: 'desc' }] });
+  // Every application a member has submitted — nothing slips through the cracks.
+  if (section === 'all-work-applications') records = await db.workApplication.findMany({ select: workApplicationSelect, orderBy: { createdAt: 'desc' } });
   if (section === 'opportunities') records = await db.driverOpportunity.findMany({ include: { _count: { select: { applications: true } } }, orderBy: { createdAt: 'desc' } });
 
   const title = section.charAt(0).toUpperCase() + section.slice(1);
@@ -96,8 +94,8 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
     );
   }
 
-  // The members area has a dedicated manager (search, dues filters, manual
-  // renewals, deletion) that loads its own data client-side.
+  // The members area has a dedicated manager (search, status filters, member
+  // details, deletion) that loads its own data client-side.
   if (section === 'members') {
     return (
       <main>
@@ -121,10 +119,9 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
         ? <a className="btn btn-ghost" href="/api/admin/export/recruitment">EXPORT CSV</a>
         : null;
 
-  // The two work-application views share one table; this variant also surfaces
-  // applications whose fee is still outstanding, so admins see every submission.
+  // The two work-application views share one table; this variant shows every
+  // submission so admins see the full pipeline.
   if (section === 'all-work-applications') {
-    const awaiting = records.filter((record) => record.paymentState === 'PENDING').length;
     return (
       <main>
         <div className="admin-page-head">
@@ -132,12 +129,12 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
             <p className="kicker" style={{ color: 'var(--blue)' }}>MEMBERSHIP</p>
             <h1>All Job Applications</h1>
             <p style={{ color: 'var(--muted)', fontSize: 13, margin: '6px 0 0' }}>
-              Every application submitted by members — {records.length} total{awaiting > 0 ? `, ${awaiting} still awaiting their application fee` : ''}.
+              Every application submitted by members — {records.length} total.
             </p>
           </div>
           {exportLink}
         </div>
-        <AdminManagementTable resource="work-applications" records={records} showPaymentState />
+        <AdminManagementTable resource="work-applications" records={records} />
       </main>
     );
   }

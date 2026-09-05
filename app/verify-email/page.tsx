@@ -9,7 +9,7 @@ function State({ state }: { state: string }) {
       <>
         <CheckCircle2 size={44} color="#0c7a43" />
         <h1>Email verified!</h1>
-        <p style={{ color: 'var(--muted)', fontSize: 13 }}>Thank you for verifying your email. Your application is now with the Mr Truth Fan Club team for review.</p>
+        <p style={{ color: 'var(--muted)', fontSize: 13 }}>Thank you for verifying your email. Your application is now with the Mr Truth Agency team for review.</p>
         <Link href="/" className="btn btn-primary">BACK TO HOMEPAGE</Link>
       </>
     );

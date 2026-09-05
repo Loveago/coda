@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Link from 'next/link';
-import { ArrowRight, BadgeCheck, Building2, Car, CarFront, Gauge, Handshake, Headphones, ShieldCheck, Sparkles, TicketCheck, Truck, UserPlus, Users, Wrench } from 'lucide-react';
+import { ArrowRight, BadgeCheck, BedDouble, Briefcase, Building2, Car, CarFront, Gauge, Handshake, Headphones, KeyRound, ShieldCheck, Sparkles, TicketCheck, Truck, UserPlus, Users, Wrench } from 'lucide-react';
 import { db } from '@/lib/db';
 import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import { formatGhs } from '@/lib/fees';
@@ -11,21 +11,23 @@ import Reveal from '@/components/Reveal';
 import StatsCounter from '@/components/StatsCounter';
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'Mr Truth Agency | Automotive & Mobility', description: 'Automotive and mobility solutions for people, drivers and businesses.' };
+export const metadata: Metadata = { title: 'Mr Truth Agency | Full-Service Agency', description: 'Automotive, mobility, property and recruitment services for people and businesses in Ghana.' };
 
 const services = [
   ['Driver Recruitment', 'We connect skilled and reliable drivers with the right opportunities.', UserPlus, '/services/driver-recruitment'],
+  ['General Recruitment', 'Sales, admin, skilled trades, hospitality, tech — we recruit for every industry.', Briefcase, '/jobs'],
+  ['Property Management', 'Tenant sourcing, rent collection, maintenance and reporting — handled for landlords.', Building2, '/services/property-management'],
+  ['Property Rentals', 'Verified homes, apartments, offices and commercial spaces to rent.', KeyRound, '/services/property-rentals'],
+  ['Airbnb & Short-Let', 'We list, price, clean and host your property on Airbnb — you collect the income.', BedDouble, '/services/airbnb'],
   ['Fleet Management', 'End-to-end fleet solutions that maximize performance and efficiency.', Truck, '/services/fleet-management'],
   ['Car Rentals', 'Quality vehicles for rent for business, leisure and everyday needs.', Car, '/rentals'],
   ['Vehicle Sales', 'Buy and sell quality new and used vehicles with confidence.', CarFront, '/vehicles'],
   ['Spare Parts', 'Genuine spare parts for all vehicle makes and models.', Wrench, '/automotive'],
-  ['Automotive Goods', 'Wide range of automotive products and accessories you can trust.', Handshake, '/automotive'],
-  ['Automotive Services', 'Professional maintenance, repairs and diagnostics you can rely on.', ShieldCheck, '/contact'],
   ['Cleaning Services', 'House, office and deep cleaning by vetted crews — spotless, every time.', Sparkles, '/services/cleaning'],
   ['Corporate Mobility', 'Smart mobility solutions designed for businesses and organizations.', Building2, '/services']
 ] as const;
 
-const perks = ['Exclusive Discounts', 'Priority Support', 'Community Access', 'Special Events'] as const;
+const perks = ['Free for Life', 'Job Access', 'Digital ID Card', 'Member Offers'] as const;
 
 function Hero() {
   return (
@@ -37,7 +39,7 @@ function Hero() {
           <p>Your trusted partner for automotive, mobility, and smart transportation solutions. From fleet operations to vehicle sourcing, we help people and businesses keep moving.</p>
           <div className="hero-actions">
             <Link href="/services" className="btn btn-primary">EXPLORE SERVICES <ArrowRight size={15} /></Link>
-            <Link href="/fan-club/join" className="btn btn-outline">JOIN FAN CLUB</Link>
+            <Link href="/membership" className="btn btn-outline">JOIN FREE</Link>
           </div>
         </div>
         <div className="hero-visual" aria-hidden>
@@ -111,32 +113,32 @@ export default async function Home() {
                   <img src="/logo-mark.png" alt="" className="idcard-logo" width={34} height={34} />
                   <div>
                     <strong>MR TRUTH</strong>
-                    <small>FAN CLUB</small>
+                    <small>AGENCY MEMBER</small>
                   </div>
                   <span className="idcard-valid-tag">MEMBER</span>
                 </div>
                 <div className="idcard-mid">
                   <div>
-                    <p className="idcard-number" style={{ margin: 0 }}>MTFC 0001 2024</p>
-                    <span className="idcard-platform"><Sparkles size={9} /> EXCLUSIVE ACCESS</span>
+                    <p className="idcard-number" style={{ margin: 0 }}>MRTA 000001</p>
+                    <span className="idcard-platform"><Sparkles size={9} /> FREE FOR LIFE</span>
                   </div>
                 </div>
                 <div className="idcard-bottom">
-                  <div className="idcard-thru"><small>VALID THRU</small><strong>31/08/2026</strong></div>
+                  <div className="idcard-thru"><small>MEMBERSHIP</small><strong>NO FEES</strong></div>
                   <span className="idcard-status-pill good">ACTIVE</span>
                 </div>
               </div>
             </div>
             <div className="fanclub-copy">
-              <p className="kicker">JOIN THE COMMUNITY</p>
-              <h2>JOIN THE<br /><em>MR TRUTH FAN CLUB</em></h2>
-              <p>Become part of our exclusive community and enjoy amazing benefits, offers and opportunities — built for drivers, riders and mobility lovers across Africa.</p>
+              <p className="kicker">JOIN MR TRUTH AGENCY</p>
+              <h2>FREE MEMBERSHIP.<br /><em>NO FEES. EVER.</em></h2>
+              <p>Join the agency for free — get job access, a digital ID card, member offers and a direct connection to the Mr Truth ecosystem. No registration fee, no annual dues.</p>
               <div className="fanclub-perks">
                 {perks.map((perk) => (
                   <span key={perk}><BadgeCheck size={16} /> {perk}</span>
                 ))}
               </div>
-              <Link href="/fan-club/join" className="btn btn-primary">JOIN THE FAN CLUB <ArrowRight size={15} /></Link>
+              <Link href="/membership" className="btn btn-primary">JOIN FREE <ArrowRight size={15} /></Link>
             </div>
           </Reveal>
         </section>

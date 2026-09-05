@@ -29,7 +29,7 @@ export default async function Resources() {
           <div className="container">
             <p className="kicker">DRIVER RESOURCES</p>
             <h1>Resources</h1>
-            <p>Guides, policies, safety information and important documents for every Mr Truth Agency driver and Fan Club member.</p>
+            <p>Guides, policies, safety information and important documents for every Mr Truth Agency driver and member.</p>
           </div>
         </section>
         <section className="container page-body">

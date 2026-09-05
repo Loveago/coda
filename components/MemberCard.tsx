@@ -15,7 +15,7 @@ export type MemberCardProps = {
   verifyUrl: string;
 };
 
-const statusTone = { ACTIVE: 'good', DUE: 'warn', OVERDUE: 'bad', SUSPENDED: 'bad' } as const;
+const statusTone = { ACTIVE: 'good', DUE: 'good', OVERDUE: 'good', SUSPENDED: 'bad' } as const;
 
 export default function MemberCard(props: MemberCardProps) {
   const [flipped, setFlipped] = useState(false);
@@ -24,7 +24,7 @@ export default function MemberCard(props: MemberCardProps) {
   const qrSize = props.qr.length;
 
   async function share() {
-    const payload = { title: 'Mr Truth Fan Club Membership Card', text: `${props.fullName} · ${props.memberNumber}`, url: props.verifyUrl };
+    const payload = { title: 'Mr Truth Agency Membership Card', text: `${props.fullName} · ${props.memberNumber}`, url: props.verifyUrl };
     try {
       if (navigator.share) await navigator.share(payload);
       else throw new Error('no-share');
@@ -62,7 +62,7 @@ export default function MemberCard(props: MemberCardProps) {
               <img src="/logo-mark.png" alt="" className="idcard-logo" width={34} height={34} />
               <div>
                 <strong>MR TRUTH</strong>
-                <small>FAN CLUB · MEMBER COMMUNITY</small>
+                <small>AGENCY MEMBER</small>
               </div>
               <span className="idcard-valid-tag">MEMBER CARD</span>
             </div>

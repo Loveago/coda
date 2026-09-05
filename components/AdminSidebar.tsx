@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
-  BarChart3, Briefcase, CarFront, ChartPie, CreditCard, FileText, Home, Image as ImageIcon, Inbox, KeyRound,
+  BarChart3, Briefcase, CarFront, ChartPie, FileText, Home, Image as ImageIcon, Inbox,
   LayoutDashboard, LogOut, Mail, Menu, Newspaper, Package, Settings, Share2, Users, X
 } from 'lucide-react';
 
@@ -43,17 +43,14 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
       ['Applications', '/admin/applications', Inbox],
       ['Work Applications', '/admin/work-applications', Briefcase],
       ['All Job Applications', '/admin/all-work-applications', FileText],
-      ['Fan Club', '/membership', Users],
-      ['Payments', '/admin/payments', CreditCard],
-      ['Fee Settings', '/admin/settings/fees', BarChart3]
+      ['Membership Page', '/membership', Users]
     ]
   },
   {
     label: 'Communication',
     items: [
       ['Messages', '/admin/messages', Mail],
-      ['Newsletter', '/admin/subscribers', Mail],
-      ['Notifications', '/admin/settings/paystack', KeyRound]
+      ['Newsletter', '/admin/subscribers', Mail]
     ]
   },
   {

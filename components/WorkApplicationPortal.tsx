@@ -2,11 +2,8 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import {
-  Briefcase, CheckCircle2, Clock3, FileText, Loader2, MapPin, Paperclip,
-  Send, Trash2, Upload
+  Briefcase, FileText, Loader2, Paperclip, Send, Trash2
 } from 'lucide-react';
-import PayDuesButton from '@/components/PayDuesButton';
-import { formatGhs } from '@/lib/fees';
 import { EMPLOYMENT_TYPES } from '@/lib/work-applications';
 
 const label = { fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', display: 'block', marginBottom: 5, letterSpacing: '.4px' };
@@ -41,14 +38,10 @@ const employmentLabels: Record<string, string> = Object.fromEntries(
 export default function WorkApplicationPortal({
   initialApplications,
   opportunities,
-  feeEnabled,
-  feeAmount,
   memberPhone
 }: {
   initialApplications: Application[];
   opportunities: Opportunity[];
-  feeEnabled: boolean;
-  feeAmount: number;
   memberPhone?: string;
 }) {
   const [applications, setApplications] = useState(initialApplications);
@@ -59,11 +52,9 @@ export default function WorkApplicationPortal({
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // Re-check the payment state of freshly submitted applications so the "pay
-  // fee" button disappears the moment the webhook/callback settles it.
-  const hasPendingPayment = applications.some((application) => application.paymentState === 'PENDING');
+  // Keep the list fresh so members see status updates from recruiters without
+  // refreshing the page.
   useEffect(() => {
-    if (!hasPendingPayment) return;
     const timer = window.setInterval(async () => {
       try {
         const response = await fetch('/api/member/work-applications');
@@ -73,9 +64,9 @@ export default function WorkApplicationPortal({
       } catch {
         // transient — the next tick retries
       }
-    }, 15_000);
+    }, 30_000);
     return () => window.clearInterval(timer);
-  }, [hasPendingPayment]);
+  }, []);
 
   async function handleCv(file: File) {
     if (file.type !== 'application/pdf') {
@@ -133,9 +124,7 @@ export default function WorkApplicationPortal({
       if (fileRef.current) fileRef.current.value = '';
       setMessage({
         ok: true,
-        text: data.feeRequired
-          ? `Application saved! Pay the ${formatGhs(data.feeAmount)} application fee below to submit it to our recruiters.`
-          : 'Application submitted! Our recruitment team will review it and contact you.'
+        text: 'Application submitted! Our recruitment team will review it and contact you.'
       });
     } catch (error) {
       setMessage({ ok: false, text: error instanceof Error ? error.message : 'Unable to submit your application.' });
@@ -172,7 +161,7 @@ export default function WorkApplicationPortal({
         ) : (
           <div className="pay-timeline">
             {applications.map((application) => (
-              <div className={`pay-item pay-${application.paymentState === 'PENDING' ? 'pending' : 'successful'}`} key={application.id} style={{ cursor: 'default' }}>
+              <div className="pay-item pay-successful" key={application.id} style={{ cursor: 'default' }}>
                 <span className="pay-item-main">
                   <strong>{application.position}</strong>
                   <small>
@@ -182,20 +171,8 @@ export default function WorkApplicationPortal({
                   {application.cvUrl && <a href={application.cvUrl} target="_blank" rel="noreferrer" className="admin-link" style={{ fontSize: 11 }}><Paperclip size={11} style={{ verticalAlign: -1 }} /> MY CV</a>}
                 </span>
                 <span className="pay-item-side" style={{ display: 'grid', gap: 6, justifyItems: 'end' }}>
-                  {application.paymentState === 'PENDING' ? (
-                    <PayDuesButton
-                      type="WORK_APPLICATION_FEE"
-                      workApplicationId={application.id}
-                      label={`PAY ${formatGhs(feeAmount)} TO SUBMIT`}
-                      className="btn btn-primary"
-                    />
-                  ) : (
-                    <span className={`badge ${statusTone[application.status] || 'badge-PENDING'}`}>{application.status}</span>
-                  )}
-                  {application.paymentState === 'PENDING' && (
-                    <span style={{ fontSize: 10.5, color: 'var(--muted)', display: 'inline-flex', alignItems: 'center', gap: 4 }}><Clock3 size={11} /> Awaiting payment</span>
-                  )}
-                  {application.paymentState === 'PENDING' && (
+                  <span className={`badge ${statusTone[application.status] || 'badge-PENDING'}`}>{application.status}</span>
+                  {application.status === 'NEW' && (
                     <button type="button" className="admin-action danger" style={{ fontSize: 10 }} disabled={busy} onClick={() => withdraw(application.id)}>
                       <Trash2 size={11} /> WITHDRAW
                     </button>
@@ -205,11 +182,6 @@ export default function WorkApplicationPortal({
             ))}
           </div>
         )}
-        {feeEnabled && applications.some((a) => a.paymentState === 'PENDING') && (
-          <p className="admin-note" style={{ marginTop: 12 }}>
-            <CheckCircle2 size={13} style={{ verticalAlign: -2, color: 'var(--accent)' }} /> Applications are only sent to recruiters once the {formatGhs(feeAmount)} application fee is confirmed.
-          </p>
-        )}
       </section>
 
       {/* ===== New application ===== */}
@@ -217,7 +189,7 @@ export default function WorkApplicationPortal({
         <h2 style={{ display: 'flex', alignItems: 'center', gap: 9 }}><Send size={18} /> Apply for Work</h2>
         {opportunities.length > 0 && (
           <p className="admin-note" style={{ marginBottom: 14 }}>
-            We are currently recruiting for: <strong>{opportunities.map((opportunity) => opportunity.title).join(' and ')}</strong>. Pick a track below and tell us about yourself.
+            We are currently recruiting for: <strong>{opportunities.map((opportunity) => opportunity.title).join(' and ')}</strong>. Pick a track below and tell us about yourself — or apply for any role from the <a href="/jobs" className="admin-link">general job board</a>.
           </p>
         )}
         <form onSubmit={submit} style={{ display: 'grid', gap: 14 }}>
@@ -304,7 +276,7 @@ export default function WorkApplicationPortal({
             <button className="btn btn-primary" disabled={busy || uploading} style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
               {busy ? <Loader2 size={15} className="spin" /> : <Send size={15} />} {busy ? 'SUBMITTING...' : 'SUBMIT APPLICATION'}
             </button>
-            {feeEnabled && <span style={{ fontSize: 12, color: 'var(--muted)', display: 'inline-flex', alignItems: 'center', gap: 6 }}><MapPin size={12} /> A {formatGhs(feeAmount)} application fee applies after submission.</span>}
+            <span style={{ fontSize: 12, color: 'var(--muted)' }}>Free for members — no application fee.</span>
           </div>
         </form>
         {message && <p role="status" className={message.ok ? 'status-ok' : 'status-err'} style={{ marginTop: 12, fontSize: 12.5 }}>{message.text}</p>}

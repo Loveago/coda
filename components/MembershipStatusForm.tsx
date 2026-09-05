@@ -12,9 +12,8 @@ type Result = {
 };
 
 const statusCopy: Record<string, string> = {
-  AWAITING_PAYMENT: 'Your account is created — but your application is not yet submitted. Complete the one-time registration fee from your member portal and your application will be sent to our membership committee immediately.',
   PENDING: 'Your application is under review. Our membership team will contact you soon.',
-  APPROVED: 'Congratulations! Your application has been approved. Welcome to the Mr Truth Fan Club!',
+  APPROVED: 'Congratulations! Your application has been approved. Welcome to Mr Truth Agency — membership is free for life!',
   REJECTED: 'Unfortunately your application was not approved at this time. Please contact the Mr Truth Agency team for details.',
   SUSPENDED: 'Your membership is currently suspended. Please contact the Mr Truth team for more information.'
 };
@@ -71,7 +70,7 @@ export default function MembershipStatusForm() {
         <div style={{ marginTop: 18, animation: 'riseIn .5s cubic-bezier(.22,.61,.36,1) both' }} role="status">
           <div className={`status-card status-${result.status}`}>
             <span style={{ fontSize: 11, letterSpacing: 1.6, opacity: .85 }}>APPLICATION STATUS</span>
-            <strong>{result.status === 'AWAITING_PAYMENT' ? 'AWAITING PAYMENT' : result.status}</strong>
+            <strong>{result.status}</strong>
             <p style={{ margin: '8px 0 0', fontSize: 13, lineHeight: 1.55, maxWidth: 480 }}>{statusCopy[result.status]}</p>
             <small style={{ display: 'block', marginTop: 12, opacity: .8, fontSize: 11 }}>
               Applicant: {result.name} · Submitted {result.submittedAt ? new Intl.DateTimeFormat('en-GB', { dateStyle: 'long' }).format(new Date(result.submittedAt)) : ''}

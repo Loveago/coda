@@ -129,7 +129,7 @@ export default async function AdminFinance() {
             <span className="fin-chip"><Wallet size={13} /> last 12 months</span>
           </div>
           {data.totalRevenue === 0 ? (
-            <p className="admin-note">No successful payments recorded yet. Revenue charts will appear as dues and registration fees come in.</p>
+            <p className="admin-note">No successful payments recorded yet. Membership is free — this chart tracks any historical or voluntary payments.</p>
           ) : (
             <Sparkline months={data.months} />
           )}

@@ -25,7 +25,7 @@ export default async function IdCard() {
   if (!member) redirect('/login');
 
   const computed = computeMembershipStatus(member);
-  const cardStatus = computed === 'ACTIVE' ? 'ACTIVE' : computed === 'DUE' ? 'DUE' : computed === 'OVERDUE' ? 'OVERDUE' : 'SUSPENDED';
+  const cardStatus = member.status === 'SUSPENDED' ? 'SUSPENDED' : 'ACTIVE';
 
   const signature = cardSignature(member.memberNumber);
   const verifyUrl = `${siteUrl()}/verify-card?number=${encodeURIComponent(member.memberNumber)}&code=${signature}`;
@@ -54,9 +54,7 @@ export default async function IdCard() {
 
       {cardStatus !== 'ACTIVE' && (
         <p className="admin-note no-print" style={{ maxWidth: 420, marginTop: 18 }}>
-          {member.membershipEndDate
-            ? <>This card is not currently valid. <Link href="/member/dashboard" className="admin-link">Renew your annual dues</Link> to reactivate it instantly.</>
-            : <>Your annual dues are still unpaid, so this card is not yet active. <Link href="/member/dashboard" className="admin-link">Pay your membership dues</Link> to activate it instantly.</>}
+          This card is not currently active because your membership is suspended. Please contact the Mr Truth team.
         </p>
       )}
 

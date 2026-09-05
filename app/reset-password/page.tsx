@@ -36,7 +36,7 @@ function ResetForm() {
       <form onSubmit={submit} className="login-card">
         <div className="brand">
           <img src="/logo-mark.png" alt="Mr Truth Agency logo" className="brand-logo" width={51} height={51} />
-          <div><div className="brand-name">MR TRUTH</div><small className="brand-sub">FAN CLUB · MEMBER PORTAL</small></div>
+          <div><div className="brand-name">MR TRUTH</div><small className="brand-sub">MR TRUTH AGENCY · MEMBER PORTAL</small></div>
         </div>
         <h1>Choose a new password</h1>
         {done ? (

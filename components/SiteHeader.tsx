@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { ArrowRight, Car, CarFront, ChevronDown, LogIn, Mail, MapPin, Megaphone, Menu, Phone, Sparkles, UserPlus, Wrench, X } from 'lucide-react';
+import { ArrowRight, BedDouble, Briefcase, Building2, Car, CarFront, ChevronDown, Home, LogIn, Mail, MapPin, Megaphone, Menu, Phone, Sparkles, UserPlus, Wrench, X } from 'lucide-react';
 import SocialIcon from '@/components/SocialIcon';
 import type { SocialLink } from '@/lib/settings';
 
@@ -15,6 +15,10 @@ const links = [
 const serviceLinks = [
   ['All Services', '/services', ArrowRight],
   ['Driver Recruitment', '/services/driver-recruitment', UserPlus],
+  ['General Recruitment', '/jobs', Briefcase],
+  ['Property Management', '/services/property-management', Building2],
+  ['Property Rentals', '/services/property-rentals', Home],
+  ['Airbnb & Short-Let', '/services/airbnb', BedDouble],
   ['Fleet Management', '/services/fleet-management', Car],
   ['Vehicles', '/vehicles', CarFront],
   ['Car Rentals', '/rentals', CarFront],
@@ -23,7 +27,7 @@ const serviceLinks = [
 ] as const;
 
 const tailLinks = [
-  ['Fan Club', '/membership'],
+  ['Membership', '/membership'],
   ['News', '/news'],
   ['Contact Us', '/contact']
 ];
@@ -71,7 +75,7 @@ export default function SiteHeader({
   useEffect(() => { setOpen(false); setServicesOpen(false); }, [pathname]);
 
   const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
-  const servicesActive = pathname.startsWith('/services') || pathname === '/vehicles' || pathname === '/rentals' || pathname === '/automotive';
+  const servicesActive = pathname.startsWith('/services') || pathname === '/vehicles' || pathname === '/rentals' || pathname === '/automotive' || pathname === '/jobs';
 
   function dismiss() {
     if (announcement) window.localStorage.setItem(`mrtruth-announcement-${announcement.key}`, 'dismissed');
@@ -135,7 +139,7 @@ export default function SiteHeader({
             ))}
           </div>
           <div className="nav-cta nav-actions">
-            <Link className="btn btn-primary" href="/fan-club/join">JOIN FAN CLUB</Link>
+            <Link className="btn btn-primary" href="/membership">JOIN FREE</Link>
           </div>
           <button
             type="button"
@@ -173,8 +177,8 @@ export default function SiteHeader({
         </nav>
         <div className="drawer-cta drawer-actions">
           <Link href="/login" className="btn btn-ghost" tabIndex={open ? 0 : -1}><LogIn size={14} /> SIGN IN</Link>
-          <Link href="/fan-club/join" className="btn btn-primary" tabIndex={open ? 0 : -1}>
-            JOIN FAN CLUB <ArrowRight size={15} />
+          <Link href="/membership" className="btn btn-primary" tabIndex={open ? 0 : -1}>
+            JOIN FREE <ArrowRight size={15} />
           </Link>
         </div>
         <div className="drawer-contact">

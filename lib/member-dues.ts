@@ -1,16 +1,11 @@
-import { RENEWAL_WINDOW_DAYS } from '@/lib/membership';
-
 export type DuesState = 'PAID' | 'DUE_SOON' | 'EXPIRED' | 'UNPAID';
 
 /**
- * Annual-dues state derived purely from the membership period. A member with no
- * period at all has simply never paid dues (approval alone never grants one).
+ * Membership is free and lifetime, so every approved member is always in good
+ * standing. The legacy dues states remain in the type so historical records
+ * (membership periods recorded before fees were retired) still render.
  */
-export function duesState(end: Date | null): DuesState {
-  if (!end) return 'UNPAID';
-  const now = Date.now();
-  if (end.getTime() < now) return 'EXPIRED';
-  if (end.getTime() - now <= RENEWAL_WINDOW_DAYS * 86_400_000) return 'DUE_SOON';
+export function duesState(_end: Date | null): DuesState {
   return 'PAID';
 }
 

@@ -15,9 +15,8 @@ const links = [
   { href: '/member/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
   { href: '/member/profile', label: 'My Profile', Icon: UserRound },
   { href: '/membership', label: 'Membership', Icon: Sparkles },
-  { href: '/member/work', label: 'Work & Pay', Icon: Briefcase },
-  { href: '/member/payments', label: 'Payments', Icon: CreditCard },
-  { href: '/member/id-card', label: 'My Benefits', Icon: IdCard },
+  { href: '/member/work', label: 'Work & Jobs', Icon: Briefcase },
+  { href: '/member/id-card', label: 'ID Card', Icon: IdCard },
   { href: '/news', label: 'Events', Icon: CalendarDays },
   { href: '/automotive', label: 'Offers', Icon: Gift },
   { href: '/member/profile', label: 'Settings', Icon: Settings },
@@ -27,7 +26,6 @@ const links = [
 const tabLinks = [
   { href: '/member/dashboard', label: 'Home', Icon: LayoutDashboard },
   { href: '/member/work', label: 'Work', Icon: Briefcase },
-  { href: '/member/payments', label: 'Payments', Icon: CreditCard },
   { href: '/member/id-card', label: 'ID Card', Icon: IdCard },
   { href: '/member/profile', label: 'More', Icon: UserRound }
 ] as const;
@@ -48,10 +46,10 @@ export default function MemberNav({ member }: { member: NavMember }) {
       {/* ===== Desktop sidebar ===== */}
       <aside className="msidebar">
         <Link href="/" className="admin-brand">
-          <img src="/logo-mark.png" alt="Mr Truth Fan Club logo" className="brand-logo" width={42} height={42} />
+          <img src="/logo-mark.png" alt="Mr Truth Agency member logo" className="brand-logo" width={42} height={42} />
           <div>
             <div className="brand-name">MR TRUTH</div>
-            <small className="brand-sub" style={{ color: '#FFD2B3' }}>FAN CLUB</small>
+            <small className="brand-sub" style={{ color: '#FFD2B3' }}>AGENCY MEMBER</small>
           </div>
         </Link>
         <div className="admin-nav-group">
@@ -105,7 +103,7 @@ export default function MemberNav({ member }: { member: NavMember }) {
       <header className="mtopbar">
         <Link href="/member/dashboard" className="mtop-brand" aria-label="Mr Truth member home">
           <img src="/logo-mark.png" alt="" className="mtop-mark" width={32} height={32} />
-          <span className="mtop-name">MR TRUTH<small>FAN CLUB</small></span>
+          <span className="mtop-name">MR TRUTH<small>AGENCY MEMBER</small></span>
         </Link>
         <div className="mtop-actions">
           <Link href="/member/profile" className="mtop-avatar" aria-label="My profile">{avatar}</Link>

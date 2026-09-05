@@ -1,4 +1,4 @@
-import { PrismaClient, ArticleStatus, MemberStatus, PaymentStatus, PaymentType, RegistrationPaymentState, Role } from '@prisma/client';
+import { PrismaClient, ArticleStatus, MemberStatus, Role } from '@prisma/client';
 import { hashPassword } from '../lib/password';
 
 const prisma = new PrismaClient();
@@ -25,20 +25,18 @@ async function main() {
   const demoNameParts = (process.env.DEMO_MEMBER_NAME?.trim() || 'Kwame Mensah').split(/\s+/);
 
   const demoMember = await prisma.member.upsert({
-    where: { memberNumber: 'MRTF-900001' },
+    where: { memberNumber: 'MRTA-900001' },
     update: {
       status: MemberStatus.APPROVED,
       email: demoEmail,
       firstName: demoNameParts[0],
       lastName: demoNameParts.slice(1).join(' ') || 'Member',
       passwordHash: await hashPassword(demoPassword),
-      registrationPayment: RegistrationPaymentState.PAID,
-      membershipStartDate: membershipStart,
-      membershipEndDate: membershipEnd,
+      registrationPayment: 'NOT_REQUIRED',
       emailVerified: true
     },
     create: {
-      memberNumber: 'MRTF-900001',
+      memberNumber: 'MRTA-900001',
       email: demoEmail,
       passwordHash: await hashPassword(demoPassword),
       firstName: demoNameParts[0],
@@ -56,25 +54,7 @@ async function main() {
       emergencyRelationship: 'Spouse',
       status: MemberStatus.APPROVED,
       emailVerified: true,
-      registrationPayment: RegistrationPaymentState.PAID,
-      membershipStartDate: membershipStart,
-      membershipEndDate: membershipEnd
-    }
-  });
-
-  await prisma.payment.upsert({
-    where: { reference: 'DEMO-ANNUAL-DUES-000001' },
-    update: { status: PaymentStatus.SUCCESSFUL, paidAt: membershipStart },
-    create: {
-      memberId: demoMember.id,
-      type: PaymentType.ANNUAL_DUES,
-      amount: 200,
-      currency: 'GHS',
-      reference: 'DEMO-ANNUAL-DUES-000001',
-      provider: 'demo',
-      providerTransactionId: 'demo_txn_000001',
-      status: PaymentStatus.SUCCESSFUL,
-      paidAt: membershipStart
+      registrationPayment: 'NOT_REQUIRED'
     }
   });
 

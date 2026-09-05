@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Verify Membership Card',
-  description: 'Verify the authenticity of a Mr Truth Fan Club membership card.'
+  description: 'Verify the authenticity of a Mr Truth Agency membership card.'
 };
 
 const mediumDate = new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium' });
@@ -41,17 +41,10 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
       outcome = { tone: 'bad', heading: 'Card could not be verified', message: 'We could not confirm this card in our records. It may be forged or damaged — please contact the Mr Truth team.' };
     } else {
       member = found;
-      const computed = computeMembershipStatus(found);
-      if (computed === 'ACTIVE') {
-        outcome = { tone: 'ok', heading: 'Valid membership', message: 'This card belongs to an active Mr Truth Fan Club member in good standing.' };
-      } else if (computed === 'DUE') {
-        outcome = found.membershipEndDate
-          ? { tone: 'warn', heading: 'Renewal due', message: 'The member is recognised, but annual dues are due for renewal.' }
-          : { tone: 'warn', heading: 'Dues not yet paid', message: 'This membership is approved, but the annual dues have not been paid yet, so the card is not fully active.' };
-      } else if (computed === 'OVERDUE') {
-        outcome = { tone: 'warn', heading: 'Membership expired', message: 'This member is recognised, but their membership has expired.' };
+      if (found.status === 'SUSPENDED') {
+        outcome = { tone: 'bad', heading: 'Card not active', message: 'This membership is currently suspended. Please contact the Mr Truth team for details.' };
       } else {
-        outcome = { tone: 'bad', heading: 'Card not active', message: 'This membership is not currently active. Please contact the Mr Truth team for details.' };
+        outcome = { tone: 'ok', heading: 'Valid membership', message: 'This card belongs to an active Mr Truth Agency member in good standing. Membership is free for life.' };
       }
     }
   }
@@ -69,7 +62,7 @@ export default async function VerifyCardPage({ searchParams }: { searchParams: P
           <div className="container">
             <p className="kicker">VERIFICATION</p>
             <h1>Membership Card Check</h1>
-            <p>Confirm that a Mr Truth Fan Club membership card is genuine and currently valid.</p>
+            <p>Confirm that a Mr Truth Agency membership card is genuine and currently valid.</p>
           </div>
         </section>
         <section className="container page-body">

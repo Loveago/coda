@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 const requirements = ['Valid driving licence and required documentation', 'Professional communication and customer-service mindset', 'Relevant driving experience for the opportunity selected'];
-const process = ['Join the Mr Truth Fan Club', 'Apply from your member dashboard', 'Our team reviews and contacts you'];
+const process = ['Join Mr Truth Agency free', 'Apply from your member dashboard', 'Our team reviews and contacts you'];
 
 export default async function DriverRecruitmentPage() {
   // Only the two active tracks are advertised: Work and Pay, and Daily Sales.
@@ -29,7 +29,7 @@ export default async function DriverRecruitmentPage() {
             <p>Approved members apply for our <strong>Work and Pay</strong> and <strong>Daily Sales</strong> tracks directly from their dashboard — track every application and its status in one place.</p>
             <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 22 }}>
               <Link href="/member/work" className="btn btn-primary">APPLY FROM MY DASHBOARD <ArrowRight size={15} /></Link>
-              <Link href="/fan-club/join" className="btn btn-outline">BECOME A MEMBER</Link>
+              <Link href="/membership" className="btn btn-outline">JOIN FREE</Link>
             </div>
           </div>
         </section>

@@ -3,10 +3,8 @@ import { z } from 'zod';
 import { db } from '@/lib/db';
 import { hashPassword } from '@/lib/password';
 import { rateLimit, requestAddress } from '@/lib/rate-limit';
-import { getFees } from '@/lib/fees';
 import { nextMemberNumber } from '@/lib/membership';
 import { MEMBER_SESSION_COOKIE, MEMBER_SESSION_MAX_AGE, createMemberSessionToken, generateToken, hashToken } from '@/lib/members-auth';
-import { createPaymentIntent } from '@/lib/payments/payment-service';
 
 // Ghana Card numbers follow the format GHC-XXXXXXXXX-X (9 digits, then a check digit).
 const ghanaCardSchema = z
@@ -45,15 +43,15 @@ const schema = z.object({
 
 /**
  * A stored member record only blocks a new signup while it represents a live
- * account. Rejected applications and abandoned drafts (PENDING with the
- * registration fee still unpaid) never reach the admin panel — they are
- * invisible there — so they used to lock an email forever after the applicant
- * gave up. Such leftovers are reclaimed: the stale record is removed and the
- * new signup proceeds with a fresh member number.
+ * account. Rejected applications and abandoned drafts (PENDING records that
+ * never verified their email) never reach the admin panel — they are invisible
+ * there — so they used to lock an email forever after the applicant gave up.
+ * Such leftovers are reclaimed: the stale record is removed and the new signup
+ * proceeds with a fresh member number.
  */
-function isReclaimable(member: { status: string; registrationPayment: string }) {
+function isReclaimable(member: { status: string; emailVerified: boolean }) {
   if (member.status === 'REJECTED') return true;
-  return member.status === 'PENDING' && member.registrationPayment === 'PENDING';
+  return member.status === 'PENDING' && !member.emailVerified;
 }
 
 async function reclaimMember(id: string) {
@@ -106,7 +104,6 @@ export async function POST(request: Request) {
   if (existing) await reclaimMember(existing.id);
   if (cardCollision && cardCollision.id !== existing?.id) await reclaimMember(cardCollision.id);
 
-  const fees = await getFees();
   const member = await db.member.create({
     data: {
       memberNumber: await nextMemberNumber(),
@@ -130,7 +127,7 @@ export async function POST(request: Request) {
       emergency2Phone: data.emergency2Phone,
       emergency2Relationship: data.emergency2Relationship,
       status: 'PENDING',
-      registrationPayment: fees.registrationFeeEnabled ? 'PENDING' : 'NOT_REQUIRED'
+      registrationPayment: 'NOT_REQUIRED'
     }
   });
 
@@ -144,33 +141,11 @@ export async function POST(request: Request) {
   const origin = new URL(request.url).origin;
   const devVerifyUrl = `${origin}/verify-email?token=${token}`;
 
-  // Pay-first flow: the applicant is auto-logged-in and we immediately create
-  // the registration-fee payment intent so the browser can be redirected to
-  // Paystack right after "Submit Application". The application only reaches
-  // the admin panel once the fee is settled (webhook / callback verification).
-  // If Paystack initialization fails we still keep the draft application and
-  // tell the client to retry payment from the portal — no data is lost.
-  let authorizationUrl: string | undefined;
-  let paymentReference: string | undefined;
-  let paymentStartError: string | undefined;
-  if (fees.registrationFeeEnabled) {
-    try {
-      const intent = await createPaymentIntent(member.id, 'REGISTRATION_FEE', origin);
-      authorizationUrl = intent.authorizationUrl;
-      paymentReference = intent.reference;
-    } catch (error) {
-      paymentStartError = error instanceof Error ? error.message : 'Unable to start the payment.';
-    }
-  }
-
+  // Membership is completely free — the applicant is auto-logged-in and the
+  // application goes straight into the review queue.
   const response = NextResponse.json({
     success: true,
     memberNumber: member.memberNumber,
-    registrationFeeRequired: fees.registrationFeeEnabled,
-    registrationFeeAmount: fees.registrationFeeEnabled ? fees.registrationFeeAmount : 0,
-    authorizationUrl,
-    paymentReference,
-    paymentStartError,
     devVerifyUrl: process.env.SMTP_URL ? undefined : devVerifyUrl
   }, { status: 201 });
   response.cookies.set(MEMBER_SESSION_COOKIE, createMemberSessionToken(member.id), {
