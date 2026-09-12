@@ -16,7 +16,18 @@ type Result = {
 export default function MembershipForm() {
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
+  const [registrationCode, setRegistrationCode] = useState('');
   const redirected = useRef(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const codeParam = params.get('code') || params.get('ref') || '';
+      if (codeParam) {
+        setRegistrationCode(codeParam.trim().toUpperCase());
+      }
+    }
+  }, []);
 
   // Once the account is created we land the applicant on the confirmation.
   useEffect(() => {
@@ -118,6 +129,22 @@ export default function MembershipForm() {
       <div className="form-grid">
         <div><label style={label}>Email address *</label><input name="email" type="email" required className="field" /></div>
         <div><label style={label}>Password * (min 8 characters)</label><input name="password" type="password" required minLength={8} className="field" /></div>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label style={label}>Registration Code *</label>
+          <input
+            name="registrationCode"
+            required
+            placeholder="e.g. MTA-9X4K2P"
+            value={registrationCode}
+            onChange={(e) => setRegistrationCode(e.target.value.toUpperCase())}
+            className="field"
+            style={{ textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}
+            autoComplete="off"
+          />
+          <small style={{ color: 'var(--muted)', fontSize: 11.5, marginTop: 5, display: 'block' }}>
+            A valid registration / invitation code is required to sign up. If you do not have a code, please contact an agency administrator.
+          </small>
+        </div>
       </div>
 
       <p className="admin-note" style={{ marginTop: 18 }}>

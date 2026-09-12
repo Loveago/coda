@@ -38,7 +38,8 @@ const schema = z.object({
   emergencyRelationship: z.string().trim().min(2),
   emergency2Name: z.string().trim().min(2),
   emergency2Phone: z.string().trim().min(7),
-  emergency2Relationship: z.string().trim().min(2)
+  emergency2Relationship: z.string().trim().min(2),
+  registrationCode: z.string({ required_error: 'Registration code is required.' }).trim().min(1, 'Registration code is required.')
 });
 
 /**
@@ -55,11 +56,11 @@ function isReclaimable(member: { status: string; emailVerified: boolean }) {
 }
 
 async function reclaimMember(id: string) {
-  await db.$transaction(async (tx) => {
-    await tx.memberToken.deleteMany({ where: { memberId: id } });
-    await tx.payment.deleteMany({ where: { memberId: id } });
-    await tx.member.delete({ where: { id } });
-  });
+  await db.$transaction([
+    db.memberToken.deleteMany({ where: { memberId: id } }),
+    db.payment.deleteMany({ where: { memberId: id } }),
+    db.member.delete({ where: { id } })
+  ]);
 }
 
 export async function POST(request: Request) {
@@ -77,15 +78,33 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     const first = parsed.error.issues[0];
     const field = first?.path[0];
-    // Surface format problems (e.g. the Ghana Card pattern) directly, but keep
-    // the generic prompt for missing/blank required fields.
+    // Surface format problems (e.g. the Ghana Card pattern or missing code) directly,
+    // but keep the generic prompt for missing/blank required fields.
     const message = field === 'ghanaCardNumber'
       ? first.message
-      : 'Please complete all required fields correctly (password must be at least 8 characters).';
+      : field === 'registrationCode'
+        ? (first.message === 'Required' ? 'Registration code is required.' : first.message)
+        : 'Please complete all required fields correctly (password must be at least 8 characters).';
     return NextResponse.json({ error: message }, { status: 400 });
   }
   const data = parsed.data;
   const email = data.email.toLowerCase();
+
+  // Validate the registration code
+  const rawCode = data.registrationCode.trim().toUpperCase();
+  const regCode = await db.registrationCode.findUnique({ where: { code: rawCode } });
+  if (!regCode) {
+    return NextResponse.json({ error: 'Invalid registration code. A valid invitation code is required to sign up.' }, { status: 400 });
+  }
+  if (!regCode.active) {
+    return NextResponse.json({ error: 'This registration code has been disabled. Please contact an administrator.' }, { status: 400 });
+  }
+  if (regCode.expiresAt && regCode.expiresAt < new Date()) {
+    return NextResponse.json({ error: 'This registration code has expired. Please request a new code to sign up.' }, { status: 400 });
+  }
+  if (regCode.maxUses > 0 && regCode.usedCount >= regCode.maxUses) {
+    return NextResponse.json({ error: 'This registration code has reached its maximum allowed uses.' }, { status: 400 });
+  }
 
   const existing = await db.member.findUnique({ where: { email } });
   if (existing && !isReclaimable(existing)) {
@@ -104,42 +123,55 @@ export async function POST(request: Request) {
   if (existing) await reclaimMember(existing.id);
   if (cardCollision && cardCollision.id !== existing?.id) await reclaimMember(cardCollision.id);
 
-  const member = await db.member.create({
-    data: {
-      memberNumber: await nextMemberNumber(),
-      email,
-      passwordHash: await hashPassword(data.password),
-      firstName: data.firstName,
-      lastName: data.lastName,
-      phone: data.phone,
-      ghanaCardNumber: data.ghanaCardNumber,
-      dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
-      gender: data.gender || null,
-      location: data.location || null,
-      platform: data.platform || null,
-      yearsExperience: data.yearsExperience ?? null,
-      vehicleInfo: data.vehicleInfo || null,
-      vehicleRegistration: data.vehicleRegistration || null,
-      emergencyName: data.emergencyName,
-      emergencyPhone: data.emergencyPhone,
-      emergencyRelationship: data.emergencyRelationship,
-      emergency2Name: data.emergency2Name,
-      emergency2Phone: data.emergency2Phone,
-      emergency2Relationship: data.emergency2Relationship,
-      status: 'PENDING',
-      registrationPayment: 'NOT_REQUIRED'
-    }
-  });
-
-  const token = generateToken();
-  await db.memberToken.create({
-    data: { memberId: member.id, tokenHash: hashToken(token), type: 'EMAIL_VERIFICATION', expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 48) }
-  });
-
-  // Email delivery is provider-abstracted; without SMTP configured we surface
-  // the verification link directly so the flow remains testable.
   const origin = new URL(request.url).origin;
-  const devVerifyUrl = `${origin}/verify-email?token=${token}`;
+  const memberNum = await nextMemberNumber();
+  const passwordHash = await hashPassword(data.password);
+
+  const { member, devVerifyUrl } = await db.$transaction(async (tx) => {
+    // Increment code usage
+    await tx.registrationCode.update({
+      where: { id: regCode.id },
+      data: { usedCount: { increment: 1 } }
+    });
+
+    const newMember = await tx.member.create({
+      data: {
+        memberNumber: memberNum,
+        email,
+        passwordHash,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        ghanaCardNumber: data.ghanaCardNumber,
+        dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : null,
+        gender: data.gender || null,
+        location: data.location || null,
+        platform: data.platform || null,
+        yearsExperience: data.yearsExperience ?? null,
+        vehicleInfo: data.vehicleInfo || null,
+        vehicleRegistration: data.vehicleRegistration || null,
+        emergencyName: data.emergencyName,
+        emergencyPhone: data.emergencyPhone,
+        emergencyRelationship: data.emergencyRelationship,
+        emergency2Name: data.emergency2Name,
+        emergency2Phone: data.emergency2Phone,
+        emergency2Relationship: data.emergency2Relationship,
+        status: 'PENDING',
+        registrationPayment: 'NOT_REQUIRED',
+        registrationCodeId: regCode.id
+      }
+    });
+
+    const token = generateToken();
+    await tx.memberToken.create({
+      data: { memberId: newMember.id, tokenHash: hashToken(token), type: 'EMAIL_VERIFICATION', expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 48) }
+    });
+
+    return {
+      member: newMember,
+      devVerifyUrl: `${origin}/verify-email?token=${token}`
+    };
+  }, { maxWait: 10000, timeout: 25000 });
 
   // Membership is completely free — the applicant is auto-logged-in and the
   // application goes straight into the review queue.

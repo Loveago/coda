@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   BarChart3, Briefcase, CarFront, ChartPie, FileText, Home, Image as ImageIcon, Inbox,
-  LayoutDashboard, LogOut, Mail, Menu, Newspaper, Package, Settings, Share2, Users, X
+  KeyRound, LayoutDashboard, LogOut, Mail, Menu, Newspaper, Package, Settings, Share2, Users, X
 } from 'lucide-react';
 
 const groups: { label: string; items: [string, string, typeof LayoutDashboard][] }[] = [
@@ -58,6 +58,7 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
     items: [
       ['Team', '/admin/team', Users],
       ['Settings', '/admin/settings', Settings],
+      ['Registration Codes', '/admin/settings/codes', KeyRound],
       ['Social Links', '/admin/settings/social', Share2]
     ]
   }

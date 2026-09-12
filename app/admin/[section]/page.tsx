@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { db } from '@/lib/db';
 import AdminManagementTable from '@/components/AdminManagementTable';
 import GalleryManager from '@/components/GalleryManager';
@@ -135,6 +136,31 @@ export default async function AdminSection({ params }: { params: Promise<{ secti
           {exportLink}
         </div>
         <AdminManagementTable resource="work-applications" records={records} />
+      </main>
+    );
+  }
+
+  if (section === 'settings') {
+    return (
+      <main>
+        <div className="admin-page-head">
+          <div>
+            <p className="kicker" style={{ color: 'var(--blue)' }}>AGENCY OPERATIONS</p>
+            <h1>Site Settings</h1>
+            <p style={{ color: 'var(--muted)', fontSize: 13, margin: '6px 0 0' }}>
+              Manage system configuration, registration codes, and public site properties.
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Link href="/admin/settings/codes" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              REGISTRATION CODES →
+            </Link>
+            <Link href="/admin/settings/social" className="btn btn-ghost">
+              SOCIAL LINKS →
+            </Link>
+          </div>
+        </div>
+        <AdminManagementTable resource="settings" records={records} />
       </main>
     );
   }
