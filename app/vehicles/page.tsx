@@ -1,21 +1,32 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Fuel, Gauge, Users } from 'lucide-react';
+import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import SiteFooter from '@/components/SiteFooter';
 import SiteHeader from '@/components/SiteHeader';
 import { db } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Vehicles', description: 'Explore vehicle sourcing and sales through Mr Truth Agency.' };
 
 export default async function VehiclesPage() {
-  const vehicles = await db.vehicle.findMany({
-    where: { availability: { not: 'SOLD' } },
-    include: { images: { orderBy: { position: 'asc' }, take: 1 } },
-    orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
-  });
+  const [vehicles, site] = await Promise.all([
+    db.vehicle.findMany({
+      where: { availability: { not: 'SOLD' } },
+      include: { images: { orderBy: { position: 'asc' }, take: 1 } },
+      orderBy: [{ featured: 'desc' }, { createdAt: 'desc' }],
+    }),
+    getSiteSettings()
+  ]);
   return (
     <>
-      <SiteHeader />
+      <SiteHeader
+        phone={site.contact_phone}
+        email={site.contact_email}
+        address={site.address_locality}
+        announcement={site.announcement_enabled === 'true' && site.announcement_text ? { text: site.announcement_text, key: announcementKey(site.announcement_text) } : null}
+        socials={socialLinks(site)}
+      />
       <main>
         <section className="page-hero">
           <div className="container">
@@ -57,7 +68,13 @@ export default async function VehiclesPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter
+        phone={site.contact_phone}
+        email={site.contact_email}
+        whatsapp={site.whatsapp_number}
+        address={site.address_locality}
+        socials={socialLinks(site)}
+      />
     </>
   );
 }

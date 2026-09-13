@@ -3,7 +3,7 @@ import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import FloatingActions from '@/components/FloatingActions';
 import NewsletterForm from '@/components/NewsletterForm';
 import SocialIcon from '@/components/SocialIcon';
-import type { SocialLink } from '@/lib/settings';
+import { getSiteSettings, socialLinks, type SocialLink } from '@/lib/settings';
 
 const quickLinks = [
   ['About Us', '/about'],
@@ -28,17 +28,26 @@ const serviceLinks = [
   ['Cleaning Services', '/services/cleaning']
 ];
 
-export default function SiteFooter({
-  phone = '+233 234 123 4567',
-  email = 'info@mrtruthagency.com',
+export default async function SiteFooter({
+  phone,
+  email,
   whatsapp,
-  socials = []
+  address,
+  socials
 }: {
   phone?: string;
   email?: string;
   whatsapp?: string;
+  address?: string;
   socials?: SocialLink[];
-}) {
+} = {}) {
+  const site = await getSiteSettings();
+  const activePhone = phone ?? site.contact_phone;
+  const activeEmail = email ?? site.contact_email;
+  const activeWhatsapp = whatsapp ?? site.whatsapp_number;
+  const activeAddress = address ?? site.address_locality ?? 'Accra, Ghana';
+  const activeSocials = (socials && socials.length > 0) ? socials : socialLinks(site);
+
   return (
     <>
       <footer className="footer">
@@ -52,9 +61,9 @@ export default function SiteFooter({
               </div>
             </div>
             <p>Your trusted partner for automotive, mobility and smart transportation solutions in Africa.</p>
-            {socials.length > 0 && (
+            {activeSocials.length > 0 && (
               <span className="footer-social-row" aria-label="Mr Truth Agency on social media">
-                {socials.map((social) => (
+                {activeSocials.map((social) => (
                   <a key={social.key} href={social.url} target="_blank" rel="noreferrer me" aria-label={social.label}>
                     <SocialIcon platform={social.key} size={15} />
                   </a>
@@ -76,9 +85,9 @@ export default function SiteFooter({
           </div>
           <div>
             <h3>Contact Us</h3>
-            <p><Phone size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} />{phone}</p>
-            <p><Mail size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} />{email}</p>
-            <p><MapPin size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} />Accra, Ghana</p>
+            <p><Phone size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} />{activePhone}</p>
+            <p><Mail size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} />{activeEmail}</p>
+            <p><MapPin size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} />{activeAddress}</p>
             <p className="footer-hours"><Clock size={12} style={{ display: 'inline', marginRight: 6, verticalAlign: -2 }} />Mon - Sat: 8:00am - 6:00pm</p>
           </div>
           <div className="footer-news">
@@ -92,7 +101,7 @@ export default function SiteFooter({
           <span>Built for the people and businesses that keep Africa moving.</span>
         </div>
       </footer>
-      <FloatingActions whatsapp={whatsapp} />
+      <FloatingActions whatsapp={activeWhatsapp} />
     </>
   );
 }

@@ -33,13 +33,15 @@ const tailLinks = [
 ];
 
 export default function SiteHeader({
-  phone = '+233 234 123 4567',
+  phone = '+233 24 123 4567',
   email = 'info@mrtruthagency.com',
+  address = 'Accra, Ghana',
   announcement,
   socials = []
 }: {
   phone?: string;
   email?: string;
+  address?: string;
   announcement?: { text: string; key: string } | null;
   socials?: SocialLink[];
 }) {
@@ -89,7 +91,7 @@ export default function SiteHeader({
           <div className="top-meta">
             <span><Mail size={12} /> {email}</span>
             <span><Phone size={12} /> {phone}</span>
-            <span className="hide-sm"><MapPin size={12} /> Accra, Ghana</span>
+            <span className="hide-sm"><MapPin size={12} /> {address}</span>
           </div>
           <div className="socials">
             <Link href="/login" className="hide-sm" style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontWeight: 700, letterSpacing: '.4px' }}><LogIn size={12} /> SIGN IN</Link>

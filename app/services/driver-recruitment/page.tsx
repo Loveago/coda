@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, Briefcase, CheckCircle2 } from 'lucide-react';
+import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import SiteFooter from '@/components/SiteFooter';
 import SiteHeader from '@/components/SiteHeader';
 import { db } from '@/lib/db';
@@ -16,11 +17,19 @@ const requirements = ['Valid driving licence and required documentation', 'Profe
 const process = ['Join Mr Truth Agency free', 'Apply from your member dashboard', 'Our team reviews and contacts you'];
 
 export default async function DriverRecruitmentPage() {
-  // Only the two active tracks are advertised: Work and Pay, and Daily Sales.
-  const opportunities = await db.driverOpportunity.findMany({ where: { status: 'OPEN', slug: { in: [...CORE_TRACK_SLUGS] } }, orderBy: { createdAt: 'asc' }, take: 6 });
+  const [opportunities, site] = await Promise.all([
+    db.driverOpportunity.findMany({ where: { status: 'OPEN', slug: { in: [...CORE_TRACK_SLUGS] } }, orderBy: { createdAt: 'asc' }, take: 6 }),
+    getSiteSettings()
+  ]);
   return (
     <>
-      <SiteHeader />
+      <SiteHeader
+        phone={site.contact_phone}
+        email={site.contact_email}
+        address={site.address_locality}
+        announcement={site.announcement_enabled === 'true' && site.announcement_text ? { text: site.announcement_text, key: announcementKey(site.announcement_text) } : null}
+        socials={socialLinks(site)}
+      />
       <main>
         <section className="page-hero">
           <div className="container">
@@ -59,7 +68,13 @@ export default async function DriverRecruitmentPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter
+        phone={site.contact_phone}
+        email={site.contact_email}
+        whatsapp={site.whatsapp_number}
+        address={site.address_locality}
+        socials={socialLinks(site)}
+      />
     </>
   );
 }

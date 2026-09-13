@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, BadgeCheck, PackageSearch, Truck } from 'lucide-react';
+import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import SiteFooter from '@/components/SiteFooter';
 import SiteHeader from '@/components/SiteHeader';
 import { db } from '@/lib/db';
@@ -11,13 +12,20 @@ export const dynamic = 'force-dynamic';
 
 export default async function AutomotivePage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
   const { category: categorySlug } = await searchParams;
-  const [products, categories] = await Promise.all([
+  const [products, categories, site] = await Promise.all([
     db.product.findMany({ where: { available: true, ...(categorySlug ? { category: { slug: categorySlug } } : {}) }, include: { category: true }, orderBy: { createdAt: 'desc' } }),
-    db.productCategory.findMany({ include: { _count: { select: { products: true } } }, orderBy: { name: 'asc' } })
+    db.productCategory.findMany({ include: { _count: { select: { products: true } } }, orderBy: { name: 'asc' } }),
+    getSiteSettings()
   ]);
   const activeCategories = categories.filter((category) => category._count.products > 0);
   return <>
-    <SiteHeader />
+    <SiteHeader
+      phone={site.contact_phone}
+      email={site.contact_email}
+      address={site.address_locality}
+      announcement={site.announcement_enabled === 'true' && site.announcement_text ? { text: site.announcement_text, key: announcementKey(site.announcement_text) } : null}
+      socials={socialLinks(site)}
+    />
     <main>
       <section className="page-hero"><div className="container"><p className="kicker">AUTOMOTIVE GOODS</p><h1>Keep every journey equipped.</h1><p>Genuine spare parts, accessories, oils, fluids and equipment from Mr Truth Agency — with real prices and live stock availability.</p></div></section>
       <section className="container page-body">
@@ -51,6 +59,12 @@ export default async function AutomotivePage({ searchParams }: { searchParams: P
         </div>
       </section>
     </main>
-    <SiteFooter />
+    <SiteFooter
+      phone={site.contact_phone}
+      email={site.contact_email}
+      whatsapp={site.whatsapp_number}
+      address={site.address_locality}
+      socials={socialLinks(site)}
+    />
   </>;
 }

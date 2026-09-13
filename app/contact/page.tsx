@@ -33,7 +33,7 @@ export default async function Contact() {
             <Reveal>
               <div className="about-card" style={{ minHeight: '100%' }}>
                 <h2>Our office</h2>
-                <p style={{ display: 'flex', alignItems: 'center', gap: 9 }}><MapPin size={14} /> Accra, Greater Accra Region, Ghana</p>
+                <p style={{ display: 'flex', alignItems: 'center', gap: 9 }}><MapPin size={14} /> {site.address_locality || 'Accra, Greater Accra Region, Ghana'}</p>
                 <p style={{ display: 'flex', alignItems: 'center', gap: 9 }}><Phone size={14} /> {site.contact_phone}</p>
                 {site.whatsapp_number ? (
                   <a href={`https://wa.me/${site.whatsapp_number.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 9, color: 'inherit' }}><MessageCircle size={14} style={{ color: '#25D366' }} /> Chat with us on WhatsApp: +{site.whatsapp_number.replace(/\D/g, '')}</a>

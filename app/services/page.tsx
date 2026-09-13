@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, BedDouble, Briefcase, BriefcaseBusiness, Building2, Car, CircuitBoard, Home, Settings2, Sparkles, UsersRound } from 'lucide-react';
+import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import SiteFooter from '@/components/SiteFooter';
 import SiteHeader from '@/components/SiteHeader';
 
+export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Services',
   description: 'Explore automotive, property, recruitment and mobility solutions from Mr Truth Agency.'
@@ -22,10 +24,17 @@ const services = [
   { title: 'Cleaning Services', description: 'Professional house, office and deep cleaning by vetted crews — one-time or recurring plans.', href: '/services/cleaning', icon: Sparkles }
 ];
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
+  const site = await getSiteSettings();
   return (
     <>
-      <SiteHeader />
+      <SiteHeader
+        phone={site.contact_phone}
+        email={site.contact_email}
+        address={site.address_locality}
+        announcement={site.announcement_enabled === 'true' && site.announcement_text ? { text: site.announcement_text, key: announcementKey(site.announcement_text) } : null}
+        socials={socialLinks(site)}
+      />
       <main>
         <section className="page-hero">
           <div className="container">
@@ -47,7 +56,13 @@ export default function ServicesPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <SiteFooter
+        phone={site.contact_phone}
+        email={site.contact_email}
+        whatsapp={site.whatsapp_number}
+        address={site.address_locality}
+        socials={socialLinks(site)}
+      />
     </>
   );
 }
