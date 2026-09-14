@@ -19,7 +19,8 @@ import { announcementKey, getSiteSettings, socialLinks } from '@/lib/settings';
 import SiteHeader from '@/components/SiteHeader';
 import SiteFooter from '@/components/SiteFooter';
 import Reveal from '@/components/Reveal';
-import WorkPayCalculator, { SAMPLE_VEHICLES } from '@/components/WorkPayCalculator';
+import WorkPayCalculator from '@/components/WorkPayCalculator';
+import { SAMPLE_VEHICLES } from '@/lib/work-pay';
 import '../globals.css';
 
 export const dynamic = 'force-dynamic';

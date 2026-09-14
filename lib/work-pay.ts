@@ -1,6 +1,76 @@
 import { db } from '@/lib/db';
 import crypto from 'crypto';
 
+export interface SampleVehicle {
+  name: string;
+  year: string;
+  category: string;
+  engine: string;
+  fuelEconomy: string;
+  totalPrice: number;
+  minDeposit: number;
+  defaultDurationWeeks: number;
+  recommendedFor: string;
+}
+
+export const SAMPLE_VEHICLES: SampleVehicle[] = [
+  {
+    name: 'Toyota Vitz (Echo / Yaris Hatch)',
+    year: '2016 - 2019',
+    category: 'Compact Hatchback',
+    engine: '1.0L - 1.3L Petrol',
+    fuelEconomy: '18 - 21 km/L',
+    totalPrice: 110000,
+    minDeposit: 5000,
+    defaultDurationWeeks: 104,
+    recommendedFor: 'Bolt & Uber Eco / City commuting'
+  },
+  {
+    name: 'Toyota Yaris Sedan / Belta',
+    year: '2016 - 2020',
+    category: 'Sedan',
+    engine: '1.3L - 1.5L Petrol',
+    fuelEconomy: '16 - 19 km/L',
+    totalPrice: 125000,
+    minDeposit: 6000,
+    defaultDurationWeeks: 104,
+    recommendedFor: 'Bolt Comfort, UberX, Airport runs'
+  },
+  {
+    name: 'Hyundai i10 Grand',
+    year: '2017 - 2021',
+    category: 'Compact Hatchback',
+    engine: '1.2L Petrol',
+    fuelEconomy: '17 - 20 km/L',
+    totalPrice: 105000,
+    minDeposit: 5000,
+    defaultDurationWeeks: 104,
+    recommendedFor: 'High fuel efficiency ride-hailing'
+  },
+  {
+    name: 'Suzuki Swift Dzire',
+    year: '2018 - 2022',
+    category: 'Compact Sedan',
+    engine: '1.2L Petrol',
+    fuelEconomy: '19 - 22 km/L',
+    totalPrice: 120000,
+    minDeposit: 6000,
+    defaultDurationWeeks: 104,
+    recommendedFor: 'Low maintenance daily commercial driving'
+  },
+  {
+    name: 'Toyota Corolla (Altis / Axio)',
+    year: '2015 - 2019',
+    category: 'Executive Sedan',
+    engine: '1.5L - 1.8L Petrol',
+    fuelEconomy: '14 - 17 km/L',
+    totalPrice: 145000,
+    minDeposit: 8000,
+    defaultDurationWeeks: 104,
+    recommendedFor: 'Corporate car service & premium ride-hailing'
+  }
+];
+
 export interface WorkPayCalculation {
   totalPrice: number;
   depositAmount: number;
