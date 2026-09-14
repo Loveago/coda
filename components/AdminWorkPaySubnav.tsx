@@ -19,6 +19,7 @@ import {
 
 const links = [
   { href: '/admin/work-and-pay', label: 'Overview', icon: LayoutDashboard, exact: true },
+  { href: '/admin/work-and-pay/fleet', label: 'Fleet Vehicles', icon: CarFront },
   { href: '/admin/work-and-pay/applications', label: 'Applications', icon: Users },
   { href: '/admin/work-and-pay/agreements', label: 'Agreements', icon: FileText },
   { href: '/admin/work-and-pay/payments', label: 'Payment Ledger', icon: CreditCard },

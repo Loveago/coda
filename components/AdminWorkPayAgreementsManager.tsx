@@ -72,6 +72,9 @@ export default function AdminWorkPayAgreementsManager({
   // Form Fields
   const [selectedAppId, setSelectedAppId] = useState(applicantId || '');
   const [selectedVehicleId, setSelectedVehicleId] = useState('');
+  const [agreementType, setAgreementType] = useState<'WORK_PAY' | 'DAILY_SALES'>('WORK_PAY');
+  const [dailySalesRate, setDailySalesRate] = useState('150');
+  const [workingDaysPerWeek, setWorkingDaysPerWeek] = useState('6');
   const [driverName, setDriverName] = useState('');
   const [driverPhone, setDriverPhone] = useState('');
   const [driverEmail, setDriverEmail] = useState('');
@@ -157,12 +160,29 @@ export default function AdminWorkPayAgreementsManager({
     setSelectedVehicleId(id);
     const v = vehicles.find((item) => item.id === id);
     if (v) {
-      setTotalPrice(String(v.price));
-      const dep = 5000;
-      setDepositRequired(String(dep));
-      const financed = v.price - dep;
-      const weeks = parseInt(durationWeeks) || 104;
-      setWeeklyPayment(String(Math.ceil(financed / weeks)));
+      if (v.programType === 'DAILY_SALES' && v.dailySalesRate) {
+        setAgreementType('DAILY_SALES');
+        const daily = Number(v.dailySalesRate);
+        const days = v.workingDaysPerWeek || 6;
+        const weekly = v.dailySalesWeeklyTarget ? Number(v.dailySalesWeeklyTarget) : daily * days;
+        const dep = v.dailySalesDeposit ? Number(v.dailySalesDeposit) : 2000;
+        const weeks = parseInt(durationWeeks) || 52;
+        setDailySalesRate(String(daily));
+        setWorkingDaysPerWeek(String(days));
+        setWeeklyPayment(String(weekly));
+        setDepositRequired(String(dep));
+        setTotalPrice(String(weekly * weeks));
+      } else {
+        setAgreementType('WORK_PAY');
+        const price = Number(v.workPayPrice || v.price || 110000);
+        const dep = Number(v.workPayDeposit || 5000);
+        const weeks = Number(v.workPayWeeks || parseInt(durationWeeks) || 104);
+        setTotalPrice(String(price));
+        setDepositRequired(String(dep));
+        setDurationWeeks(String(weeks));
+        const weekly = v.workPayWeekly ? Number(v.workPayWeekly) : Math.ceil((price - dep) / weeks);
+        setWeeklyPayment(String(weekly));
+      }
     }
   }
 
@@ -178,6 +198,9 @@ export default function AdminWorkPayAgreementsManager({
         body: JSON.stringify({
           applicationId: selectedAppId || undefined,
           vehicleId: selectedVehicleId,
+          agreementType,
+          dailySalesRate: agreementType === 'DAILY_SALES' ? parseFloat(dailySalesRate) : undefined,
+          workingDaysPerWeek: agreementType === 'DAILY_SALES' ? parseInt(workingDaysPerWeek) : undefined,
           driverName,
           driverPhone,
           driverEmail: driverEmail || undefined,
@@ -459,7 +482,7 @@ export default function AdminWorkPayAgreementsManager({
                     >
                       {vehicles.map((v) => (
                         <option key={v.id} value={v.id}>
-                          {v.year} {v.make} {v.model} — GHS {v.price.toLocaleString()}
+                          {v.registrationNumber ? `[${v.registrationNumber}] ` : ''}{v.year} {v.make} {v.model} ({v.programType || 'WORK_PAY'}) — GHS {v.workPayWeekly ? `${Number(v.workPayWeekly).toLocaleString()}/wk` : `${Number(v.price).toLocaleString()} buyout`}
                         </option>
                       ))}
                     </select>
@@ -480,9 +503,76 @@ export default function AdminWorkPayAgreementsManager({
 
               {/* Step 3: Financial Terms & Amortization */}
               <div style={{ padding: 14, background: '#f8fafc', borderRadius: 8, border: '1px solid var(--line)', display: 'grid', gap: 10 }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--blue)' }}>
-                  3. FINANCIAL TERMS &amp; AUTO-AMORTIZATION SCHEDULE
-                </span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--blue)' }}>
+                    3. FINANCIAL TERMS &amp; AUTO-AMORTIZATION SCHEDULE
+                  </span>
+                  <div style={{ display: 'flex', gap: 12 }}>
+                    <label style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: 12, fontWeight: 700, color: agreementType === 'WORK_PAY' ? 'var(--blue)' : 'var(--muted)' }}>
+                      <input
+                        type="radio"
+                        name="modalAgreementType"
+                        value="WORK_PAY"
+                        checked={agreementType === 'WORK_PAY'}
+                        onChange={() => setAgreementType('WORK_PAY')}
+                      />
+                      Work &amp; Pay
+                    </label>
+                    <label style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer', fontSize: 12, fontWeight: 700, color: agreementType === 'DAILY_SALES' ? '#b45309' : 'var(--muted)' }}>
+                      <input
+                        type="radio"
+                        name="modalAgreementType"
+                        value="DAILY_SALES"
+                        checked={agreementType === 'DAILY_SALES'}
+                        onChange={() => setAgreementType('DAILY_SALES')}
+                      />
+                      Daily Sales
+                    </label>
+                  </div>
+                </div>
+
+                {agreementType === 'DAILY_SALES' && (
+                  <div style={{ padding: 10, background: '#fffbeb', borderRadius: 6, border: '1px solid #fde68a', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                    <div>
+                      <label style={{ fontSize: 11, fontWeight: 700, color: '#92400e', display: 'block', marginBottom: 4 }}>
+                        Daily Sales Rate (GHS/day) *
+                      </label>
+                      <input
+                        type="number"
+                        value={dailySalesRate}
+                        onChange={(e) => {
+                          const rate = e.target.value;
+                          setDailySalesRate(rate);
+                          const weekly = (Number(rate) || 0) * (Number(workingDaysPerWeek) || 6);
+                          setWeeklyPayment(String(weekly));
+                          setTotalPrice(String(weekly * (Number(durationWeeks) || 52)));
+                        }}
+                        className="field"
+                        style={{ fontWeight: 700, color: '#b45309' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: 11, fontWeight: 700, color: '#92400e', display: 'block', marginBottom: 4 }}>
+                        Working Days / Week
+                      </label>
+                      <select
+                        value={workingDaysPerWeek}
+                        onChange={(e) => {
+                          const days = e.target.value;
+                          setWorkingDaysPerWeek(days);
+                          const weekly = (Number(dailySalesRate) || 0) * (Number(days) || 6);
+                          setWeeklyPayment(String(weekly));
+                          setTotalPrice(String(weekly * (Number(durationWeeks) || 52)));
+                        }}
+                        className="field"
+                      >
+                        <option value="5">5 Days (Mon - Fri)</option>
+                        <option value="6">6 Days (Mon - Sat · Sun off)</option>
+                        <option value="7">7 Days (Full week)</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 10 }}>
                   <div>
                     <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', display: 'block', marginBottom: 4 }}>

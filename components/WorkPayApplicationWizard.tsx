@@ -1,20 +1,25 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   AlertCircle,
   ArrowLeft,
   ArrowRight,
+  Car,
   CarFront,
   Check,
   CheckCircle2,
+  Coins,
   Copy,
   FileCheck2,
   FileText,
   KeyRound,
   Loader2,
+  Radio,
   Shield,
+  Sparkles,
   Upload,
   User,
   Users
@@ -38,6 +43,10 @@ export default function WorkPayApplicationWizard({ initialVehicle }: { initialVe
   const [result, setResult] = useState<{ applicationNumber: string } | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Available fleet vehicles fetched from backend
+  const [fleetVehicles, setFleetVehicles] = useState<any[]>([]);
+  const [loadingFleet, setLoadingFleet] = useState(false);
+
   // Form State across steps
   const [formData, setFormData] = useState({
     // Step 1: Personal
@@ -55,7 +64,9 @@ export default function WorkPayApplicationWizard({ initialVehicle }: { initialVe
     yearsExperience: '3',
     commercialHistory: 'Bolt, Uber, Local Taxi',
     rideHailingPlatforms: '',
-    // Step 3: Vehicle & Region
+    // Step 3: Scheme, Vehicle & Region
+    programType: 'WORK_PAY', // WORK_PAY or DAILY_SALES
+    vehicleId: '',
     preferredVehicleType: initialVehicle || 'Toyota Vitz (Compact Hatchback)',
     operatingRegion: 'Greater Accra',
     // Step 4: Guarantors
@@ -78,6 +89,24 @@ export default function WorkPayApplicationWizard({ initialVehicle }: { initialVe
     // Step 6: Consent
     consent: false
   });
+
+  useEffect(() => {
+    async function loadFleet() {
+      setLoadingFleet(true);
+      try {
+        const res = await fetch('/api/vehicles?availableOnly=true');
+        const data = await res.json();
+        if (data.success && data.vehicles) {
+          setFleetVehicles(data.vehicles);
+        }
+      } catch (err) {
+        console.error('Failed to load fleet vehicles:', err);
+      } finally {
+        setLoadingFleet(false);
+      }
+    }
+    loadFleet();
+  }, []);
 
   function update(field: string, value: any) {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -447,27 +476,233 @@ export default function WorkPayApplicationWizard({ initialVehicle }: { initialVe
           </div>
         )}
 
-        {/* STEP 3: Vehicle Preference & Location */}
+        {/* STEP 3: Scheme, Vehicle & Location */}
         {step === 3 && (
-          <div className="form-grid">
-            <div style={{ gridColumn: '1 / -1' }}>
-              <label style={labelStyle}>Select Preferred Vehicle Model *</label>
-              <select
-                value={formData.preferredVehicleType}
-                onChange={(e) => update('preferredVehicleType', e.target.value)}
-                className="field"
-                style={{ fontWeight: 600 }}
-              >
-                <option>Toyota Vitz (Compact Hatchback) — Best for Bolt/Uber Eco</option>
-                <option>Toyota Yaris Sedan / Belta — Best for Comfort & City</option>
-                <option>Hyundai i10 Grand — High fuel economy hatchback</option>
-                <option>Suzuki Swift Dzire — Compact sedan</option>
-                <option>Toyota Corolla — Executive sedan / Corporate</option>
-                <option>Commercial Minibus (Urvan / HiAce)</option>
-                <option>Delivery Van / Cargo</option>
-              </select>
+          <div style={{ display: 'grid', gap: 20 }}>
+            {/* Scheme Picker */}
+            <div>
+              <label style={labelStyle}>Select Program Scheme *</label>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 12 }}>
+                <div
+                  onClick={() => update('programType', 'WORK_PAY')}
+                  style={{
+                    border: `2px solid ${formData.programType === 'WORK_PAY' ? 'var(--blue)' : 'var(--line)'}`,
+                    background: formData.programType === 'WORK_PAY' ? '#eff6ff' : '#fff',
+                    padding: 16,
+                    borderRadius: 10,
+                    cursor: 'pointer',
+                    transition: 'all .2s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <CarFront size={18} style={{ color: 'var(--blue)' }} />
+                      <strong style={{ fontSize: 14, color: formData.programType === 'WORK_PAY' ? 'var(--blue)' : '#1e293b' }}>
+                        Work &amp; Pay (Drive-to-Own)
+                      </strong>
+                    </div>
+                    {formData.programType === 'WORK_PAY' && <CheckCircle2 size={18} style={{ color: 'var(--blue)' }} />}
+                  </div>
+                  <p style={{ margin: 0, fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>
+                    Pay fixed weekly installments towards acquiring full vehicle ownership. DVLA title and registration transferred 100% to you at contract completion.
+                  </p>
+                </div>
+
+                <div
+                  onClick={() => update('programType', 'DAILY_SALES')}
+                  style={{
+                    border: `2px solid ${formData.programType === 'DAILY_SALES' ? '#d97706' : 'var(--line)'}`,
+                    background: formData.programType === 'DAILY_SALES' ? '#fffbeb' : '#fff',
+                    padding: 16,
+                    borderRadius: 10,
+                    cursor: 'pointer',
+                    transition: 'all .2s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Coins size={18} style={{ color: '#d97706' }} />
+                      <strong style={{ fontSize: 14, color: formData.programType === 'DAILY_SALES' ? '#b45309' : '#1e293b' }}>
+                        Daily Sales (Commercial Rental)
+                      </strong>
+                    </div>
+                    {formData.programType === 'DAILY_SALES' && <CheckCircle2 size={18} style={{ color: '#d97706' }} />}
+                  </div>
+                  <p style={{ margin: 0, fontSize: 12, color: 'var(--muted)', lineHeight: 1.5 }}>
+                    Remit an agreed daily sales quota (typically 6 days a week, Sunday off). Retain all surplus daily earnings with a lower initial security deposit.
+                  </p>
+                </div>
+              </div>
             </div>
-            <div style={{ gridColumn: '1 / -1' }}>
+
+            {/* Vehicle Selection from Fleet */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <label style={{ ...labelStyle, margin: 0 }}>
+                  Select Available Vehicle from Fleet ({formData.programType === 'WORK_PAY' ? 'Work & Pay' : 'Daily Sales'}) *
+                </label>
+                {loadingFleet && <span style={{ fontSize: 11, color: 'var(--muted)' }}>Loading fleet...</span>}
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12, marginBottom: 14 }}>
+                {/* Agency Choice Option */}
+                <div
+                  onClick={() => {
+                    update('vehicleId', '');
+                    update('preferredVehicleType', formData.programType === 'WORK_PAY' ? 'Toyota Vitz or similar (Agency Assign)' : 'Any Available Daily Sales Fleet Car');
+                  }}
+                  style={{
+                    border: `2px solid ${!formData.vehicleId ? 'var(--blue)' : 'var(--line)'}`,
+                    background: !formData.vehicleId ? '#eff6ff' : '#f8fafc',
+                    padding: 14,
+                    borderRadius: 8,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                      <strong style={{ fontSize: 13, color: !formData.vehicleId ? 'var(--blue)' : '#1e293b' }}>
+                        Agency Assignment (Flexible)
+                      </strong>
+                      {!formData.vehicleId && <CheckCircle2 size={16} style={{ color: 'var(--blue)' }} />}
+                    </div>
+                    <p style={{ margin: 0, fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.4 }}>
+                      Let our vetting officer match you with the best available vehicle based on your interview and operating region.
+                    </p>
+                  </div>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--blue)', marginTop: 8 }}>
+                    Fastest Allocation →
+                  </span>
+                </div>
+
+                {/* Filtered Fleet Cars */}
+                {fleetVehicles
+                  .filter((v) => {
+                    if (formData.programType === 'WORK_PAY') {
+                      return v.programType === 'WORK_PAY' || v.programType === 'BOTH';
+                    } else {
+                      return v.programType === 'DAILY_SALES' || v.programType === 'BOTH';
+                    }
+                  })
+                  .map((v) => {
+                    const isSelected = formData.vehicleId === v.id;
+                    const img = v.imageUrl || (v.images && v.images[0] ? v.images[0].url : null);
+                    const isWP = formData.programType === 'WORK_PAY';
+
+                    return (
+                      <div
+                        key={v.id}
+                        onClick={() => {
+                          update('vehicleId', v.id);
+                          update('preferredVehicleType', `${v.make} ${v.model} (${v.year})${v.registrationNumber ? ` - ${v.registrationNumber}` : ''}`);
+                        }}
+                        style={{
+                          border: `2px solid ${isSelected ? (isWP ? 'var(--blue)' : '#d97706') : 'var(--line)'}`,
+                          background: isSelected ? (isWP ? '#eff6ff' : '#fffbeb') : '#fff',
+                          borderRadius: 8,
+                          overflow: 'hidden',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          transition: 'all .15s ease'
+                        }}
+                      >
+                        <div style={{ height: 100, background: '#f1f5f9', position: 'relative' }}>
+                          {img ? (
+                            <Image
+                              src={img}
+                              alt={`${v.make} ${v.model}`}
+                              fill
+                              style={{ objectFit: 'cover' }}
+                            />
+                          ) : (
+                            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8' }}>
+                              <CarFront size={28} />
+                            </div>
+                          )}
+                          {v.registrationNumber && (
+                            <span
+                              style={{
+                                position: 'absolute',
+                                bottom: 6,
+                                left: 6,
+                                background: '#000',
+                                color: '#fef08a',
+                                padding: '2px 6px',
+                                borderRadius: 4,
+                                fontSize: 10,
+                                fontWeight: 800,
+                                letterSpacing: '.5px'
+                              }}
+                            >
+                              {v.registrationNumber}
+                            </span>
+                          )}
+                          {isSelected && (
+                            <span
+                              style={{
+                                position: 'absolute',
+                                top: 6,
+                                right: 6,
+                                background: isWP ? 'var(--blue)' : '#d97706',
+                                color: '#fff',
+                                width: 22,
+                                height: 22,
+                                borderRadius: '50%',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                            >
+                              <Check size={14} />
+                            </span>
+                          )}
+                        </div>
+
+                        <div style={{ padding: 12, display: 'grid', gap: 4 }}>
+                          <strong style={{ fontSize: 13 }}>
+                            {v.make} {v.model} ({v.year})
+                          </strong>
+                          <span style={{ fontSize: 11, color: 'var(--muted)' }}>
+                            {v.category} · {v.transmission}
+                          </span>
+
+                          <div style={{ marginTop: 4, paddingTop: 6, borderTop: '1px solid var(--line)', fontSize: 11.5 }}>
+                            {isWP ? (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: 'var(--muted)' }}>Weekly:</span>
+                                <strong style={{ color: 'var(--blue)' }}>GHS {Number(v.workPayWeekly || 800).toLocaleString()}/wk</strong>
+                              </div>
+                            ) : (
+                              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <span style={{ color: 'var(--muted)' }}>Daily Rate:</span>
+                                <strong style={{ color: '#b45309' }}>GHS {Number(v.dailySalesRate || 150).toLocaleString()}/day</strong>
+                              </div>
+                            )}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--muted)', fontSize: 10.5, marginTop: 2 }}>
+                              <span>Deposit:</span>
+                              <span style={{ color: '#059669', fontWeight: 600 }}>
+                                GHS {Number(isWP ? (v.workPayDeposit || 5000) : (v.dailySalesDeposit || 2000)).toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+
+              {/* Selected Vehicle Text Summary */}
+              <div style={{ padding: '8px 12px', background: '#f8fafc', borderRadius: 6, border: '1px solid var(--line)', fontSize: 12 }}>
+                Selected Preference: <strong>{formData.preferredVehicleType}</strong> ({formData.programType === 'WORK_PAY' ? 'Work & Pay' : 'Daily Sales'})
+              </div>
+            </div>
+
+            {/* Operating Region */}
+            <div>
               <label style={labelStyle}>Primary Operating Region *</label>
               <select
                 value={formData.operatingRegion}
@@ -686,7 +921,13 @@ export default function WorkPayApplicationWizard({ initialVehicle }: { initialVe
                 <strong>{formData.driverLicenseNumber} ({formData.driverLicenseClass})</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
-                <span style={{ color: 'var(--muted)' }}>Vehicle Preference:</span>
+                <span style={{ color: 'var(--muted)' }}>Program Scheme:</span>
+                <strong style={{ color: formData.programType === 'WORK_PAY' ? 'var(--blue)' : '#d97706' }}>
+                  {formData.programType === 'WORK_PAY' ? 'Work & Pay (Drive-to-Own)' : 'Daily Sales (Commercial Rental)'}
+                </strong>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
+                <span style={{ color: 'var(--muted)' }}>Vehicle Selection:</span>
                 <strong>{formData.preferredVehicleType}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>

@@ -34,85 +34,98 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const {
-      applicationId,
-      vehicleId,
-      driverName,
-      driverPhone,
-      driverEmail,
-      totalPrice,
-      depositRequired,
-      weeklyPayment,
-      durationWeeks,
-      startDate,
-      gracePeriodDays,
-      latePenaltyFee,
-      termsAndConditions,
-      handoverMileage
-    } = body;
+      const {
+        applicationId,
+        vehicleId,
+        driverName,
+        driverPhone,
+        driverEmail,
+        agreementType,
+        dailySalesRate,
+        workingDaysPerWeek,
+        totalPrice,
+        depositRequired,
+        weeklyPayment,
+        durationWeeks,
+        startDate,
+        gracePeriodDays,
+        latePenaltyFee,
+        termsAndConditions,
+        handoverMileage
+      } = body;
 
-    if (!vehicleId || !driverName || !driverPhone || !totalPrice || !weeklyPayment || !durationWeeks) {
-      return NextResponse.json({ error: 'Please complete all required agreement fields.' }, { status: 400 });
-    }
-
-    const numTotalPrice = Number(totalPrice);
-    const numDepositRequired = Number(depositRequired || 0);
-    const numWeeklyPayment = Number(weeklyPayment);
-    const numWeeks = Number(durationWeeks);
-    const numGraceDays = Number(gracePeriodDays ?? 3);
-    const numLatePenalty = Number(latePenaltyFee ?? 50);
-
-    const start = startDate ? new Date(startDate) : new Date();
-    const expectedEnd = new Date(start.getTime() + numWeeks * 7 * 24 * 60 * 60 * 1000);
-    const agreementNumber = generateAgreementNumber();
-
-    const createdAgreement = await db.$transaction(async (tx) => {
-      // Validate vehicleId exists or find/create a valid vehicle
-      let validVehicleId = vehicleId;
-      const existingVehicle = await tx.vehicle.findUnique({ where: { id: vehicleId } });
-      if (!existingVehicle) {
-        const anyVehicle = await tx.vehicle.findFirst({ where: { availability: { not: 'SOLD' } } });
-        if (anyVehicle) {
-          validVehicleId = anyVehicle.id;
-        } else {
-          const newVeh = await tx.vehicle.create({
-            data: {
-              make: 'Toyota',
-              model: 'Vitz',
-              year: 2020,
-              category: 'Compact Hatchback',
-              price: numTotalPrice,
-              availability: 'ASSIGNED'
-            }
-          });
-          validVehicleId = newVeh.id;
-        }
+      if (!vehicleId || !driverName || !driverPhone || !totalPrice || !weeklyPayment || !durationWeeks) {
+        return NextResponse.json({ error: 'Please complete all required agreement fields.' }, { status: 400 });
       }
 
-      // 1. Create Agreement
-      const ag = await (tx as any).workPayAgreement.create({
-        data: {
-          agreementNumber,
-          applicationId: applicationId || null,
-          driverName,
-          driverPhone,
-          driverEmail: driverEmail || null,
-          vehicleId: validVehicleId,
-          totalPrice: numTotalPrice,
-          depositRequired: numDepositRequired,
-          depositPaid: 0,
-          weeklyPayment: numWeeklyPayment,
-          durationWeeks: numWeeks,
-          startDate: start,
-          expectedCompletionDate: expectedEnd,
-          gracePeriodDays: numGraceDays,
-          latePenaltyFee: numLatePenalty,
-          totalPaid: 0,
-          remainingBalance: numTotalPrice,
-          status: 'PENDING_SIGNATURE',
-          termsAndConditions: termsAndConditions || null
+      const numTotalPrice = Number(totalPrice);
+      const numDepositRequired = Number(depositRequired || 0);
+      const numWeeklyPayment = Number(weeklyPayment);
+      const numWeeks = Number(durationWeeks);
+      const numGraceDays = Number(gracePeriodDays ?? 3);
+      const numLatePenalty = Number(latePenaltyFee ?? 50);
+
+      const start = startDate ? new Date(startDate) : new Date();
+      const expectedEnd = new Date(start.getTime() + numWeeks * 7 * 24 * 60 * 60 * 1000);
+      const agreementNumber = generateAgreementNumber();
+
+      const createdAgreement = await db.$transaction(async (tx) => {
+        // Validate vehicleId exists or find/create a valid vehicle
+        let validVehicleId = vehicleId;
+        const existingVehicle = await (tx.vehicle as any).findUnique({ where: { id: vehicleId } });
+        if (!existingVehicle) {
+          const anyVehicle = await tx.vehicle.findFirst({ where: { availability: { not: 'SOLD' } } });
+          if (anyVehicle) {
+            validVehicleId = anyVehicle.id;
+          } else {
+            const newVeh = await tx.vehicle.create({
+              data: {
+                make: 'Toyota',
+                model: 'Vitz',
+                year: 2020,
+                category: 'Compact Hatchback',
+                price: numTotalPrice,
+                availability: 'ASSIGNED'
+              }
+            });
+            validVehicleId = newVeh.id;
+          }
+        } else {
+          await tx.vehicle.update({
+            where: { id: validVehicleId },
+            data: { availability: 'ASSIGNED' }
+          });
         }
-      });
+
+        // 1. Create Agreement
+        const ag = await (tx as any).workPayAgreement.create({
+          data: {
+            agreementNumber,
+            agreementType: agreementType || 'WORK_PAY',
+            dailySalesRate: dailySalesRate ? Number(dailySalesRate) : null,
+            workingDaysPerWeek: workingDaysPerWeek ? Number(workingDaysPerWeek) : 6,
+            fleetOwnerName: existingVehicle?.ownerName || null,
+            fleetOwnerPhone: existingVehicle?.ownerPhone || null,
+            applicationId: applicationId || null,
+            driverName,
+            driverPhone,
+            driverEmail: driverEmail || null,
+            vehicleId: validVehicleId,
+            totalPrice: numTotalPrice,
+            depositRequired: numDepositRequired,
+            depositPaid: 0,
+            weeklyPayment: numWeeklyPayment,
+            durationWeeks: numWeeks,
+            startDate: start,
+            expectedCompletionDate: expectedEnd,
+            gracePeriodDays: numGraceDays,
+            latePenaltyFee: numLatePenalty,
+            totalPaid: 0,
+            remainingBalance: numTotalPrice,
+            status: 'PENDING_SIGNATURE',
+            termsAndConditions: termsAndConditions || null
+          }
+        });
 
       // 2. Generate full installment schedule
       const schedule = buildAmortizationSchedule(start, numWeeks, numWeeklyPayment, numTotalPrice, numDepositRequired);

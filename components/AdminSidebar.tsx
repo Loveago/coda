@@ -50,6 +50,7 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
     label: 'Work & Pay',
     items: [
       ['Overview', '/admin/work-and-pay', LayoutDashboard],
+      ['Fleet & Vehicles', '/admin/work-and-pay/fleet', CarFront],
       ['Applications', '/admin/work-and-pay/applications', Users],
       ['Agreements', '/admin/work-and-pay/agreements', FileText],
       ['Payments', '/admin/work-and-pay/payments', BarChart3],

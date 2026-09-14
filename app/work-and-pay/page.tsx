@@ -277,6 +277,89 @@ export default async function WorkAndPayPage() {
             </div>
           </section>
 
+          {/* Two Pathways: Work & Pay vs Daily Sales */}
+          <section style={{ marginTop: 64 }}>
+            <Reveal>
+              <p className="kicker" style={{ color: 'var(--blue)' }}>CHOOSE YOUR PATHWAY</p>
+              <h2 style={{ fontSize: 28, margin: '4px 0 12px', fontWeight: 800 }}>Work &amp; Pay vs. Daily Sales: Which is Right for You?</h2>
+              <p style={{ color: 'var(--muted)', fontSize: 14, maxWidth: 680, margin: '0 0 24px' }}>
+                We offer two flexible commercial driving models to suit your financial goals, capital capacity, and long-term career plans in Ghana.
+              </p>
+            </Reveal>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
+              {/* Card 1: Work & Pay */}
+              <div className="panel" style={{ padding: 24, borderTop: '4px solid #2563eb', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ display: 'inline-block', background: '#eff6ff', color: 'var(--blue)', padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 800, marginBottom: 12 }}>
+                    PATHWAY A · DRIVE-TO-OWN
+                  </div>
+                  <h3 style={{ fontSize: 20, fontWeight: 800, margin: '0 0 10px' }}>Work &amp; Pay (Hire Purchase)</h3>
+                  <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 16px' }}>
+                    Ideal for drivers who want to own the vehicle permanently. Every weekly installment pays down your vehicle purchase balance until complete ownership.
+                  </p>
+                  <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12.5, color: '#334155', lineHeight: 1.8 }}>
+                    <li><strong>Ownership:</strong> 100% DVLA Title transferred to you at end of term</li>
+                    <li><strong>Remittance:</strong> Fixed weekly payment (typically GHS 800 - GHS 1,100 / wk)</li>
+                    <li><strong>Duration:</strong> 104 to 156 weeks (~2 - 3 years)</li>
+                    <li><strong>Security Deposit:</strong> Higher initial security deposit (e.g. GHS 5,000 - 8,000)</li>
+                    <li><strong>Early Payoff:</strong> 0% penalty — pay faster to own earlier</li>
+                  </ul>
+                </div>
+                <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--line)' }}>
+                  <Link href="/work-and-pay/apply" className="btn btn-primary" style={{ width: '100%', textAlign: 'center', fontSize: 13 }}>
+                    APPLY FOR WORK &amp; PAY →
+                  </Link>
+                </div>
+              </div>
+
+              {/* Card 2: Daily Sales */}
+              <div className="panel" style={{ padding: 24, borderTop: '4px solid #d97706', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <div style={{ display: 'inline-block', background: '#fffbeb', color: '#b45309', padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 800, marginBottom: 12 }}>
+                    PATHWAY B · COMMERCIAL RENTAL
+                  </div>
+                  <h3 style={{ fontSize: 20, fontWeight: 800, margin: '0 0 10px' }}>Daily Sales (Sales Quota)</h3>
+                  <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, margin: '0 0 16px' }}>
+                    Ideal for drivers who prefer lower initial capital commitment and maximum daily earnings. Remit an agreed daily quota (6 days a week) and keep all surplus profits.
+                  </p>
+                  <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12.5, color: '#334155', lineHeight: 1.8 }}>
+                    <li><strong>Ownership:</strong> Vehicle remains with Agency / Fleet Investor</li>
+                    <li><strong>Remittance:</strong> Fixed daily sales rate (typically GHS 140 - GHS 180 / day)</li>
+                    <li><strong>Schedule:</strong> 6 days/week (Monday – Saturday; Sunday is driver’s rest/maintenance day)</li>
+                    <li><strong>Security Deposit:</strong> Lower deposit (typically GHS 1,800 - GHS 2,500)</li>
+                    <li><strong>Surplus Income:</strong> Everything you make above the daily quota is 100% yours</li>
+                  </ul>
+                </div>
+                <div style={{ marginTop: 20, paddingTop: 16, borderTop: '1px solid var(--line)' }}>
+                  <Link href="/work-and-pay/apply" className="btn btn-ghost" style={{ width: '100%', textAlign: 'center', fontSize: 13, borderColor: '#d97706', color: '#b45309' }}>
+                    APPLY FOR DAILY SALES →
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Section for Fleet Owners / Car Investors */}
+          <section style={{ marginTop: 64, padding: 32, background: '#faf5ff', borderRadius: 12, border: '1px solid #e9d5ff' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
+              <div style={{ maxWidth: 640 }}>
+                <div style={{ display: 'inline-block', background: '#f3e8ff', color: '#7e22ce', padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 800, marginBottom: 8 }}>
+                  FLEET INVESTORS &amp; PRIVATE CAR OWNERS
+                </div>
+                <h3 style={{ fontSize: 22, fontWeight: 800, margin: '0 0 8px', color: '#581c87' }}>
+                  Have a Car in Ghana? Let Mr Truth Agency Manage It for You.
+                </h3>
+                <p style={{ fontSize: 13.5, color: '#4b5563', lineHeight: 1.6, margin: 0 }}>
+                  Avoid the stress of rogue drivers, unpaid sales, and neglected repairs. Onboard your vehicle into our managed fleet. We provide 24/7 GPS tracking, thoroughly vetted commercial drivers, automated weekly remittances to your bank/MoMo, and routine maintenance oversight. You choose whether your car goes out as <strong>Daily Sales</strong> or <strong>Work &amp; Pay</strong>.
+                </p>
+              </div>
+              <Link href="/contact" className="btn btn-primary" style={{ background: '#7e22ce', borderColor: '#7e22ce', padding: '12px 24px', fontSize: 13, fontWeight: 700 }}>
+                ONBOARD YOUR VEHICLE →
+              </Link>
+            </div>
+          </section>
+
           {/* FAQ Section */}
           <section style={{ marginTop: 64 }}>
             <Reveal>

@@ -217,6 +217,29 @@ model Vehicle {
   features      Json?
   price         Int?
   dailyRate     Int?
+  registrationNumber String?
+  vin                String?
+  color              String?
+  mileage            Int?
+  programType        String   @default("WORK_PAY") // WORK_PAY, DAILY_SALES, BOTH
+  ownerType          String   @default("AGENCY")    // AGENCY, FLEET_INVESTOR
+  ownerName          String?
+  ownerPhone         String?
+  ownerEmail         String?
+  ownerSharePct      Decimal? @db.Decimal(5, 2)
+  workPayPrice       Decimal? @db.Decimal(12, 2)
+  workPayDeposit     Decimal? @db.Decimal(12, 2)
+  workPayWeekly      Decimal? @db.Decimal(12, 2)
+  workPayWeeks       Int?     @default(104)
+  dailySalesRate     Decimal? @db.Decimal(12, 2)
+  dailySalesDeposit  Decimal? @db.Decimal(12, 2)
+  dailySalesWeeklyTarget Decimal? @db.Decimal(12, 2)
+  workingDaysPerWeek Int?     @default(6)
+  insuranceExpiry    DateTime?
+  roadworthyExpiry   DateTime?
+  trackerInstalled   Boolean  @default(false)
+  trackerDeviceId    String?
+  imageUrl           String?
   availability  String   @default("AVAILABLE")
   featured      Boolean  @default(false)
   createdAt     DateTime @default(now())
@@ -226,6 +249,7 @@ model Vehicle {
   rentalInquiries RentalInquiry[]
   workPayAgreements WorkPayAgreement[]
   vehicleAssignments WorkPayVehicleAssignment[]
+  workPayApplications WorkPayApplication[]
 
   @@index([category, availability])
 }
@@ -606,6 +630,9 @@ model WorkPayApplication {
   rideHailingPlatforms  String?
   preferredVehicleType  String
   operatingRegion       String
+  programType           String                   @default("WORK_PAY") // WORK_PAY or DAILY_SALES
+  vehicleId             String?
+  vehicle               Vehicle?                 @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
   guarantor1Name        String
   guarantor1Phone       String
   guarantor1Occupation  String
@@ -641,6 +668,11 @@ model WorkPayApplication {
 model WorkPayAgreement {
   id                     String                        @id @default(uuid())
   agreementNumber        String                        @unique
+  agreementType          String                        @default("WORK_PAY") // WORK_PAY or DAILY_SALES
+  dailySalesRate         Decimal?                      @db.Decimal(12, 2)
+  workingDaysPerWeek     Int?                          @default(6)
+  fleetOwnerName         String?
+  fleetOwnerPhone        String?
   applicationId          String?
   application            WorkPayApplication?           @relation(fields: [applicationId], references: [id], onDelete: SetNull)
   memberId               String?
