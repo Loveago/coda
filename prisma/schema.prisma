@@ -697,6 +697,22 @@ model WorkPayAgreement {
   status                 WorkPayAgreementStatus        @default(PENDING_SIGNATURE)
   signedContractUrl      String?
   signedAt               DateTime?
+  driverSignature        String?                       @db.Text
+  driverSignedAt         DateTime?
+  driverSignedName       String?
+  guarantor1Signature    String?                       @db.Text
+  guarantor1SignedAt     DateTime?
+  guarantor1SignedName   String?
+  guarantor2Signature    String?                       @db.Text
+  guarantor2SignedAt     DateTime?
+  guarantor2SignedName   String?
+  agencySignature        String?                       @db.Text
+  agencySignedBy         String?
+  agencySignedAt         DateTime?
+  witnessName            String?
+  witnessPhone           String?
+  witnessSignature       String?                       @db.Text
+  witnessSignedAt        DateTime?
   termsAndConditions     String?
   notes                  String?
   createdAt              DateTime                      @default(now())

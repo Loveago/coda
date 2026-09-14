@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CarFront, CreditCard, Headphones, LayoutDashboard, Wrench } from 'lucide-react';
+import { CarFront, CreditCard, FileCheck2, Headphones, LayoutDashboard, Wrench } from 'lucide-react';
 
 const tabs = [
   { href: '/member/work-and-pay', label: 'Dashboard', icon: LayoutDashboard, exact: true },
+  { href: '/member/work-and-pay/contract', label: 'Legal Contract', icon: FileCheck2 },
   { href: '/member/work-and-pay/payments', label: 'Payments & Installments', icon: CreditCard },
   { href: '/member/work-and-pay/vehicle', label: 'Assigned Vehicle', icon: CarFront },
   { href: '/member/work-and-pay/support', label: 'Support & Tickets', icon: Headphones }

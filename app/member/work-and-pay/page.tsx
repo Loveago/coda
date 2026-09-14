@@ -11,6 +11,7 @@ import {
   Clock,
   CreditCard,
   Download,
+  FileText,
   Gauge,
   HelpCircle,
   History,
@@ -117,6 +118,39 @@ export default async function MemberWorkPayDashboard({
 
             return (
               <>
+                {!agreement.driverSignature && (
+                  <div style={{
+                    padding: '14px 18px',
+                    background: '#fffbeb',
+                    borderRadius: 8,
+                    border: '1px solid #fde68a',
+                    marginBottom: 16,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: 12,
+                    color: '#92400e'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <AlertCircle size={20} style={{ color: '#d97706' }} />
+                      <div>
+                        <strong style={{ fontSize: 14 }}>Signature Required on Your Official Agreement</strong>
+                        <p style={{ margin: '2px 0 0', fontSize: 12.5, color: '#b45309' }}>
+                          Please review and digitally sign your Work &amp; Pay agreement to finalize contract activation.
+                        </p>
+                      </div>
+                    </div>
+                    <Link
+                      href="/member/work-and-pay/contract"
+                      className="btn btn-primary"
+                      style={{ fontSize: 12, padding: '8px 16px', background: '#d97706', borderColor: '#d97706' }}
+                    >
+                      Review &amp; Sign Contract
+                    </Link>
+                  </div>
+                )}
+
                 {/* Status Hero Card */}
                 <div className="panel" style={{ padding: 24, borderTop: `4px solid ${isOverdue ? '#ef4444' : '#2563eb'}` }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
@@ -129,7 +163,15 @@ export default async function MemberWorkPayDashboard({
                       </h2>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                      <Link
+                        href="/member/work-and-pay/contract"
+                        className="btn btn-ghost"
+                        style={{ fontSize: 12, padding: '6px 12px', display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                      >
+                        <FileText size={14} /> Legal Contract
+                      </Link>
+
                       <span className={`pill ${isOverdue ? 'bad' : agreement.status === 'COMPLETED' ? 'good' : 'tone-blue'}`} style={{ fontSize: 12, padding: '4px 12px' }}>
                         {agreement.status.replace(/_/g, ' ')}
                       </span>

@@ -21,6 +21,7 @@ import {
   PauseCircle,
   PlayCircle,
   Plus,
+  Printer,
   ShieldAlert,
   ShieldCheck,
   User,
@@ -118,6 +119,14 @@ export default function AdminAgreementDetailClient({ agreement }: { agreement: a
         </Link>
 
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <Link
+            href={`/admin/work-and-pay/agreements/${agreement.id}/contract`}
+            className="btn btn-ghost"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12.5 }}
+          >
+            <Printer size={15} /> PRINT LEGAL CONTRACT
+          </Link>
+
           <button
             type="button"
             onClick={() => setOpenPayModal(true)}
@@ -196,16 +205,32 @@ export default function AdminAgreementDetailClient({ agreement }: { agreement: a
             </p>
           </div>
 
-          <span
-            className={`pill ${
-              currentStatus === 'ACTIVE' ? 'good' :
-              currentStatus === 'IN_ARREARS' ? 'bad' :
-              currentStatus === 'COMPLETED' ? 'tone-blue' : 'muted'
-            }`}
-            style={{ fontSize: 12, padding: '4px 14px' }}
-          >
-            {currentStatus.replace(/_/g, ' ')}
-          </span>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+            <span
+              className={`pill ${
+                currentStatus === 'ACTIVE' ? 'good' :
+                currentStatus === 'IN_ARREARS' ? 'bad' :
+                currentStatus === 'COMPLETED' ? 'tone-blue' : 'muted'
+              }`}
+              style={{ fontSize: 12, padding: '4px 14px' }}
+            >
+              {currentStatus.replace(/_/g, ' ')}
+            </span>
+
+            {agreement.driverSignature && agreement.agencySignature ? (
+              <span className="pill good" style={{ fontSize: 11, padding: '4px 10px' }}>
+                ✓ CONTRACT FULLY SIGNED
+              </span>
+            ) : agreement.driverSignature ? (
+              <span className="pill" style={{ fontSize: 11, padding: '4px 10px', background: '#fef3c7', color: '#b45309' }}>
+                PENDING AGENCY SIGNATURE
+              </span>
+            ) : (
+              <span className="pill" style={{ fontSize: 11, padding: '4px 10px', background: '#fee2e2', color: '#b91c1c' }}>
+                PENDING DRIVER SIGNATURE
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Equity Progress */}
