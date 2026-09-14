@@ -10,3 +10,4 @@
 // patterns always take precedence over this one.
 
 declare module '*.css';
+

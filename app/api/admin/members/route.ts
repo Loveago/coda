@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { requireAdmin } from '@/lib/auth';
 import { buildMemberRows, memberRowSelect, OWING_STATES, type AdminMemberRow } from '@/lib/member-dues';
+import { getFeeSettings } from '@/lib/fees';
 
 export const dynamic = 'force-dynamic';
 
@@ -41,8 +42,11 @@ export async function GET(request: Request) {
     });
   }
 
-  const members = await db.member.findMany({ where, select: memberRowSelect, orderBy: { createdAt: 'desc' } });
-  const rows = buildMemberRows(members);
+  const [members, feeSettings] = await Promise.all([
+    db.member.findMany({ where, select: memberRowSelect, orderBy: { createdAt: 'desc' } }),
+    getFeeSettings()
+  ]);
+  const rows = buildMemberRows(members, feeSettings.annualDues.enabled, feeSettings.annualDues.gracePeriodDays);
 
   const counts = {
     all: rows.length,

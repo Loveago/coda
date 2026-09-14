@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Bell, Briefcase, CalendarDays, CreditCard, Gift, Headphones, IdCard, LayoutDashboard, LogOut, Search, Settings, Sparkles, UserRound } from 'lucide-react';
+import { Bell, Briefcase, CalendarDays, CarFront, CreditCard, Gift, Headphones, IdCard, LayoutDashboard, LogOut, Search, Settings, Sparkles, UserRound } from 'lucide-react';
 
 type NavMember = {
   firstName: string;
@@ -13,6 +13,7 @@ type NavMember = {
 
 const links = [
   { href: '/member/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+  { href: '/member/work-and-pay', label: 'Work & Pay', Icon: CarFront },
   { href: '/member/profile', label: 'My Profile', Icon: UserRound },
   { href: '/membership', label: 'Membership', Icon: Sparkles },
   { href: '/member/work', label: 'Work & Jobs', Icon: Briefcase },
@@ -25,6 +26,7 @@ const links = [
 
 const tabLinks = [
   { href: '/member/dashboard', label: 'Home', Icon: LayoutDashboard },
+  { href: '/member/work-and-pay', label: 'Work & Pay', Icon: CarFront },
   { href: '/member/work', label: 'Work', Icon: Briefcase },
   { href: '/member/id-card', label: 'ID Card', Icon: IdCard },
   { href: '/member/profile', label: 'More', Icon: UserRound }

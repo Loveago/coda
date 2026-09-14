@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import {
   BarChart3, Briefcase, CarFront, ChartPie, FileText, Home, Image as ImageIcon, Inbox,
-  KeyRound, LayoutDashboard, LogOut, Mail, Menu, Newspaper, Package, Settings, Share2, Users, X
+  KeyRound, LayoutDashboard, LogOut, Mail, Menu, Newspaper, Package, Settings, Share2, Users, Wrench, X
 } from 'lucide-react';
 
 const groups: { label: string; items: [string, string, typeof LayoutDashboard][] }[] = [
@@ -47,6 +47,20 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
     ]
   },
   {
+    label: 'Work & Pay',
+    items: [
+      ['Overview', '/admin/work-and-pay', LayoutDashboard],
+      ['Applications', '/admin/work-and-pay/applications', Users],
+      ['Agreements', '/admin/work-and-pay/agreements', FileText],
+      ['Payments', '/admin/work-and-pay/payments', BarChart3],
+      ['Arrears Monitor', '/admin/work-and-pay/arrears', Briefcase],
+      ['Security Deposits', '/admin/work-and-pay/deposits', Package],
+      ['Maintenance & Fleet', '/admin/work-and-pay/maintenance', Wrench],
+      ['DVLA Transfers', '/admin/work-and-pay/ownership-transfers', CarFront],
+      ['Settings', '/admin/work-and-pay/settings', Settings]
+    ]
+  },
+  {
     label: 'Communication',
     items: [
       ['Messages', '/admin/messages', Mail],
@@ -58,6 +72,7 @@ const groups: { label: string; items: [string, string, typeof LayoutDashboard][]
     items: [
       ['Team', '/admin/team', Users],
       ['Settings', '/admin/settings', Settings],
+      ['Membership Fees', '/admin/settings/membership', BarChart3],
       ['Registration Codes', '/admin/settings/codes', KeyRound],
       ['Social Links', '/admin/settings/social', Share2]
     ]

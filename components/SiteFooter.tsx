@@ -7,6 +7,7 @@ import { getSiteSettings, socialLinks, type SocialLink } from '@/lib/settings';
 
 const quickLinks = [
   ['About Us', '/about'],
+  ['Work & Pay Ghana', '/work-and-pay'],
   ['Our Services', '/services'],
   ['Vehicles', '/vehicles'],
   ['Membership', '/membership'],
@@ -16,6 +17,7 @@ const quickLinks = [
 ];
 
 const serviceLinks = [
+  ['Work & Pay (Drive to Own)', '/work-and-pay'],
   ['Driver Recruitment', '/services/driver-recruitment'],
   ['General Recruitment', '/jobs'],
   ['Property Management', '/services/property-management'],

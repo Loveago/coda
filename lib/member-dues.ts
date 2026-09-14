@@ -1,12 +1,19 @@
 export type DuesState = 'PAID' | 'DUE_SOON' | 'EXPIRED' | 'UNPAID';
 
 /**
- * Membership is free and lifetime, so every approved member is always in good
- * standing. The legacy dues states remain in the type so historical records
- * (membership periods recorded before fees were retired) still render.
+ * Calculates dues state according to expiry date and admin setting.
  */
-export function duesState(_end: Date | null): DuesState {
-  return 'PAID';
+export function duesState(end: Date | null, duesEnabled: boolean = true, gracePeriodDays: number = 30): DuesState {
+  if (!duesEnabled) return 'PAID';
+  if (!end) return 'UNPAID';
+  const now = new Date();
+  const diffMs = end.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays > 30) return 'PAID';
+  if (diffDays >= 0) return 'DUE_SOON';
+  if (Math.abs(diffDays) <= gracePeriodDays) return 'DUE_SOON';
+  return 'EXPIRED';
 }
 
 export type AdminMemberRow = {
@@ -54,7 +61,11 @@ type SourceMember = {
 };
 
 /** Enrich members (with their successful payments) into admin table rows. */
-export function buildMemberRows(members: SourceMember[]): AdminMemberRow[] {
+export function buildMemberRows(
+  members: SourceMember[],
+  duesEnabled: boolean = true,
+  gracePeriodDays: number = 30
+): AdminMemberRow[] {
   return members.map((member) => {
     const totalPaid = member.payments.reduce((sum, payment) => sum + payment.amount, 0);
     const lastPaidAt = member.payments.reduce<Date | null>((latest, payment) => {
@@ -87,7 +98,7 @@ export function buildMemberRows(members: SourceMember[]): AdminMemberRow[] {
       membershipStartDate: member.membershipStartDate ? member.membershipStartDate.toISOString() : null,
       membershipEndDate: member.membershipEndDate ? member.membershipEndDate.toISOString() : null,
       internalNotes: member.internalNotes,
-      dues: duesState(member.membershipEndDate),
+      dues: duesState(member.membershipEndDate, duesEnabled, gracePeriodDays),
       totalPaid,
       lastPaidAt: lastPaidAt ? lastPaidAt.toISOString() : null,
       joined: member.createdAt.toISOString()

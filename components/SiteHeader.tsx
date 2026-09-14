@@ -14,6 +14,7 @@ const links = [
 
 const serviceLinks = [
   ['All Services', '/services', ArrowRight],
+  ['Work & Pay (Drive to Own)', '/work-and-pay', CarFront],
   ['Driver Recruitment', '/services/driver-recruitment', UserPlus],
   ['General Recruitment', '/jobs', Briefcase],
   ['Property Management', '/services/property-management', Building2],
@@ -77,7 +78,7 @@ export default function SiteHeader({
   useEffect(() => { setOpen(false); setServicesOpen(false); }, [pathname]);
 
   const isActive = (href: string) => href === '/' ? pathname === '/' : pathname.startsWith(href);
-  const servicesActive = pathname.startsWith('/services') || pathname === '/vehicles' || pathname === '/rentals' || pathname === '/automotive' || pathname === '/jobs';
+  const servicesActive = pathname.startsWith('/services') || pathname === '/vehicles' || pathname === '/rentals' || pathname === '/automotive' || pathname === '/jobs' || pathname.startsWith('/work-and-pay');
 
   function dismiss() {
     if (announcement) window.localStorage.setItem(`mrtruth-announcement-${announcement.key}`, 'dismissed');
@@ -136,6 +137,7 @@ export default function SiteHeader({
               </div>
             </div>
             <Link href="/vehicles" className={isActive('/vehicles') ? 'active' : ''}>Vehicles</Link>
+            <Link href="/work-and-pay" className={isActive('/work-and-pay') ? 'active' : ''}>Work &amp; Pay</Link>
             {tailLinks.map(([label, href]) => (
               <Link key={href} href={href} className={isActive(href) ? 'active' : ''}>{label}</Link>
             ))}

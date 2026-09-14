@@ -40,6 +40,7 @@ model User {
   articles     NewsArticle[]
   auditLogs    AuditLog[]
   createdCodes RegistrationCode[]
+  workPayAuditLogs WorkPayAuditLog[]
 }
 
 model MembershipApplication {
@@ -223,6 +224,8 @@ model Vehicle {
   images        VehicleImage[]
   inquiries     VehicleInquiry[]
   rentalInquiries RentalInquiry[]
+  workPayAgreements WorkPayAgreement[]
+  vehicleAssignments WorkPayVehicleAssignment[]
 
   @@index([category, availability])
 }
@@ -348,6 +351,8 @@ enum PaymentType {
   REGISTRATION_FEE
   ANNUAL_DUES
   WORK_APPLICATION_FEE
+  WORK_PAY_INSTALLMENT
+  WORK_PAY_DEPOSIT
 }
 
 enum PaymentStatus {
@@ -396,6 +401,9 @@ model Member {
   payments              Payment[]
   tokens                MemberToken[]
   workApplications      WorkApplication[]
+  workPayApplications   WorkPayApplication[]
+  workPayAgreements     WorkPayAgreement[]
+  workPayTickets        WorkPaySupportTicket[]
   registrationCodeId    String?
   registrationCode      RegistrationCode?        @relation(fields: [registrationCodeId], references: [id], onDelete: SetNull)
 
@@ -464,21 +472,25 @@ model Payment {
 }
 
 model FeeSetting {
-  key       String   @id
-  amount    Int
-  enabled   Boolean  @default(true)
-  updatedAt DateTime @updatedAt
+  key             String   @id
+  amount          Int
+  enabled         Boolean  @default(true)
+  currency        String   @default("GHS")
+  gracePeriodDays Int      @default(0)
+  updatedAt       DateTime @updatedAt
 }
 
 model FeeSettingHistory {
-  id             String   @id @default(uuid())
-  feeKey         String
-  previousAmount Int?
-  newAmount      Int
-  enabled        Boolean
-  changedBy      String
-  note           String?
-  createdAt      DateTime @default(now())
+  id              String   @id @default(uuid())
+  feeKey          String
+  previousAmount  Int?
+  newAmount       Int
+  enabled         Boolean
+  currency        String   @default("GHS")
+  gracePeriodDays Int      @default(0)
+  changedBy       String
+  note            String?
+  createdAt       DateTime @default(now())
 
   @@index([feeKey])
 }
@@ -512,4 +524,382 @@ model RegistrationCode {
 
   @@index([code])
   @@index([active])
+}
+
+enum WorkPayApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  INTERVIEW_SCHEDULED
+  APPROVED
+  REJECTED
+  WAITLISTED
+  AGREEMENT_PENDING
+  ACTIVE
+  COMPLETED
+  TERMINATED
+  DEFAULTED
+}
+
+enum WorkPayAgreementStatus {
+  PENDING_SIGNATURE
+  ACTIVE
+  IN_ARREARS
+  DEFAULTED
+  SUSPENDED
+  COMPLETED
+  OWNERSHIP_TRANSFERRED
+  CANCELLED
+}
+
+enum WorkPayInstallmentStatus {
+  PENDING
+  PAID
+  PARTIAL
+  OVERDUE
+  WAIVED
+}
+
+enum WorkPayPaymentMethod {
+  PAYSTACK_MOMO
+  PAYSTACK_CARD
+  CASH_OFFLINE
+  BANK_TRANSFER
+}
+
+enum WorkPayDepositStatus {
+  PENDING
+  HELD
+  PARTIALLY_DEDUCTED
+  FULLY_DEDUCTED
+  REFUNDED
+}
+
+enum WorkPayTicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum WorkPayTransferStatus {
+  PENDING_CLEARANCE
+  PAPERS_SUBMITTED
+  DVLA_PROCESSING
+  COMPLETED
+}
+
+model WorkPayApplication {
+  id                    String                   @id @default(uuid())
+  applicationNumber     String                   @unique
+  memberId              String?
+  member                Member?                  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  fullName              String
+  phone                 String
+  email                 String
+  ghanaCardNumber       String
+  driverLicenseNumber   String
+  driverLicenseClass    String
+  driverLicenseExpiry   DateTime?
+  yearsExperience       Int
+  commercialHistory     String?
+  rideHailingPlatforms  String?
+  preferredVehicleType  String
+  operatingRegion       String
+  guarantor1Name        String
+  guarantor1Phone       String
+  guarantor1Occupation  String
+  guarantor1Address     String
+  guarantor1GhanaCard   String
+  guarantor2Name        String
+  guarantor2Phone       String
+  guarantor2Occupation  String
+  guarantor2Address     String
+  guarantor2GhanaCard   String
+  driverLicenseFrontUrl String?
+  driverLicenseBackUrl  String?
+  ghanaCardFrontUrl     String?
+  proofOfResidenceUrl   String?
+  utilityBillUrl        String?
+  status                WorkPayApplicationStatus @default(SUBMITTED)
+  interviewDate         DateTime?
+  interviewNotes        String?
+  interviewScore        Int?
+  rejectionReason       String?
+  internalNotes         String?
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  agreements            WorkPayAgreement[]
+  documents             WorkPayDocument[]
+
+  @@index([status])
+  @@index([phone])
+  @@index([email])
+  @@index([ghanaCardNumber])
+}
+
+model WorkPayAgreement {
+  id                     String                        @id @default(uuid())
+  agreementNumber        String                        @unique
+  applicationId          String?
+  application            WorkPayApplication?           @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+  memberId               String?
+  member                 Member?                       @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  driverName             String
+  driverPhone            String
+  driverEmail            String?
+  vehicleId              String
+  vehicle                Vehicle                       @relation(fields: [vehicleId], references: [id])
+  totalPrice             Decimal                       @db.Decimal(12, 2)
+  depositRequired        Decimal                       @db.Decimal(12, 2)
+  depositPaid            Decimal                       @default(0.00) @db.Decimal(12, 2)
+  weeklyPayment          Decimal                       @db.Decimal(12, 2)
+  durationWeeks          Int
+  startDate              DateTime
+  expectedCompletionDate DateTime
+  actualCompletionDate   DateTime?
+  gracePeriodDays        Int                           @default(3)
+  latePenaltyFee         Decimal                       @default(50.00) @db.Decimal(12, 2)
+  totalPaid              Decimal                       @default(0.00) @db.Decimal(12, 2)
+  remainingBalance       Decimal                       @db.Decimal(12, 2)
+  status                 WorkPayAgreementStatus        @default(PENDING_SIGNATURE)
+  signedContractUrl      String?
+  signedAt               DateTime?
+  termsAndConditions     String?
+  notes                  String?
+  createdAt              DateTime                      @default(now())
+  updatedAt              DateTime                      @updatedAt
+
+  vehicleAssignments     WorkPayVehicleAssignment[]
+  installments           WorkPayInstallment[]
+  payments               WorkPayPayment[]
+  securityDeposits       WorkPaySecurityDeposit[]
+  conditionReports       WorkPayVehicleConditionReport[]
+  maintenanceRecords     WorkPayMaintenanceRecord[]
+  documents              WorkPayDocument[]
+  supportTickets         WorkPaySupportTicket[]
+  ownershipTransfer      WorkPayOwnershipTransfer?
+  auditLogs              WorkPayAuditLog[]
+
+  @@index([status])
+  @@index([vehicleId])
+  @@index([memberId])
+}
+
+model WorkPayVehicleAssignment {
+  id                String           @id @default(uuid())
+  agreementId       String
+  agreement         WorkPayAgreement @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  vehicleId         String
+  vehicle           Vehicle          @relation(fields: [vehicleId], references: [id])
+  handoverMileage   Int
+  conditionNotes    String?
+  handoverDate      DateTime         @default(now())
+  handoverReportUrl String?
+  returnDate        DateTime?
+  returnMileage     Int?
+  returnNotes       String?
+  status            String           @default("ACTIVE")
+  createdAt         DateTime         @default(now())
+
+  @@index([agreementId])
+  @@index([vehicleId])
+}
+
+model WorkPayInstallment {
+  id               String                   @id @default(uuid())
+  agreementId      String
+  agreement        WorkPayAgreement         @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  weekNumber       Int
+  dueDate          DateTime
+  targetAmount     Decimal                  @db.Decimal(12, 2)
+  principalPortion Decimal                  @db.Decimal(12, 2)
+  feePortion       Decimal                  @default(0.00) @db.Decimal(12, 2)
+  amountPaid       Decimal                  @default(0.00) @db.Decimal(12, 2)
+  status           WorkPayInstallmentStatus @default(PENDING)
+  paidAt           DateTime?
+  notes            String?
+  createdAt        DateTime                 @default(now())
+  updatedAt        DateTime                 @updatedAt
+  allocations      WorkPayPaymentAllocation[]
+
+  @@index([agreementId, weekNumber])
+  @@index([status])
+  @@index([dueDate])
+}
+
+model WorkPayPayment {
+  id                    String                   @id @default(uuid())
+  reference             String                   @unique
+  agreementId           String
+  agreement             WorkPayAgreement         @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  amount                Decimal                  @db.Decimal(12, 2)
+  paymentDate           DateTime                 @default(now())
+  paymentMethod         WorkPayPaymentMethod
+  paystackReference     String?
+  paystackTransactionId String?
+  channelDetails        String?
+  verifiedBy            String?
+  receiptNumber         String?
+  notes                 String?
+  status                String                   @default("SUCCESSFUL")
+  createdAt             DateTime                 @default(now())
+  updatedAt             DateTime                 @updatedAt
+  allocations           WorkPayPaymentAllocation[]
+
+  @@index([agreementId])
+  @@index([reference])
+  @@index([paymentDate])
+}
+
+model WorkPayPaymentAllocation {
+  id               String             @id @default(uuid())
+  paymentId        String
+  payment          WorkPayPayment     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  installmentId    String
+  installment      WorkPayInstallment @relation(fields: [installmentId], references: [id], onDelete: Cascade)
+  amount           Decimal            @db.Decimal(12, 2)
+  principalPortion Decimal            @db.Decimal(12, 2)
+  feePortion       Decimal            @default(0.00) @db.Decimal(12, 2)
+  createdAt        DateTime           @default(now())
+
+  @@index([paymentId])
+  @@index([installmentId])
+}
+
+model WorkPaySecurityDeposit {
+  id              String               @id @default(uuid())
+  agreementId     String
+  agreement       WorkPayAgreement     @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  targetAmount    Decimal              @db.Decimal(12, 2)
+  amountPaid      Decimal              @default(0.00) @db.Decimal(12, 2)
+  balance         Decimal              @default(0.00) @db.Decimal(12, 2)
+  deductions      Decimal              @default(0.00) @db.Decimal(12, 2)
+  deductionReason String?
+  refundAmount    Decimal              @default(0.00) @db.Decimal(12, 2)
+  refundDate      DateTime?
+  status          WorkPayDepositStatus @default(PENDING)
+  notes           String?
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  @@index([agreementId])
+}
+
+model WorkPayVehicleConditionReport {
+  id             String           @id @default(uuid())
+  agreementId    String
+  agreement      WorkPayAgreement @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  reportType     String
+  inspectionDate DateTime         @default(now())
+  mileage        Int
+  inspectorName  String
+  checklist      Json?
+  photos         Json?
+  overallRating  String?
+  notes          String?
+  createdAt      DateTime         @default(now())
+
+  @@index([agreementId])
+}
+
+model WorkPayMaintenanceRecord {
+  id                   String           @id @default(uuid())
+  agreementId          String
+  agreement            WorkPayAgreement @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  serviceType          String
+  serviceDate          DateTime         @default(now())
+  mileage              Int?
+  cost                 Decimal          @default(0.00) @db.Decimal(12, 2)
+  paidBy               String           @default("DRIVER")
+  serviceCenter        String?
+  receiptUrl           String?
+  insuranceExpiryDate  DateTime?
+  roadworthyExpiryDate DateTime?
+  notes                String?
+  status               String           @default("COMPLETED")
+  createdAt            DateTime         @default(now())
+
+  @@index([agreementId])
+}
+
+model WorkPayDocument {
+  id            String              @id @default(uuid())
+  agreementId   String?
+  agreement     WorkPayAgreement?   @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  applicationId String?
+  application   WorkPayApplication? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  documentType  String
+  title         String
+  fileUrl       String
+  fileSize      Int?
+  mimeType      String?
+  verified      Boolean             @default(false)
+  verifiedBy    String?
+  verifiedAt    DateTime?
+  notes         String?
+  createdAt     DateTime            @default(now())
+
+  @@index([agreementId])
+  @@index([applicationId])
+}
+
+model WorkPaySupportTicket {
+  id            String              @id @default(uuid())
+  ticketNumber  String              @unique
+  agreementId   String?
+  agreement     WorkPayAgreement?   @relation(fields: [agreementId], references: [id], onDelete: SetNull)
+  memberId      String
+  member        Member              @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  category      String
+  subject       String
+  message       String
+  priority      String              @default("NORMAL")
+  status        WorkPayTicketStatus @default(OPEN)
+  adminResponse String?
+  respondedAt   DateTime?
+  resolvedAt    DateTime?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+
+  @@index([memberId])
+  @@index([agreementId])
+  @@index([status])
+}
+
+model WorkPayOwnershipTransfer {
+  id                        String                @id @default(uuid())
+  agreementId               String                @unique
+  agreement                 WorkPayAgreement      @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  transferCertificateNumber String                @unique
+  finalPayoffVerified       Boolean               @default(false)
+  payoffVerifiedAt          DateTime?
+  payoffVerifiedBy          String?
+  transferClearance         Boolean               @default(false)
+  dvlaPaperworkStatus       WorkPayTransferStatus @default(PENDING_CLEARANCE)
+  dvlaSubmissionDate        DateTime?
+  dvlaCompletionDate        DateTime?
+  handoverDate              DateTime?
+  completionCertificateUrl  String?
+  newRegistrationNumber     String?
+  notes                     String?
+  createdAt                 DateTime              @default(now())
+  updatedAt                 DateTime              @updatedAt
+}
+
+model WorkPayAuditLog {
+  id             String            @id @default(uuid())
+  agreementId    String?
+  agreement      WorkPayAgreement? @relation(fields: [agreementId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action         String
+  details        String
+  previousValues Json?
+  newValues      Json?
+  ipAddress      String?
+  createdAt      DateTime          @default(now())
+
+  @@index([agreementId])
+  @@index([userId])
 }

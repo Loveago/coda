@@ -5,6 +5,8 @@ import { hashPassword } from '@/lib/password';
 import { rateLimit, requestAddress } from '@/lib/rate-limit';
 import { nextMemberNumber } from '@/lib/membership';
 import { MEMBER_SESSION_COOKIE, MEMBER_SESSION_MAX_AGE, createMemberSessionToken, generateToken, hashToken } from '@/lib/members-auth';
+import { getFeeSettings } from '@/lib/fees';
+import { generatePaymentReference, initializePaystackPayment } from '@/lib/paystack';
 
 // Ghana Card numbers follow the format GHC-XXXXXXXXX-X (9 digits, then a check digit).
 const ghanaCardSchema = z
@@ -127,12 +129,16 @@ export async function POST(request: Request) {
   const memberNum = await nextMemberNumber();
   const passwordHash = await hashPassword(data.password);
 
-  const { member, devVerifyUrl } = await db.$transaction(async (tx) => {
+  const { member, devVerifyUrl, isFeeRequired, paymentRef, feeAmount } = await db.$transaction(async (tx) => {
     // Increment code usage
     await tx.registrationCode.update({
       where: { id: regCode.id },
       data: { usedCount: { increment: 1 } }
     });
+
+    const feeSettings = await getFeeSettings();
+    const isFeeRequired = feeSettings.registration.enabled;
+    const paymentRef = isFeeRequired ? generatePaymentReference('REG') : null;
 
     const newMember = await tx.member.create({
       data: {
@@ -156,11 +162,25 @@ export async function POST(request: Request) {
         emergency2Name: data.emergency2Name,
         emergency2Phone: data.emergency2Phone,
         emergency2Relationship: data.emergency2Relationship,
-        status: 'PENDING',
-        registrationPayment: 'NOT_REQUIRED',
+        status: isFeeRequired ? 'PENDING' : 'PENDING',
+        registrationPayment: isFeeRequired ? 'PENDING' : 'NOT_REQUIRED',
         registrationCodeId: regCode.id
       }
     });
+
+    if (isFeeRequired && paymentRef) {
+      await tx.payment.create({
+        data: {
+          memberId: newMember.id,
+          type: 'REGISTRATION_FEE',
+          amount: feeSettings.registration.amount,
+          currency: 'GHS',
+          reference: paymentRef,
+          status: 'PENDING',
+          metadata: { memberId: newMember.id, memberNumber: newMember.memberNumber, paymentType: 'REGISTRATION_FEE' }
+        }
+      });
+    }
 
     const token = generateToken();
     await tx.memberToken.create({
@@ -169,17 +189,39 @@ export async function POST(request: Request) {
 
     return {
       member: newMember,
+      isFeeRequired,
+      paymentRef,
+      feeAmount: feeSettings.registration.amount,
       devVerifyUrl: `${origin}/verify-email?token=${token}`
     };
   }, { maxWait: 10000, timeout: 25000 });
 
-  // Membership is completely free — the applicant is auto-logged-in and the
-  // application goes straight into the review queue.
+  let paymentUrl: string | undefined;
+  if (isFeeRequired && paymentRef) {
+    try {
+      const paystackRes = await initializePaystackPayment({
+        email,
+        amountInPesewas: feeAmount,
+        reference: paymentRef,
+        callbackUrl: `${origin}/api/payments/paystack/verify`,
+        metadata: { paymentType: 'REGISTRATION_FEE', memberId: member.id }
+      });
+      paymentUrl = paystackRes.authorization_url;
+    } catch (paystackErr) {
+      console.error('Failed to initialize Paystack for new registration:', paystackErr);
+    }
+  }
+
   const response = NextResponse.json({
     success: true,
     memberNumber: member.memberNumber,
+    requiresPayment: isFeeRequired,
+    feeAmount: isFeeRequired ? feeAmount : 0,
+    paymentUrl,
+    paymentReference: paymentRef,
     devVerifyUrl: process.env.SMTP_URL ? undefined : devVerifyUrl
   }, { status: 201 });
+
   response.cookies.set(MEMBER_SESSION_COOKIE, createMemberSessionToken(member.id), {
     httpOnly: true,
     sameSite: 'lax',

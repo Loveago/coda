@@ -26,7 +26,7 @@ export default async function About() {
     db.siteSetting.findMany({ where: { key: { in: ['about_title', 'about_body', 'about_mission', 'about_vision'] } } }),
     getSiteSettings()
   ]);
-  const setting = Object.fromEntries(settingRows.map((item) => [item.key, item.value]));
+  const setting = Object.fromEntries(settingRows.map((item: { key: string; value: string }) => [item.key, item.value]));
 
   return (
     <>
@@ -51,7 +51,7 @@ export default async function About() {
               { id: '2', value: 'SAFETY', label: 'Safer roads for all' },
               { id: '3', value: 'SUPPORT', label: 'Members first' },
               { id: '4', value: 'GROWTH', label: 'A stronger future' }
-            ]).map((stat) => (
+            ]).map((stat: { id: string; value: string; label: string }) => (
               <div className="stat" key={stat.id}>
                 <StatsCounter value={stat.value} />
                 <span>{stat.label}</span>
